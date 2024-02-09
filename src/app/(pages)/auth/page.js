@@ -2,22 +2,23 @@
 
 import React, { useEffect } from "react";
 
-import Auth from "@/files/Auth";
+import Login from "@/files/Login";
+import Signup from "@/files/Signup";
 
-import authService from "@/appwrite/auth";
-import useAuth from "@/context/auth/useAuth";
+// import authService from "@/appwrite/auth";
+// import useAuth from "@/context/auth/useAuth";
 
-const Home = () => {
-	const { authStatus, setAuthStatus } = useAuth();
+const Auth = () => {
+	// const { authStatus, setAuthStatus } = useAuth();
 
-	useEffect(() => {
-		if (authStatus)
-			authService.logout().then(() => {
-				setAuthStatus(false);
-			});
-	}, []);
+	// useEffect(() => {
+	// 	if (authStatus)
+	// 		authService.logout().then(() => {
+	// 			setAuthStatus(false);
+	// 		});
+	// }, []);
 
-	return <Auth />;
+	return <Login />;
 };
 
-export default Home;
+export default Auth;
