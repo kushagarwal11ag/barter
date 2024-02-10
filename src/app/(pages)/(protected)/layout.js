@@ -9,7 +9,7 @@ const ProtectedLayout = ({ children }) => {
 
 	useEffect(() => {
 		if (!authStatus) {
-			router.replace("/auth");
+			router.replace("/login");
 		}
 	}, [authStatus, router]);
 	return authStatus ? children : null;

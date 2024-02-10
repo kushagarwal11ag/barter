@@ -1,31 +1,24 @@
 "use client";
 
-import React from "react";
-// import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-
+import useAuth from "@/context/auth/useAuth";
+import Loader from "@/files/Loader";
 import Welcome from "@/files/Welcome";
-// import useAuth from "@/context/auth/useAuth";
-// import Loader from "@/files/Loader";
 
 const Home = () => {
-	// const router = useRouter();
-	// const { authStatus } = useAuth();
-	// const [loader, setLoader] = useState(false);
+	const router = useRouter();
+	const { authStatus } = useAuth();
+	const [loader, setLoader] = useState(false);
 
-	// useEffect(() => {
-	// 	setLoader(true);
-	// 	if (authStatus) {
-	// 		router.push("/profile");
-	// 		setLoader(false);
-	// 	} else {
-	// 		router.push("/auth");
-	// 		setLoader(false);
-	// 	}
-	// }, [authStatus, router]);
+	useEffect(() => {
+		setLoader(true);
+		if (authStatus) router.push("/home");
+		setLoader(false);
+	}, [authStatus, router]);
 
-	// return loader ? <Loader /> : <></>;
-	return <Welcome />;
+	return loader ? <Loader /> : authStatus ? <></> : <Welcome />;
 };
 
 export default Home;

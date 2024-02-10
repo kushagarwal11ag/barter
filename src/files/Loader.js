@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
-import gif from "../../public/barter.gif";
+import gif from "../../public/barter-crop-small-smaller.gif";
 
 const Loader = () => {
 	const loadingArr = [

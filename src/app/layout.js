@@ -1,4 +1,4 @@
-import "./globals.css";
+import "@/components/globals.css";
 
 export const metadata = {
 	title: "Swap Ease - A Barter System",
