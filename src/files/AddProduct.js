@@ -191,7 +191,7 @@ const AddProduct = () => {
 								<div className="md:w-3/12 text-center md:pl-6 ">
 									<button className="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4  inline-flex items-center rounded-full">
 										<img
-											src="/checked-2.png"
+											src="/images/checked-2.png"
 											alt=""
 											className="fill-current w-4 h-4 mr-2"
 										/>

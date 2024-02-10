@@ -14,7 +14,7 @@ function Custom404() {
 		<main className="h-screen overflow-hidden">
 			<section className="bg-cover bg-center bg-[url('/error404background.svg')] h-full w-full grid grid-flow-row grid-rows-[50%_50%] justify-items-center items-center sm:grid-rows-[auto] sm:grid-flow-col sm:grid-cols-[50%_50%]">
 				<div className="p-8 flex flex-col gap-8 items-center sm:items-start">
-					<header className="text-[white] text-5xl font-semibold md:text-[4rem]">
+					<header className="text-[white] text-5xl font-semibold md:text-[4rem] text-center sm:text-left">
 						404: Lost in Chaos
 					</header>
 					<p className="text-[#88e3ad] text-2xl md:text-[2rem]">
