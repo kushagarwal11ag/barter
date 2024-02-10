@@ -9,6 +9,11 @@ import Loader from "@/files/Loader";
 import EditProfile from "@/files/EditProfile";
 import ChatBox from "@/files/ChatBox";
 import NotificationBox from "@/files/NotificationBox";
+import Explore from "@/files/Explore";
+import AccountBanned from "@/files/AccountBanned";
+import ContactUs from "@/files/ContactUs";
+import Navbar from "@/files/Navbar";
+
 
 
 // import authService from "@/appwrite/auth";
@@ -24,7 +29,7 @@ const Auth = () => {
 	// 		});
 	// }, []);
 
-	return <NotificationBox />;
+	return <Login />;
 };
 
 export default Auth;

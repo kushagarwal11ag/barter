@@ -110,7 +110,7 @@ const Login = () => {
                         <?= showError('checkuser') ?> */}
 									<span
 										className="absolute  right-5 -translate-y-1/2  top-[48px]"
-										onclick=" hidepassword()"
+										// onClick=" hidepassword()"
 									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"

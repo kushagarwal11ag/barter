@@ -18,7 +18,7 @@ const AddProduct = () => {
 					<form
 						action="assets/php/actions.php?addpost"
 						method="post"
-						enctype="multipart/form-data"
+						encType="multipart/form-data"
 					>
 						<div className="bg-white space-y-6">
 							<div className="md:inline-flex space-y-4 md:space-y-0 w-full p-4 text-black items-center">

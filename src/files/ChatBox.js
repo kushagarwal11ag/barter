@@ -63,53 +63,53 @@ const ChatBox = () => {
 							>
 								{/* this is the chats section */}
 								<div
-									class="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer chatlist_item"
-									onclick="openModal();popchat(40)"
+									className="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer chatlist_item"
+									// onClick="openModal();popchat(40)"
 								>
-									<span class="text-xs font-bold uppercase px-2 mt-2 mr-1 text-green-900 bg-green-400 border rounded-full absolute top-0 right-0 hidden">
+									<span className="text-xs font-bold uppercase px-2 mt-2 mr-1 text-green-900 bg-green-400 border rounded-full absolute top-0 right-0 hidden">
 										New
 									</span>
 
 									<img
-										class="h-12 w-12 rounded-full object-cover"
+										className="h-12 w-12 rounded-full object-cover"
 										alt="user"
 										src="/images/profile/black.jpg"
 									/>
 
-									<div class="ml-3 text-sm font-normal">
-										<div class="text-sm font-bold text-gray-900 flex justify-start mt-3">
+									<div className="ml-3 text-sm font-normal">
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3">
 											Sanju Samson
 										</div>
-										<div class="text-sm font-normal flex justify-star mb-5">
+										<div className="text-sm font-normal flex justify-star mb-5">
 											Want
 										</div>
-										<span class="text-xs font-semibold uppercase m-1 py-1 mr-3 text-gray-500 absolute bottom-0 right-0">
+										<span className="text-xs font-semibold uppercase m-1 py-1 mr-3 text-gray-500 absolute bottom-0 right-0">
 											20:02
 										</span>
 									</div>
 								</div>
 								<div
-									class="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer chatlist_item"
-									onclick="openModal();popchat(40)"
+									className="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer chatlist_item"
+									// onClick="openModal();popchat(40)"
 								>
-									<span class="text-xs font-bold uppercase px-2 mt-2 mr-1 text-green-900 bg-green-400 border rounded-full absolute top-0 right-0">
+									<span className="text-xs font-bold uppercase px-2 mt-2 mr-1 text-green-900 bg-green-400 border rounded-full absolute top-0 right-0">
 										New
 									</span>
 
 									<img
-										class="h-12 w-12 rounded-full object-cover"
+										className="h-12 w-12 rounded-full object-cover"
 										alt="user"
 										src="/images/profile/camera-woman.jpg"
 									/>
 
-									<div class="ml-3 text-sm font-normal">
-										<div class="text-sm font-bold text-gray-900 flex justify-start mt-3">
+									<div className="ml-3 text-sm font-normal">
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3">
 											Camera
 										</div>
-										<div class="text-sm font-normal flex justify-star mb-5">
+										<div className="text-sm font-normal flex justify-star mb-5">
 											Hi
 										</div>
-										<span class="text-xs font-semibold uppercase m-1 py-1 mr-3 text-gray-500 absolute bottom-0 right-0">
+										<span className="text-xs font-semibold uppercase m-1 py-1 mr-3 text-gray-500 absolute bottom-0 right-0">
 											21:25
 										</span>
 									</div>

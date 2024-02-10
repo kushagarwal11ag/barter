@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 const Navbar = () => {
@@ -143,7 +144,7 @@ const Navbar = () => {
 						id="searchform"
 						actions="?search"
 					>
-						<label for="simple-search" className="sr-only">
+						<label htmlFor="simple-search" className="sr-only">
 							Search
 						</label>
 						<div className="relative w-full">
@@ -156,9 +157,9 @@ const Navbar = () => {
 									xmlns="http://www.w3.org/2000/svg"
 								>
 									<path
-										fill-rule="evenodd"
+										fillRule="evenodd"
 										d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-										clip-rule="evenodd"
+										clipRule="evenodd"
 									></path>
 								</svg>
 							</div>
@@ -167,7 +168,7 @@ const Navbar = () => {
 								name="search"
 								placeholder="Search items"
 								id="search"
-								autocomplete="off"
+								autoComplete="off"
 								className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full pl-10 p-2.5"
 								required
 							/>
@@ -184,9 +185,9 @@ const Navbar = () => {
 								xmlns="http://www.w3.org/2000/svg"
 							>
 								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
 									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
 								></path>
 							</svg>
@@ -281,7 +282,7 @@ const Navbar = () => {
 						>
 							<span className="sr-only">Open user menu</span>
 							<img
-								src="/images/profile/<?= $user['profile_pic'] ?>"
+								src="/images/profile/black.jpg"
 								alt=""
 								className="w-10 h-10 object-cover rounded-full"
 							/>
@@ -319,9 +320,9 @@ const Navbar = () => {
 												xmlns="http://www.w3.org/2000/svg"
 											>
 												<path
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													stroke-width="2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth="2"
 													d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
 												></path>
 											</svg>
@@ -359,9 +360,9 @@ const Navbar = () => {
 												xmlns="http://www.w3.org/2000/svg"
 											>
 												<path
-													stroke-linecap="round"
-													stroke-linejoin="round"
-													stroke-width="2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth="2"
 													d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
 												></path>
 											</svg>

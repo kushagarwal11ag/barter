@@ -5,9 +5,11 @@ const NotificationBox = () => {
 		<>
 			<div
 				id="not-drawer"
-				className="fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto bg-white w-80 "
-				tabindex="-1"
+				className="fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform bg-white w-80 transform-none"
+				tabIndex="-1"
 				aria-labelledby="drawer-label"
+				aria-modal="true"
+				role="dialog"
 			>
 				<div className="flex flex-row h-full w-full overflow-y-hidden">
 					<div className="flex flex-col py-8  pr-2 w-full bg-white flex-shrink-0">
@@ -27,14 +29,137 @@ const NotificationBox = () => {
 						<div className="flex flex-col mt-8 h-full pb-20 ">
 							<div className="flex flex-col space-y-1 mt-4 -mx-2  overflow-y-auto  ">
 								<div className="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer ">
-									{/* <span className="text-xs font-bold uppercase px-2 mt-2 mr-1 text-green-900 bg-green-400 border rounded-full absolute top-0 right-0 ">
-										New
-									</span> */}
-									{/* <span className="text-xs font-bold uppercase px-2 mt-2 mr-1 text-white bg-red-600 border rounded-full absolute top-0 right-0 ">
-										Post Deleted
-									</span> */}
+									<a href="?u=Jack">
+										<img
+											className="h-12 w-12 rounded-full object-cover inline-block"
+											alt="user"
+											src="/images/profile/camera-woman.jpg"
+										/>
+									</a>
 
-									<a href="?u=<?= $fuser['username'] ?>">
+									<div className="ml-3 text-sm font-normal">
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3">
+											Jack Sparrow{" "}
+										</div>
+										<div className="text-sm font-normal flex justify-start  mb-4 ">
+											unliked your post !{" "}
+										</div>
+										<span className="text-xs absolute bottom-0 right-2  text-gray-500 mt-10 mb-2 ">
+											4 days ago
+										</span>
+									</div>
+								</div>
+
+								<div className="flex items-center p-3 bg-white rounded-lg 3shadow-xl  w-auto relative cursor-pointer ">
+									<a href="?u=Jack">
+										<img
+											className="h-12 w-12 rounded-full object-cover inline-block"
+											alt="user"
+											src="/images/profile/white.jpg"
+										/>
+									</a>
+
+									<div className="ml-3 text-sm font-normal">
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3">
+											Jack Sparrow{" "}
+										</div>
+										<div className="text-sm font-normal flex justify-start  mb-4 ">
+											liked your post !{" "}
+										</div>
+										<span className="text-xs absolute bottom-0 right-2  text-gray-500 mt-10 mb-2 ">
+											a month ago
+										</span>
+									</div>
+								</div>
+
+								<div className="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer ">
+									<a href="?u=Jack">
+										<img
+											className="h-12 w-12 rounded-full object-cover inline-block"
+											alt="user"
+											src="/images/profile/truman.jpg"
+										/>
+									</a>
+
+									<div className="ml-3 text-sm font-normal">
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3">
+											Jack Sparrow{" "}
+										</div>
+										<div className="text-sm font-normal flex justify-start  mb-4 ">
+											started following you !{" "}
+										</div>
+										<span className="text-xs absolute bottom-0 right-2  text-gray-500 mt-10 mb-2 ">
+											a month ago
+										</span>
+									</div>
+								</div>
+
+								<div className="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer ">
+									<a href="?u=sadas">
+										<img
+											className="h-12 w-12 rounded-full object-cover inline-block"
+											alt="user"
+											src="/images/profile/sunglasses.jpg"
+										/>
+									</a>
+
+									<div className="ml-3 text-sm font-normal">
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3"></div>
+										<div className="text-sm font-normal flex justify-start  mb-4 ">
+											liked your post !{" "}
+										</div>
+										<span className="text-xs absolute bottom-0 right-2  text-gray-500 mt-10 mb-2 ">
+											6 months ago
+										</span>
+									</div>
+								</div>
+
+								<div className="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer ">
+									<a href="?u=Jethalal">
+										<img
+											className="h-12 w-12 rounded-full object-cover inline-block"
+											alt="user"
+											src="/images/profile/silhouette.jpg"
+										/>
+									</a>
+
+									<div className="ml-3 text-sm font-normal">
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3">
+											Jethalal Gada{" "}
+										</div>
+										<div className="text-sm font-normal flex justify-start  mb-4 ">
+											liked your post !{" "}
+										</div>
+										<span className="text-xs absolute bottom-0 right-2  text-gray-500 mt-10 mb-2 ">
+											10 months ago
+										</span>
+									</div>
+								</div>
+
+								<div className="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer ">
+									<a href="?u=Jethalal">
+										<img
+											className="h-12 w-12 rounded-full object-cover inline-block"
+											alt="user"
+											src="/images/profile/silencer.jpg"
+										/>
+									</a>
+
+									<div className="ml-3 text-sm font-normal">
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3">
+											Jethalal Gada{" "}
+										</div>
+										<div className="text-sm font-normal flex justify-start  mb-4 ">
+											liked your post !{" "}
+										</div>
+										<span className="text-xs absolute bottom-0 right-2  text-gray-500 mt-10 mb-2 ">
+											10 months ago
+										</span>
+									</div>
+								</div>
+
+								<div className="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer ">
+									<a href="?u=Nobita">
 										<img
 											className="h-12 w-12 rounded-full object-cover inline-block"
 											alt="user"
@@ -43,39 +168,61 @@ const NotificationBox = () => {
 									</a>
 
 									<div className="ml-3 text-sm font-normal">
-										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3"></div>
-										<div className="text-sm font-normal flex justify-start  mb-4 "></div>
-										<span
-											className="text-xs absolute bottom-0 right-2  text-gray-500 mt-10 mb-2 "
-											data-livestamp="<?= $time ?>"
-										></span>
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3">
+											Nobita Nobi{" "}
+										</div>
+										<div className="text-sm font-normal flex justify-start  mb-4 ">
+											unliked your post !{" "}
+										</div>
+										<span className="text-xs absolute bottom-0 right-2  text-gray-500 mt-10 mb-2 ">
+											10 months ago
+										</span>
 									</div>
 								</div>
-								{/* <div className="d-flex justify-content-between border-bottom">
-              <div className="d-flex align-items-center p-2">
-                <div><img src="assets/images/profile/<?= $fuser['profile_pic'] ?>" alt="" height="40" width="40"
-                    className="rounded-circle border">
-                </div>
-                <div className="d-flex flex-column justify-content-center" <?= $post ?>>
-                  <a href='' className="text-decoration-none text-dark">
-                    <h6 style="margin: 0px;font-size: small;">Fname Lname
-                    </h6>
-                  </a>
-                  <p style="margin:0px;font-size:small" className="<?= $not['read_status'] ? 'text-muted' : '' ?>">
-                    
-                  <time style="font-size:small" className="timeago <?= $not['read_status'] ? 'text-muted' : '' ?> text-small"
-                    datetime="<?= $time ?>"></time>
-                </div>
-              </div>
-              <div className="d-flex align-items-center">
-                  <div className="p-1 bg-primary rounded-circle"></div>
 
-                  
-                    <span className="badge bg-danger">Post Deleted</span>
-                  
+								<div className="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer ">
+									<a href="?u=Nobita">
+										<img
+											className="h-12 w-12 rounded-full object-cover inline-block"
+											alt="user"
+											src="/images/profile/black.jpg"
+										/>
+									</a>
 
-              </div>
-            </div> */}
+									<div className="ml-3 text-sm font-normal">
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3">
+											Nobita Nobi{" "}
+										</div>
+										<div className="text-sm font-normal flex justify-start  mb-4 ">
+											liked your post !{" "}
+										</div>
+										<span className="text-xs absolute bottom-0 right-2  text-gray-500 mt-10 mb-2 ">
+											10 months ago
+										</span>
+									</div>
+								</div>
+
+								<div className="flex items-center p-3 bg-white rounded-lg shadow-xl  w-auto relative cursor-pointer ">
+									<a href="?u=Nobita">
+										<img
+											className="h-12 w-12 rounded-full object-cover inline-block"
+											alt="user"
+											src="/images/profile/bhuvan.jpg"
+										/>
+									</a>
+
+									<div className="ml-3 text-sm font-normal">
+										<div className="text-sm font-bold text-gray-900 flex justify-start mt-3">
+											Nobita Nobi{" "}
+										</div>
+										<div className="text-sm font-normal flex justify-start  mb-4 ">
+											unliked your post !{" "}
+										</div>
+										<span className="text-xs absolute bottom-0 right-2  text-gray-500 mt-10 mb-2 ">
+											10 months ago
+										</span>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -94,9 +241,9 @@ const NotificationBox = () => {
 							xmlns="http://www.w3.org/2000/svg"
 						>
 							<path
-								fill-rule="evenodd"
+								fillRule="evenodd"
 								d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-								clip-rule="evenodd"
+								clipRule="evenodd"
 							></path>
 						</svg>
 						<span className="sr-only">Close menu</span>

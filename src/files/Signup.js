@@ -95,13 +95,13 @@ const Signup = () => {
 										type="password"
 										placeholder="Enter your password"
 										name="password"
-										value=""
+										// value=""
 									/>
 									{/* <?=showError('password')?> */}
 
 									<span
 										className="absolute  right-5 -translate-y-1/2  top-[48px]"
-										onclick=" hidepassword()"
+										// onClick=" hidepassword()"
 									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"

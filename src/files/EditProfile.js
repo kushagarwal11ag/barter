@@ -9,7 +9,7 @@ const EditProfile = () => {
 						<form
 							action=""
 							method="post"
-							enctype="multipart/form-data"
+							encType="multipart/form-data"
 						>
 							<div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
 								<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
@@ -28,7 +28,7 @@ const EditProfile = () => {
 											type="file"
 											name="profile_pic"
 											className="mt-3 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-											value=""
+											// value=""
 										/>
 									</div>
 
@@ -40,7 +40,7 @@ const EditProfile = () => {
 													type="text"
 													name="name"
 													className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													value=""
+													// value=""
 													placeholder="Name"
 												/>
 											</div>
@@ -51,7 +51,7 @@ const EditProfile = () => {
 													type="email"
 													name="email"
 													className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													value=""
+													// value=""
 													placeholder=""
 													disabled
 												/>
@@ -63,13 +63,13 @@ const EditProfile = () => {
 													type="number"
 													name="contact"
 													className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													value=""
+													// value=""
 													placeholder=""
 												/>
 											</div>
 
 											<div className="md:col-span-3">
-												<label for="address">
+												<label htmlFor="address">
 													Address / Street
 												</label>
 												<input
@@ -77,25 +77,25 @@ const EditProfile = () => {
 													name="address"
 													id="address"
 													className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													value=""
+													// value=""
 													placeholder=""
 												/>
 											</div>
 
 											<div className="md:col-span-2">
-												<label for="city">City</label>
+												<label htmlFor="city">City</label>
 												<input
 													type="text"
 													name="city"
 													id="city"
 													className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													value=""
+													// value=""
 													placeholder=""
 												/>
 											</div>
 
 											<div className="md:col-span-2">
-												<label for="country">
+												<label htmlFor="country">
 													Country / region
 												</label>
 												<div className="h-10 bg-gray-50 flex border border-gray-200 rounded items-center mt-1">
@@ -105,13 +105,13 @@ const EditProfile = () => {
 														placeholder="Country"
 														type="text"
 														className="px-4 appearance-none outline-none text-gray-800 w-full bg-transparent"
-														value=""
+														// value=""
 													/>
 												</div>
 											</div>
 
 											<div className="md:col-span-2">
-												<label for="state">
+												<label htmlFor="state">
 													State / province
 												</label>
 												<div className="h-10 bg-gray-50 flex border border-gray-200 rounded items-center mt-1">
@@ -120,13 +120,13 @@ const EditProfile = () => {
 														id="state"
 														placeholder="State"
 														className="px-4 appearance-none outline-none text-gray-800 w-full bg-transparent"
-														value=""
+														// value=""
 													/>
 												</div>
 											</div>
 
 											<div className="md:col-span-1">
-												<label for="zipcode">
+												<label htmlFor="zipcode">
 													Zipcode
 												</label>
 												<input
@@ -135,7 +135,7 @@ const EditProfile = () => {
 													id="zipcode"
 													className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
 													placeholder=""
-													value=""
+													// value=""
 												/>
 											</div>
 
@@ -147,7 +147,7 @@ const EditProfile = () => {
 													name="bio"
 													className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
 													placeholder=""
-													value=""
+													// value=""
 												/>
 											</div>
 
