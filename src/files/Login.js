@@ -1,28 +1,93 @@
-import React from "react";
-import "@/components/Login.css";
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+import toast, { Toaster } from "react-hot-toast";
+
+import authService from "@/appwrite/auth";
+import useAuth from "@/context/auth/useAuth";
+
+import "@/components/Auth.css";
 
 const Login = () => {
+	const router = useRouter();
+	const { setAuthStatus } = useAuth();
+
+	const [credentials, setCredentials] = useState({
+		email: "",
+		password: "",
+	});
+
+	const [formStatus, setFormStatus] = useState("");
+
+	useEffect(() => {
+		setCredentials({
+			email: "",
+			password: "",
+		});
+	}, [formStatus]);
+
+	const onChange = (event) => {
+		setCredentials({
+			...credentials,
+			[event.target.name]: event.target.value,
+		});
+	};
+
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+		try {
+			let sessionPromise = authService.login(credentials);
+
+			toast.promise(sessionPromise, {
+				loading: "Authenticating...",
+				success: "Successfully Authenticated",
+				error: "Authentication Error",
+			});
+
+			await sessionPromise;
+			setCredentials({
+				email: "",
+				password: "",
+			});
+
+			const userDataPromise = authService.getCurrentUser();
+			toast.promise(userDataPromise, {
+				loading: "Fetching user data",
+				success: "Rerouting",
+				error: "Error fetching user data",
+			});
+			await userDataPromise;
+			setFormStatus("");
+			setAuthStatus(true);
+			router.push("/home");
+		} catch (error) {
+			setFormStatus(error.message);
+		}
+	};
+
 	return (
 		<>
+			<Toaster />
 			<div className="relative min-h-screen flex ">
 				<div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0 bg-white">
 					<div
 						className="sm:w-1/2 xl:w-2/5 h-full hidden md:flex flex-auto items-center justify-start p-10 overflow-hidden bg-purple-900 text-white bg-no-repeat bg-cover relative"
 						style={{
-							backgroundImage:
-								"url(https://images.unsplash.com/photo-1579451861283-a2239070aaa9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80)",
+							backgroundImage: "url(/images/auth.jpg)",
 						}}
 					>
 						<div className="absolute bg-gradient-to-b from-blue-900 to-gray-900 opacity-75 inset-0 z-0"></div>
 						<div className="absolute border-l-[25rem] border-l-transparent border-t-[60rem] border-t-white border-solid min-h-screen right-0 w-16"></div>
 
-						<a className="flex absolute top-5 text-center text-gray-100 focus:outline-none">
+						<span className="flex absolute top-5 text-center text-gray-100 focus:outline-none">
 							<img
 								src="/images/sl10.png"
 								alt=""
 								className="object-cover mx-auto w-40"
 							/>
-						</a>
+						</span>
 
 						<img
 							src="/images/3d.png"
@@ -45,126 +110,77 @@ const Login = () => {
 					<div className="md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full  xl:w-2/5 p-8  md:p-10 lg:p-14 sm:rounded-lg md:rounded-none bg-white ">
 						<div className="max-w-md w-full space-y-8">
 							<div className="text-center">
-								{/* <?php
-                    if (isset($_GET['newuser'])) {
-                        ?>
-                        <div className="bg-green-100 rounded-md p-3 flex">
-                            <svg className="stroke-2 stroke-current text-green-600 h-6 w-6 mr-2 flex-shrink-0"
-                                viewBox="0 0 24 24" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M0 0h24v24H0z" stroke="none" />
-                                <circle cx="12" cy="12" r="9" />
-                                <path d="M9 12l2 2 4-4" />
-                            </svg>
-
-                            <div className="text-green-700">
-                                <div className="font-bold text-md">Account created succesfully,please log in</div>
-                            </div>
-                        </div>
-                        <?php
-                    }
-                    ?> */}
-
 								<h2 className="mt-6 text-3xl font-bold text-gray-900">
 									Welcome Back!
 								</h2>
 								<p className="mt-2 text-sm text-gray-500">
-									Please sign in to your account
+									Please sign in your account
 								</p>
 							</div>
 
 							<form
 								className="mt-8 space-y-6"
-								action="assets/php/actions.php?login"
-								method="POST"
+								onSubmit={handleSubmit}
 							>
-								<input
-									type="hidden"
-									name="remember"
-									value="true"
-								/>
+								{formStatus && (
+									<p className="text-[#b42318] border-[#b42318]">
+										{formStatus}
+									</p>
+								)}
 								<div className="relative">
 									<label className="ml-3 text-sm font-bold text-gray-700 tracking-wide">
-										Username/Email
+										Email
 									</label>
 									<input
 										className=" w-full text-base px-4 py-2 border-b border-gray-300 focus:outline-none rounded-2xl focus:border-indigo-500"
-										type="text"
-										placeholder="Enter username or email"
-										name="username_email"
-										// value="<?= showFormData('username_email') ?>"
+										type="email"
+										name="email"
+										value={credentials.email}
+										onChange={onChange}
+										required
+										aria-describedby="email"
+										placeholder="Enter email"
 									/>
-									{/* <?= showError('username_email') ?> */}
 								</div>
+
 								<div className="mt-8 content-center relative">
 									<label className="ml-3 text-sm font-bold text-gray-700 tracking-wide">
 										Password
 									</label>
 									<input
-										id="pass1"
 										className="w-full content-center text-base px-4 py-2 border-b rounded-2xl border-gray-300 focus:outline-none focus:border-indigo-500"
 										type="password"
-										placeholder="Enter your password"
 										name="password"
+										value={credentials.password}
+										onChange={onChange}
+										required
+										placeholder="Enter your password"
 									/>
-									{/* <?= showError('password') ?>
-                        <?= showError('checkuser') ?> */}
-									<span
-										className="absolute  right-5 -translate-y-1/2  top-[48px]"
-										// onClick=" hidepassword()"
-									>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="16"
-											height="16"
-											fill="gray"
-											id="hide1"
-											className="hidden bi bi-eye "
-											viewBox="0 0 16 16"
-										>
-											<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
-											<path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
-										</svg>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="16"
-											height="16"
-											fill="currentColor"
-											id="hide2"
-											className=" bi bi-eye-slash "
-											viewBox="0 0 16 16"
-										>
-											<path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z" />
-											<path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z" />
-											<path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z" />
-										</svg>
-									</span>
 								</div>
-								<div className="flex items-center justify-between"></div>
+
 								<div>
 									<button
-										type="submit"
-										name="submit"
 										className="w-full flex justify-center bg-gradient-to-r from-indigo-500 to-blue-600  hover:bg-gradient-to-l hover:from-blue-500 hover:to-indigo-600 text-gray-100 p-4  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500"
+										type="submit"
 									>
 										Sign in
 									</button>
 								</div>
+
 								<p className="flex flex-col items-center justify-center mt-10 text-center text-md text-gray-500">
-									<span>Don't have an account?</span>
-									<a
-										href="?signup"
+									<span>Don&apos;t have an account? </span>
+									<Link
+										href="/signup"
 										className="text-indigo-400 hover:text-blue-500 no-underline hover:underline cursor-pointer transition ease-in duration-300"
 									>
 										Sign up
-									</a>
+									</Link>
 								</p>
 							</form>
 						</div>
 					</div>
 				</div>
 			</div>
-
-			{/* <script src="assets/js/login.js"></script> */}
 		</>
 	);
 };
