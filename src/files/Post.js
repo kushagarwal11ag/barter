@@ -1,22 +1,23 @@
 import React from "react";
 import Link from "next/link";
 
-const Explore = ({
-	productLiked = false,
+const Post = ({
+	liked = false,
 	productCategory = "undefined",
 	productName = "null",
 	traderName = "null",
 	traderPhone = "null",
 }) => {
+
 	return (
 		<>
 			<section className="bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
 				<Link href="?p=80">
 					<div className="bg-white shadow-xl rounded-lg overflow-hidden">
-						<div className="bg-cover bg-center h-56 p-4 bg-[url(/images/profile/camera-woman.jpg)]">
+						<div className="bg-cover bg-center h-56 p-4 bg-[url(/images/posts/watch.jpg)]">
 							<div className="flex justify-end">
 								<span>
-									{productLiked ? (
+									{liked ? (
 										<img
 											src="/images/fill-heart.png"
 											alt=""
@@ -44,7 +45,7 @@ const Explore = ({
 								trader
 							</div>
 							<div className="flex items-center pt-2">
-								<div className="bg-cover bg-center w-10 h-10 rounded-full mr-3 bg-[url(/images/profile/camera-woman.jpg)]"></div>
+								<div className="bg-cover bg-center w-10 h-10 rounded-full mr-3 bg-[url(/images/defaultProfile.svg)]"></div>
 								<div>
 									<p className="font-bold text-gray-900">
 										{traderName}
@@ -62,4 +63,4 @@ const Explore = ({
 	);
 };
 
-export default Explore;
+export default Post;

@@ -1,16 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import authService from "@/appwrite/auth";
+import useUser from "@/context/users/useUser";
 
 const EditProfile = () => {
+	const { user, editUser } = useUser();
+	const [credentials, setCredentials] = useState({
+		userName: "",
+		userEmail: "",
+		userPhone: "",
+	});
+	const [formStatus, setFormStatus] = useState("");
+
+	useEffect(() => {
+		setCredentials({
+			userName: user.userName,
+			userEmail: user.userEmail,
+			userPhone: user.userPhone,
+		});
+	}, [user]);
+
+	const onChange = (event) => {
+		setCredentials({
+			...credentials,
+			[event.target.name]: event.target.value,
+		});
+	};
+
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+		try {
+			/*
+			 * update user name, email and phone number
+			 */
+			let sessionPromise = authService.createUserAccount(credentials);
+
+			toast.promise(sessionPromise, {
+				loading: "Authenticating...",
+				success: "Successfully Authenticated",
+				error: "Authentication Error",
+			});
+
+			await sessionPromise;
+			setCredentials({
+				name: "",
+				email: "",
+				password: "",
+			});
+
+			const userDataPromise = authService.getCurrentUser();
+			toast.promise(userDataPromise, {
+				loading: "Fetching user data",
+				success: "Rerouting",
+				error: "Error fetching user data",
+			});
+			await userDataPromise;
+			setFormStatus("");
+			setAuthStatus(true);
+			router.push("/home");
+		} catch (error) {
+			setFormStatus(error.message);
+		}
+	};
+
 	return (
 		<>
+			<Toaster />
 			<div className=" flex items-center justify-center ">
 				<div className="container max-w-screen-lg mx-auto pb-12 md:pb-0">
 					<div>
-						<form
-							action=""
-							method="post"
-							encType="multipart/form-data"
-						>
+						<form onSubmit={handleSubmit}>
 							<div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
 								<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
 									<div className="text-gray-600">
@@ -23,7 +82,9 @@ const EditProfile = () => {
 											alt=""
 											className="w-52 h-52 mt-10 mb-7 rounded-full object-cover"
 										/>
-										<label className="">Upload new photo</label>
+										<label className="">
+											Upload new photo
+										</label>
 										<input
 											type="file"
 											name="profile_pic"
@@ -33,127 +94,64 @@ const EditProfile = () => {
 									</div>
 
 									<div className="lg:col-span-2">
+										{formStatus && (
+											<p className="text-[#b42318] border-[#b42318]">
+												{formStatus}
+											</p>
+										)}
 										<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
 											<div className="md:col-span-5">
-												<label>Name</label>
+												<label className="text-sm text-gray-600 font-bold">
+													Name
+												</label>
 												<input
 													type="text"
-													name="name"
-													className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													// value=""
+													name="userName"
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													value={credentials.userName}
+													onChange={onChange}
 													placeholder="Name"
 												/>
 											</div>
 
 											<div className="md:col-span-3">
-												<label>Email</label>
+												<label className="text-sm text-gray-600 font-bold">
+													Email
+												</label>
 												<input
 													type="email"
-													name="email"
-													className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													// value=""
+													name="userEmail"
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													value={
+														credentials.userEmail
+													}
 													placeholder=""
 													disabled
 												/>
 											</div>
 
 											<div className="md:col-span-2">
-												<label>Contact no.</label>
+												<label className="text-sm text-gray-600 font-bold">
+													Contact Number
+												</label>
 												<input
 													type="number"
-													name="contact"
-													className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													// value=""
+													name="userPhone"
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													value={
+														credentials.userPhone
+													}
+													onChange={onChange}
 													placeholder=""
-												/>
-											</div>
-
-											<div className="md:col-span-3">
-												<label htmlFor="address">
-													Address / Street
-												</label>
-												<input
-													type="text"
-													name="address"
-													id="address"
-													className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													// value=""
-													placeholder=""
-												/>
-											</div>
-
-											<div className="md:col-span-2">
-												<label htmlFor="city">City</label>
-												<input
-													type="text"
-													name="city"
-													id="city"
-													className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													// value=""
-													placeholder=""
-												/>
-											</div>
-
-											<div className="md:col-span-2">
-												<label htmlFor="country">
-													Country / region
-												</label>
-												<div className="h-10 bg-gray-50 flex border border-gray-200 rounded items-center mt-1">
-													<input
-														name="country"
-														id="country"
-														placeholder="Country"
-														type="text"
-														className="px-4 appearance-none outline-none text-gray-800 w-full bg-transparent"
-														// value=""
-													/>
-												</div>
-											</div>
-
-											<div className="md:col-span-2">
-												<label htmlFor="state">
-													State / province
-												</label>
-												<div className="h-10 bg-gray-50 flex border border-gray-200 rounded items-center mt-1">
-													<input
-														name="state"
-														id="state"
-														placeholder="State"
-														className="px-4 appearance-none outline-none text-gray-800 w-full bg-transparent"
-														// value=""
-													/>
-												</div>
-											</div>
-
-											<div className="md:col-span-1">
-												<label htmlFor="zipcode">
-													Zipcode
-												</label>
-												<input
-													type="text"
-													name="zipcode"
-													id="zipcode"
-													className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													placeholder=""
-													// value=""
-												/>
-											</div>
-
-											<div className="md:col-span-5">
-												<label>Bio</label>
-
-												<input
-													type="text"
-													name="bio"
-													className="transition-all flex items-center h-10 border mt-1 rounded px-4 w-full bg-gray-50"
-													placeholder=""
-													// value=""
 												/>
 											</div>
 
 											<div className="md:col-span-5 ">
 												<div className="inline-flex items-end">
-													<button className="bg-[#002D74] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+													<button
+														className="bg-[#002D74] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+														type="submit"
+													>
 														Update profile
 													</button>
 												</div>
