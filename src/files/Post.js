@@ -1,20 +1,27 @@
-import React from "react";
+"use client";
+import React, {useEffect, useState} from "react";
 import Link from "next/link";
 
+import postService from "@/appwrite/post";
+
 const Post = ({
-	liked = false,
+	// liked = false,
+	imageId,
 	productCategory = "undefined",
 	productName = "null",
 	traderName = "null",
 	traderPhone = "null",
 }) => {
-
+	useEffect(() => {
+		setImageUrl(postService.getFilePreview(imageId).href);
+	}, [])
+	const [imageUrl, setImageUrl] = useState("")
 	return (
 		<>
 			<section className="bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
-				<Link href="?p=80">
+				<Link href="#">
 					<div className="bg-white shadow-xl rounded-lg overflow-hidden">
-						<div className="bg-cover bg-center h-56 p-4 bg-[url(/images/posts/watch.jpg)]">
+						{/* <div className="bg-cover bg-center h-56 p-4 bg-[url(/images/posts/watch.jpg)]">
 							<div className="flex justify-end">
 								<span>
 									{liked ? (
@@ -32,7 +39,8 @@ const Post = ({
 									)}
 								</span>
 							</div>
-						</div>
+						</div> */}
+						<img src={imageUrl} alt="Watch image" />
 						<div className="p-4">
 							<p className="text-gray-700">{productCategory}</p>
 							<span className="uppercase tracking-wide text-sm font-bold text-gray-700">

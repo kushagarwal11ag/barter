@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import authService from "@/appwrite/auth";
 import useUser from "@/context/users/useUser";
 
+import toast, { Toaster } from "react-hot-toast";
+
 const EditProfile = () => {
 	const { user, editUser } = useUser();
 	const [credentials, setCredentials] = useState({

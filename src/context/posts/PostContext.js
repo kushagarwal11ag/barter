@@ -5,15 +5,17 @@ export const PostContext = createContext({
 		{
 			id: 1,
 			liked: false,
-			pName: "Books",
-			pCategory: "Literature",
+			imageId: "65d50926238160d98cee",
+			pName: "Bag",
+			pCategory: "Accessories",
 			tName: "John Jacobs",
 			tPhone: "+91 1234567890",
 		},
 		{
 			id: 2,
 			liked: true,
-			pName: "Camera",
+			imageId: "65d50926238160d98cee",
+			pName: "Headphones",
 			pCategory: "Electronics",
 			tName: "Lost from Light",
 			tPhone: "+91 1234567890",
@@ -21,6 +23,7 @@ export const PostContext = createContext({
 		{
 			id: 3,
 			liked: false,
+			imageId: "65d4e7b799af9265bb61",
 			pName: "Watch",
 			pCategory: "Accessories",
 			tName: "Changing Star",
@@ -29,7 +32,8 @@ export const PostContext = createContext({
 		{
 			id: 4,
 			liked: true,
-			pName: "Bag",
+			imageId: "65d50e442e82e82cde5f",
+			pName: "Shoes",
 			pCategory: "Accessories",
 			tName: "Prince of Nothing",
 			tPhone: "+91 1234567890",
@@ -37,6 +41,7 @@ export const PostContext = createContext({
 		{
 			id: 5,
 			liked: true,
+			imageId: "65d50d171e3ef9b0a326",
 			pName: "Lipstick",
 			pCategory: "Makeup",
 			tName: "Soul Reaper",
@@ -52,7 +57,17 @@ export const PostProvider = ({ children }) => {
 	const [posts, setPosts] = useState(defaultPosts);
 
 	const addPost = (post) => {
-		setPosts(post);
+		setPosts([
+			{
+				id: Date.now(),
+				liked: false,
+				imageId: "65d4e7b799af9265bb61",
+				tName: "Kushal",
+				tPhone: "+919191919191",
+				...post,
+			},
+			...posts,
+		]);
 	};
 
 	// const deletePost = (postId) => {
@@ -65,6 +80,5 @@ export const PostProvider = ({ children }) => {
 		</PostContext.Provider>
 	);
 };
-
 
 export default PostContext;

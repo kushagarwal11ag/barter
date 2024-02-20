@@ -1,9 +1,10 @@
 import conf from "@/conf/config";
 import { Client, Databases, Storage, Query, ID } from "appwrite";
 
-export class Service {
+export class PostService {
 	client = new Client();
 	databases;
+    postImage;
 
 	constructor() {
 		this.client.setEndpoint(conf.endpoint).setProject(conf.projectId);
@@ -30,37 +31,44 @@ export class Service {
     //     }
     // }
 
-    async getPost(slug){
-        try {
-            return await this.databases.getDocument(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                slug
+    // async getPost(slug){
+    //     try {
+    //         return await this.databases.getDocument(
+    //             conf.appwriteDatabaseId,
+    //             conf.appwriteCollectionId,
+    //             slug
             
-            )
-        } catch (error) {
-            console.log("Appwrite serive :: getPost :: error", error);
-            return false
-        }
-    }
+    //         )
+    //     } catch (error) {
+    //         console.log("Appwrite serive :: getPost :: error", error);
+    //         return false
+    //     }
+    // }
 
-    async getPosts(queries = [Query.equal("userId", "active")]){
-        try {
-            return await this.databases.listDocuments(
-                conf.appwriteDatabaseId,
-                conf.appwriteCollectionId,
-                queries,
+    // async getPosts(queries = [Query.equal("userId", "active")]){
+    //     try {
+    //         return await this.databases.listDocuments(
+    //             conf.appwriteDatabaseId,
+    //             conf.appwriteCollectionId,
+    //             queries,
                 
 
-            )
-        } catch (error) {
-            console.log("Appwrite serive :: getPosts :: error", error);
-            return false
-        }
+    //         )
+    //     } catch (error) {
+    //         console.log("Appwrite serive :: getPosts :: error", error);
+    //         return false
+    //     }
+    // }
+
+    getFilePreview(fileId){
+        return this.bucket.getFilePreview(
+            conf.productImagesId,
+            fileId
+        )
     }
 
 }
 
-const service = new Service();
+const postService = new PostService();
 
-export default service;
+export default postService;

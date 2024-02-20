@@ -8,7 +8,7 @@ import usePost from "@/context/posts/usePost";
 import Navbar from "@/files/Navbar";
 
 const HomePage = () => {
-	const { posts, addPost } = usePost();
+	const { posts } = usePost();
 
 	return (
 		<>
@@ -20,6 +20,7 @@ const HomePage = () => {
 							key={post.id}
 							id={post.id}
 							liked={post.liked}
+							imageId={post.imageId}
 							productName={post.pName}
 							productCategory={post.pCategory}
 							traderName={post.tName}
