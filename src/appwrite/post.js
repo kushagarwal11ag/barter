@@ -12,24 +12,24 @@ export class PostService {
 		this.bucket = new Storage(this.client);
 	}
 
-	// async createPost({title, slug, content, featuredImage, status, userId}){
-	//     try {
-	//         return await this.databases.createDocument(
-	//             conf.appwriteDatabaseId,
-	//             conf.appwriteCollectionId,
-	//             slug,
-	//             {
-	//                 title,
-	//                 content,
-	//                 featuredImage,
-	//                 status,
-	//                 userId,
-	//             }
-	//         )
-	//     } catch (error) {
-	//         console.log("Appwrite serive :: createPost :: error", error);
-	//     }
-	// }
+	async createPost({ id, imageID, pName, pCategory, tName, tPhone }) {
+		try {
+			return await this.databases.createDocument(
+				conf.databaseId,
+				conf.postCollectionId,
+				id,
+				{
+					imageID,
+					pName,
+					pCategory,
+					tName,
+					tPhone,
+				}
+			);
+		} catch (error) {
+			console.log("Appwrite service :: createPost :: error", error);
+		}
+	}
 
 	// async getPost(slug){
 	//     try {
@@ -40,7 +40,7 @@ export class PostService {
 
 	//         )
 	//     } catch (error) {
-	//         console.log("Appwrite serive :: getPost :: error", error);
+	//         console.log("Appwrite service :: getPost :: error", error);
 	//         return false
 	//     }
 	// }
@@ -52,7 +52,7 @@ export class PostService {
 				conf.postCollectionId
 			);
 		} catch (error) {
-			console.log("Appwrite serive :: getPosts :: error", error);
+			console.log("Appwrite service :: getPosts :: error", error);
 			return false;
 		}
 	}
@@ -63,7 +63,7 @@ export class PostService {
 			await this.bucket.createFile(conf.productImagesId, id, file);
 			return id;
 		} catch (error) {
-			console.log("Appwrite serive :: uploadFile :: error", error);
+			console.log("Appwrite service :: uploadFile :: error", error);
 			return false;
 		}
 	}

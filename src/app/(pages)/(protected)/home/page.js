@@ -8,13 +8,13 @@ import usePost from "@/context/posts/usePost";
 import postService from "@/appwrite/post";
 
 const HomePage = () => {
-	// const { posts } = usePost();
-	const [posts, setPosts] = useState([]);
+	const { posts, addInitialPosts, addPost } = usePost();
+	const [defaultPosts, setDefaultPosts] = useState([]);
 	postService.getPosts().then((posts) => {
 		if (posts) {
-			setPosts(posts.documents);
+			addInitialPosts(posts.documents);
 		}
-	});
+	});	
 
 	return (
 		<>
@@ -23,8 +23,8 @@ const HomePage = () => {
 				{posts.map((post) => {
 					return (
 						<Post
-							key={post.id}
-							id={post.id}
+							key={post.$id}
+							id={post.$id}
 							// liked={post.liked}
 							imageId={post.imageId}
 							productName={post.pName}

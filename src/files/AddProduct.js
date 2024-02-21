@@ -9,11 +9,12 @@ const AddProduct = () => {
 	const router = useRouter();
 	const { posts, addPost } = usePost();
 	const [credentials, setCredentials] = useState({
+		id: "",
 		imageId: "",
 		pName: "",
-		pCategory: "Accessories",
-		// tName: "",
-		// tPhone: "",
+		pCategory: "",
+		tName: "Kushal",
+		tPhone: "+91 1234567890",
 	});
 	const [postFile, setPostFile] = useState(null);
 	const [imageURL, setImageURL] = useState("/images/uploadFile.svg");
@@ -34,12 +35,15 @@ const AddProduct = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const postImageId = await postService.uploadFile(postFile);
+		const id = Date.now();
 		const newCredentials = {
 			...credentials,
+			id: id,
 			imageId: postImageId,
 		};
 		setCredentials(newCredentials);
 		addPost(newCredentials);
+		postService.createPost(newCredentials);
 		router.push("/home");
 	};
 	
