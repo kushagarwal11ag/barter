@@ -19,7 +19,7 @@ export const PostProvider = ({ children }) => {
 	};
 
 	const deletePost = (postId) => {
-		setPosts(posts.filter((post) => post.id !== postId));
+		setPosts(posts.filter((post) => post.$id !== postId));
 	};
 
 	return (

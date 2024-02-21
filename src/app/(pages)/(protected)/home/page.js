@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import Navbar from "@/files/Navbar";
 import Post from "@/files/Post";
@@ -9,12 +9,13 @@ import postService from "@/appwrite/post";
 
 const HomePage = () => {
 	const { posts, addInitialPosts, addPost } = usePost();
-	const [defaultPosts, setDefaultPosts] = useState([]);
-	postService.getPosts().then((posts) => {
-		if (posts) {
-			addInitialPosts(posts.documents);
-		}
-	});	
+	useEffect(() => {
+		postService.getPosts().then((posts) => {
+			if (posts) {
+				addInitialPosts(posts.documents);
+			}
+		});
+	}, []);
 
 	return (
 		<>

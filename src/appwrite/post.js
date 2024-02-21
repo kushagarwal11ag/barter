@@ -12,14 +12,14 @@ export class PostService {
 		this.bucket = new Storage(this.client);
 	}
 
-	async createPost({ id, imageID, pName, pCategory, tName, tPhone }) {
+	async createPost({ $id, imageId, pName, pCategory, tName, tPhone }) {
 		try {
 			return await this.databases.createDocument(
 				conf.databaseId,
 				conf.postCollectionId,
-				id,
+				$id,
 				{
-					imageID,
+					imageId,
 					pName,
 					pCategory,
 					tName,
@@ -57,11 +57,10 @@ export class PostService {
 		}
 	}
 
-	async uploadFile(file) {
+	async uploadFile(id, file) {
 		try {
-			const id = Date.now();
-			await this.bucket.createFile(conf.productImagesId, id, file);
-			return id;
+			const id = Date.now().toString();
+			return await this.bucket.createFile(conf.productImagesId, id, file);
 		} catch (error) {
 			console.log("Appwrite service :: uploadFile :: error", error);
 			return false;

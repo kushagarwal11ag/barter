@@ -5,14 +5,12 @@ import usePost from "@/context/posts/usePost";
 
 import postService from "@/appwrite/post";
 
-const AddProduct = () => {
+const AddPost = () => {
 	const router = useRouter();
 	const { posts, addPost } = usePost();
 	const [credentials, setCredentials] = useState({
-		id: "",
-		imageId: "",
 		pName: "",
-		pCategory: "",
+		pCategory: "Accessories",
 		tName: "Kushal",
 		tPhone: "+91 1234567890",
 	});
@@ -34,11 +32,12 @@ const AddProduct = () => {
 	
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const postImageId = await postService.uploadFile(postFile);
-		const id = Date.now();
+		const postImageId = Date.now().toString();
+		await postService.uploadFile(postImageId, postFile);
+		const postId = Date.now().toString();
 		const newCredentials = {
 			...credentials,
-			id: id,
+			$id: postId,
 			imageId: postImageId,
 		};
 		setCredentials(newCredentials);
@@ -149,4 +148,4 @@ const AddProduct = () => {
 	);
 };
 
-export default AddProduct;
+export default AddPost;

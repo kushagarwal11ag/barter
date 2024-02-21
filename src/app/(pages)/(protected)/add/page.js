@@ -2,7 +2,7 @@
 import React from "react";
 
 import Navbar from "@/files/Navbar";
-import AddProduct from "@/files/AddProduct";
+import AddPost from "@/files/AddPost";
 
 import usePost from "@/context/posts/usePost";
 
@@ -10,7 +10,7 @@ const AddProductPage = () => {
 	return (
 		<>
 			<Navbar page="addProduct" />
-			<AddProduct />
+			<AddPost />
 		</>
 	);
 };
