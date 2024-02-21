@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import Post from "@/files/Post";
 
@@ -9,6 +9,10 @@ import Navbar from "@/files/Navbar";
 
 const HomePage = () => {
 	const { posts } = usePost();
+	useEffect(() => {
+	  console.log(posts)
+	}, [posts])
+	
 
 	return (
 		<>

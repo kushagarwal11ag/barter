@@ -60,7 +60,22 @@ export class PostService {
     //     }
     // }
 
-    getFilePreview(fileId){
+    async uploadFile(file){
+        try {
+            const id = Date.now();
+            await this.bucket.createFile(
+                conf.productImagesId,
+                id,
+                file
+            )
+            return id;
+        } catch (error) {
+            console.log("Appwrite serive :: uploadFile :: error", error);
+            return false
+        }
+    }
+
+    getFile(fileId){
         return this.bucket.getFilePreview(
             conf.productImagesId,
             fileId

@@ -5,7 +5,7 @@ export const PostContext = createContext({
 		{
 			id: 1,
 			liked: false,
-			imageId: "65d50926238160d98cee",
+			imageId: "65d59a33e7993002319b",
 			pName: "Bag",
 			pCategory: "Accessories",
 			tName: "John Jacobs",
@@ -61,7 +61,6 @@ export const PostProvider = ({ children }) => {
 			{
 				id: Date.now(),
 				liked: false,
-				imageId: "65d4e7b799af9265bb61",
 				tName: "Kushal",
 				tPhone: "+919191919191",
 				...post,
