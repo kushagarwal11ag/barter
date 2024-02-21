@@ -81,17 +81,18 @@ const Login = () => {
 						<div className="absolute bg-gradient-to-b from-blue-900 to-gray-900 opacity-75 inset-0 z-0"></div>
 						<div className="absolute border-l-[25rem] border-l-transparent border-t-[60rem] border-t-white border-solid min-h-screen right-0 w-16"></div>
 
-						<span className="flex absolute top-5 text-center text-gray-100 focus:outline-none">
+						<div className="flex absolute top-5 text-center text-gray-100 focus:outline-none">
 							<img
-								src="/images/sl10.png"
-								alt=""
-								className="object-cover mx-auto w-40"
+								src="logo.png"
+								alt="Swap Ease logo"
+								className="h-8 w-auto"
 							/>
-						</span>
+						</div>
 
 						<img
 							src="/images/3d.png"
 							className="h-96 absolute right-5 mr-5"
+							alt="Main image"
 						/>
 
 						<ul className="circles">

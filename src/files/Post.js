@@ -25,6 +25,7 @@ const Post = ({
 							src={imageUrl}
 							alt="Watch image"
 							className="h-full w-full object-cover"
+							loading="auto"
 						/>
 					</div>
 					<div className="p-4">

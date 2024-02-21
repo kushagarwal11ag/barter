@@ -1,102 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import Navbar from "./Navbar";
+
 export default function Welcome() {
 	return (
 		<>
-			<nav className="bg-gray-100 sm:fixed w-full z-10 sm:top-0">
-				<div className="max-w-6xl mx-auto">
-					<div className="flex justify-between">
-						<div className="flex space-x-4 ">
-							<Link
-								href="/"
-								className="flex items-center py-1 px-1"
-							>
-								<Image
-									width={200}
-									height={200}
-									src="/images/sl10.png"
-									alt="SwapEase"
-								/>
-							</Link>
-						</div>
+			<Navbar page="welcome" />
 
-						<div className=" hidden md:flex items-center space-x-1">
-							<Link
-								href="/login"
-								className="py-2 px-3 hover:text-[#002D74]"
-							>
-								Login
-							</Link>
-							<Link
-								href="/signup"
-								className="py-2 px-3 hover:bg-slate-500 bg-[#002D74] text-white rounded-full "
-							>
-								Join Now
-							</Link>
-						</div>
-
-						{/* mobile button */}
-						<div
-							className="md:hidden flex items-center mr-2"
-							id="btn"
-						>
-							<button
-								type="button"
-								className="mobile-menu-button hover:bg-blue-300"
-							>
-								<svg
-									className="h-8 w-8 w-6 h-6"
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									strokeWidth="1.5"
-									stroke="currentColor"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-									/>
-								</svg>
-								<svg
-									className="hidden h-8 w-8 w-6 h-6"
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									strokeWidth="1.5"
-									stroke="currentColor"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M6 18L18 6M6 6l12 12"
-									/>
-								</svg>
-							</button>
-						</div>
-					</div>
-				</div>
-				{/* mobile menu */}
-				<div className="hidden " id="mobile-menu">
-					<Link
-						className=" block py-4 px-2 hover:bg-slate-400 text-center border "
-						href="/login"
-					>
-						Login
-					</Link>
-					<Link
-						className=" block py-4 px-2 hover:bg-slate-400 text-center border bg-[#002D74] text-white"
-						href="/signup"
-					>
-						SignUp
-					</Link>
-				</div>
-			</nav>
-
-			{/* Hero Section */}
-
-			<section className="sm:my-10 bg-gray-900">
+			<section className="bg-gray-900">
 				<div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
 					<div className="mr-auto place-self-center lg:col-span-7">
 						<h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl text-white">

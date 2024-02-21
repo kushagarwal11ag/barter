@@ -84,13 +84,13 @@ const Signup = () => {
 						<div className="absolute bg-gradient-to-b from-blue-900 to-gray-900 opacity-75 inset-0 z-0"></div>
 						<div className="absolute border-l-[25rem] border-l-transparent border-t-[60rem] border-t-white border-solid min-h-screen right-0 w-16"></div>
 
-						<span className="flex absolute top-5 text-center text-gray-100 focus:outline-none">
+						<div className="flex absolute top-5 text-center text-gray-100 focus:outline-none">
 							<img
-								src="/images/sl10.png"
-								alt=""
-								className="object-cover mx-auto w-40"
+								src="logo.png"
+								alt="Swap Ease logo"
+								className="h-8 w-auto"
 							/>
-						</span>
+						</div>
 
 						<img
 							src="/images/3d.png"
@@ -189,7 +189,7 @@ const Signup = () => {
 								<p className="flex flex-col items-center justify-center mt-10 text-center text-md text-gray-500">
 									<span>Already have an account?</span>
 									<Link
-										href="/signup"
+										href="/login"
 										className="text-indigo-400 hover:text-blue-500 no-underline hover:underline cursor-pointer transition ease-in duration-300"
 									>
 										Login

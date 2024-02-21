@@ -1,18 +1,20 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import Navbar from "@/files/Navbar";
 import Post from "@/files/Post";
 
 import usePost from "@/context/posts/usePost";
-
-import Navbar from "@/files/Navbar";
+import postService from "@/appwrite/post";
 
 const HomePage = () => {
-	const { posts } = usePost();
-	useEffect(() => {
-	  console.log(posts)
-	}, [posts])
-	
+	// const { posts } = usePost();
+	const [posts, setPosts] = useState([]);
+	postService.getPosts().then((posts) => {
+		if (posts) {
+			setPosts(posts.documents);
+		}
+	});
 
 	return (
 		<>
@@ -23,7 +25,7 @@ const HomePage = () => {
 						<Post
 							key={post.id}
 							id={post.id}
-							liked={post.liked}
+							// liked={post.liked}
 							imageId={post.imageId}
 							productName={post.pName}
 							productCategory={post.pCategory}
