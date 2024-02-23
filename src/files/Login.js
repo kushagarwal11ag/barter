@@ -7,12 +7,14 @@ import toast, { Toaster } from "react-hot-toast";
 
 import authService from "@/appwrite/auth";
 import useAuth from "@/context/auth/useAuth";
+import useUser from "@/context/users/useUser";
 
 import "@/components/Auth.css";
 
 const Login = () => {
 	const router = useRouter();
 	const { setAuthStatus } = useAuth();
+	const { user, setUser } = useUser();
 
 	const [credentials, setCredentials] = useState({
 		email: "",
@@ -38,27 +40,29 @@ const Login = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			let sessionPromise = authService.login(credentials);
-
-			toast.promise(sessionPromise, {
+			await toast.promise(authService.login(credentials), {
 				loading: "Authenticating...",
 				success: "Successfully Authenticated",
 				error: "Authentication Error",
 			});
 
-			await sessionPromise;
 			setCredentials({
 				email: "",
 				password: "",
 			});
 
-			const userDataPromise = authService.getCurrentUser();
-			toast.promise(userDataPromise, {
+			const userData = await toast.promise(authService.getCurrentUser(), {
 				loading: "Fetching user data",
 				success: "Rerouting",
 				error: "Error fetching user data",
 			});
-			await userDataPromise;
+			setUser({
+				$id: userData.$id || "",
+				// profileImageId: null,
+				userName: userData.name || "",
+				userEmail: userData.email || "",
+			});
+
 			setFormStatus("");
 			setAuthStatus(true);
 			router.push("/home");

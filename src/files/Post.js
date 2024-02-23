@@ -10,7 +10,6 @@ const Post = ({
 	productCategory = "undefined",
 	productName = "null",
 	traderName = "null",
-	traderPhone = "null",
 }) => {
 	useEffect(() => {
 		setImageUrl(postService.getFile(imageId).href);
@@ -36,9 +35,6 @@ const Post = ({
 					</div>
 
 					<section className="p-2 border-t border-gray-300 bg-gray-100">
-						<p className="text-xs uppercase font-bold text-gray-600 tracking-wide">
-							trader
-						</p>
 						<div className="flex items-center pt-2">
 							<img
 								src="/images/defaultProfile.svg"
@@ -48,9 +44,9 @@ const Post = ({
 								<p className="font-bold text-gray-900">
 									{traderName}
 								</p>
-								<p className="text-sm text-gray-700">
-									{traderPhone}
-								</p>
+								<p className="text-sm font-bold text-gray-700 tracking-wide">
+							Trader
+						</p>
 							</div>
 						</div>
 					</section>

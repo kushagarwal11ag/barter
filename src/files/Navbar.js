@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { Disclosure, Menu, Transition } from "@headlessui/react";
@@ -14,6 +15,7 @@ function classNames(...classes) {
 }
 
 export default function Example({ page = "home" }) {
+	const router = useRouter();
 	const { setAuthStatus } = useAuth();
 
 	return (
@@ -144,7 +146,7 @@ export default function Example({ page = "home" }) {
 												</span>
 												<img
 													className="h-8 w-8 rounded-full"
-													src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+													src="/defaultProfile.svg"
 													alt=""
 												/>
 											</Menu.Button>
@@ -206,8 +208,7 @@ export default function Example({ page = "home" }) {
 												</Menu.Item>
 												<Menu.Item>
 													{({ active }) => (
-														<Link
-															href="/"
+														<button
 															className={classNames(
 																active
 																	? "bg-gray-100"
@@ -222,12 +223,13 @@ export default function Example({ page = "home" }) {
 																			setAuthStatus(
 																				false
 																			);
+																			router.push("/");
 																		}
 																	);
 															}}
 														>
 															Sign out
-														</Link>
+														</button>
 													)}
 												</Menu.Item>
 											</Menu.Items>

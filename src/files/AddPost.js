@@ -29,7 +29,7 @@ const AddPost = () => {
 		setPostFile(file);
 		setImageURL(URL.createObjectURL(file));
 	};
-	
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const postImageId = Date.now().toString();
@@ -40,12 +40,10 @@ const AddPost = () => {
 			$id: postId,
 			imageId: postImageId,
 		};
-		setCredentials(newCredentials);
 		addPost(newCredentials);
 		postService.createPost(newCredentials);
 		router.push("/home");
 	};
-	
 
 	return (
 		<>
@@ -90,6 +88,7 @@ const AddPost = () => {
 													value={credentials.pName}
 													placeholder="Enter product title"
 													onChange={onChange}
+													maxLength={20}
 												/>
 											</div>
 											<div className="md:col-span-5">

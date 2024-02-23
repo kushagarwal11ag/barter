@@ -10,10 +10,10 @@ export class AuthService {
 		this.account = new Account(this.client);
 	}
 
-	async createUserAccount({ email, password, name }) {
+	async createUserAccount(id, { email, password, name }) {
 		try {
 			const userAccount = await this.account.create(
-				ID.unique(),
+				id,
 				email,
 				password,
 				name
@@ -57,14 +57,6 @@ export class AuthService {
 	async updateName(userName) {
 		try {
 			return await this.account.updateName(userName);
-		} catch (error) {
-			throw error;
-		}
-	}
-
-	async updatePhone(phone) {
-		try {
-			return await this.account.updatePhone(phone);
 		} catch (error) {
 			throw error;
 		}

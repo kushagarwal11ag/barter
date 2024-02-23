@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import authService from "@/appwrite/auth";
 import useUser from "@/context/users/useUser";
 
 import toast, { Toaster } from "react-hot-toast";
 
 const EditProfile = () => {
-	const { user, editUser } = useUser();
+	const router = useRouter();
+	const { user, setUser } = useUser();
+	const oldCredentials = {
+		userName: user.userName || "",
+	};
 	const [credentials, setCredentials] = useState({
-		userName: "",
-		userEmail: "",
-		userPhone: "",
+		userName: user.userName || "",
+		userEmail: user.userEmail || "",
 	});
 	const [formStatus, setFormStatus] = useState("");
-
-	useEffect(() => {
-		setCredentials({
-			userName: user.userName,
-			userEmail: user.userEmail,
-			userPhone: user.userPhone,
-		});
-	}, [user]);
 
 	const onChange = (event) => {
 		setCredentials({
@@ -32,34 +29,26 @@ const EditProfile = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			/*
-			 * update user name, email and phone number
-			 */
-			let sessionPromise = authService.createUserAccount(credentials);
-
-			toast.promise(sessionPromise, {
-				loading: "Authenticating...",
-				success: "Successfully Authenticated",
-				error: "Authentication Error",
-			});
-
-			await sessionPromise;
-			setCredentials({
-				name: "",
-				email: "",
-				password: "",
-			});
-
-			const userDataPromise = authService.getCurrentUser();
-			toast.promise(userDataPromise, {
-				loading: "Fetching user data",
-				success: "Rerouting",
-				error: "Error fetching user data",
-			});
-			await userDataPromise;
+			console.log("inside EditProfile: user:: ", user);
+			if (oldCredentials.userName !== credentials.userName) {
+				await toast.promise(
+					authService.updateName(credentials.userName),
+					{
+						loading: "Updating name...",
+						success: "Name updated successfully! Rerouting...",
+						error: "Failed to update name.",
+					}
+				);
+				setUser((prev) => ({
+					...prev,
+					userName: credentials.userName,
+				}));
+				setTimeout(() => router.push("/home"), 2000);
+			} else {
+				setFormStatus("Name not updated! Make some changes first");
+				return;
+			}
 			setFormStatus("");
-			setAuthStatus(true);
-			router.push("/home");
 		} catch (error) {
 			setFormStatus(error.message);
 		}
@@ -73,14 +62,14 @@ const EditProfile = () => {
 					<div>
 						<form onSubmit={handleSubmit}>
 							<div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-								<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+								<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-3">
 									<div className="text-gray-600">
 										<p className="font-medium text-lg">
 											Edit Profile
 										</p>
 										<p>Please fill out all the fields.</p>
 										<img
-											src="/images/profile/bhuvan.jpg"
+											src="/defaultProfile.svg"
 											alt=""
 											className="w-52 h-52 mt-10 mb-7 rounded-full object-cover"
 										/>
@@ -95,7 +84,7 @@ const EditProfile = () => {
 										/>
 									</div>
 
-									<div className="lg:col-span-2">
+									<div className="md:col-span-2">
 										{formStatus && (
 											<p className="text-[#b42318] border-[#b42318]">
 												{formStatus}
@@ -113,38 +102,23 @@ const EditProfile = () => {
 													value={credentials.userName}
 													onChange={onChange}
 													placeholder="Name"
+													maxLength={20}
+													required
 												/>
 											</div>
 
-											<div className="md:col-span-3">
+											<div className="md:col-span-5">
 												<label className="text-sm text-gray-600 font-bold">
 													Email
 												</label>
 												<input
 													type="email"
 													name="userEmail"
-													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
 													value={
 														credentials.userEmail
 													}
-													placeholder=""
 													disabled
-												/>
-											</div>
-
-											<div className="md:col-span-2">
-												<label className="text-sm text-gray-600 font-bold">
-													Contact Number
-												</label>
-												<input
-													type="number"
-													name="userPhone"
-													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													value={
-														credentials.userPhone
-													}
-													onChange={onChange}
-													placeholder=""
 												/>
 											</div>
 

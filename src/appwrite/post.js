@@ -4,7 +4,7 @@ import { Client, Databases, Storage, Query, ID } from "appwrite";
 export class PostService {
 	client = new Client();
 	databases;
-	postImage;
+	bucket;
 
 	constructor() {
 		this.client.setEndpoint(conf.endpoint).setProject(conf.projectId);
@@ -59,7 +59,6 @@ export class PostService {
 
 	async uploadFile(id, file) {
 		try {
-			const id = Date.now().toString();
 			return await this.bucket.createFile(conf.productImagesId, id, file);
 		} catch (error) {
 			console.log("Appwrite service :: uploadFile :: error", error);

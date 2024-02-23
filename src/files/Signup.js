@@ -7,12 +7,14 @@ import toast, { Toaster } from "react-hot-toast";
 
 import authService from "@/appwrite/auth";
 import useAuth from "@/context/auth/useAuth";
+import useUser from "@/context/users/useUser";
 
 import "@/components/Auth.css";
 
 const Signup = () => {
 	const router = useRouter();
 	const { setAuthStatus } = useAuth();
+	const { user, setUser } = useUser();
 
 	const [credentials, setCredentials] = useState({
 		name: "",
@@ -40,28 +42,29 @@ const Signup = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			let sessionPromise = authService.createUserAccount(credentials);
+			const id = Date.now().toString();
+			await toast.promise(
+				authService.createUserAccount(id, credentials),
+				{
+					loading: "Authenticating...",
+					success: "Successfully Authenticated",
+					error: "Authentication Error",
+				}
+			);
 
-			toast.promise(sessionPromise, {
-				loading: "Authenticating...",
-				success: "Successfully Authenticated",
-				error: "Authentication Error",
+			setUser({
+				$id: id || "",
+				// profileImageId: null,
+				userName: credentials.name || "",
+				userEmail: credentials.email || "",
 			});
 
-			await sessionPromise;
 			setCredentials({
 				name: "",
 				email: "",
 				password: "",
 			});
 
-			const userDataPromise = authService.getCurrentUser();
-			toast.promise(userDataPromise, {
-				loading: "Fetching user data",
-				success: "Rerouting",
-				error: "Error fetching user data",
-			});
-			await userDataPromise;
 			setFormStatus("");
 			setAuthStatus(true);
 			router.push("/home");
@@ -143,6 +146,7 @@ const Signup = () => {
 										required
 										aria-describedby="name"
 										placeholder="Enter your name"
+										maxLength={20}
 									/>
 								</div>
 
