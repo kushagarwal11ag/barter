@@ -13,16 +13,18 @@ const LoginPage = () => {
 	const { setUser } = useUser();
 
 	useEffect(() => {
-		if (authStatus)
+		if (authStatus) {
 			authService.logout().then(() => {
 				setAuthStatus(false);
 			});
-		setUser({
-			$id: "",
-			// profileImageId: null,
-			userName: "",
-			userEmail: "",
-		});
+			setUser({
+				$id: "",
+				profileImageId: null,
+				profileUrl: "/defaultProfile.svg",
+				userName: "",
+				userEmail: "",
+			});
+		}
 	}, []);
 
 	return <Login />;

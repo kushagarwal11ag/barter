@@ -6,6 +6,7 @@ import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 
 import authService from "@/appwrite/auth";
+import userService from "@/appwrite/user";
 import useAuth from "@/context/auth/useAuth";
 import useUser from "@/context/users/useUser";
 
@@ -52,9 +53,12 @@ const Signup = () => {
 				}
 			);
 
+			await userService.createUser(id, null);
+
 			setUser({
 				$id: id || "",
-				// profileImageId: null,
+				profileImageId: null,
+				profileUrl: "/defaultProfile.svg",
 				userName: credentials.name || "",
 				userEmail: credentials.email || "",
 			});

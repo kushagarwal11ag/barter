@@ -7,6 +7,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import authService from "@/appwrite/auth";
 import useAuth from "@/context/auth/useAuth";
+import useUser from "@/context/users/useUser";
 
 // const navigation = [{ name: "Home", href: "/", current: true }];
 
@@ -17,6 +18,7 @@ function classNames(...classes) {
 export default function Example({ page = "home" }) {
 	const router = useRouter();
 	const { setAuthStatus } = useAuth();
+	const { user, setUser } = useUser();
 
 	return (
 		<Disclosure as="nav" className="bg-gray-800">
@@ -145,9 +147,9 @@ export default function Example({ page = "home" }) {
 													Open user menu
 												</span>
 												<img
-													className="h-8 w-8 rounded-full"
-													src="/defaultProfile.svg"
-													alt=""
+													className="h-8 w-8 rounded-full object-cover object-center"
+													src={user.profileUrl}
+													alt="User Profile Image"
 												/>
 											</Menu.Button>
 										</div>
@@ -223,7 +225,16 @@ export default function Example({ page = "home" }) {
 																			setAuthStatus(
 																				false
 																			);
-																			router.push("/");
+																			setUser({
+																				$id: "",
+																				profileImageId: null,
+																				profileUrl: "/defaultProfile.svg",
+																				userName: "",
+																				userEmail: "",
+																			})
+																			router.push(
+																				"/"
+																			);
 																		}
 																	);
 															}}

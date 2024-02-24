@@ -32,17 +32,22 @@ const AddPost = () => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const postImageId = Date.now().toString();
-		await postService.uploadFile(postImageId, postFile);
-		const postId = Date.now().toString();
-		const newCredentials = {
-			...credentials,
-			$id: postId,
-			imageId: postImageId,
-		};
-		addPost(newCredentials);
-		postService.createPost(newCredentials);
-		router.push("/home");
+		try {
+			const postImageId = Date.now().toString();
+			await postService.uploadFile(postImageId, postFile);
+			const postId = Date.now().toString();
+			const newCredentials = {
+				...credentials,
+				$id: postId,
+				imageId: postImageId,
+			};
+			addPost(newCredentials);
+			postService.createPost(newCredentials);
+			router.push("/home");
+			setFormStatus("");
+		} catch (error) {
+			setFormStatus(error.message);
+		}
 	};
 
 	return (
@@ -76,6 +81,11 @@ const AddPost = () => {
 									</div>
 
 									<div className="md:col-span-2">
+										{formStatus && (
+											<p className="text-[#b42318] border-[#b42318]">
+												{formStatus}
+											</p>
+										)}
 										<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
 											<div className="md:col-span-5">
 												<label className="text-sm text-gray-600 font-bold">

@@ -10,8 +10,7 @@ import postService from "@/appwrite/post";
 
 const HomePage = () => {
 	const { posts, addInitialPosts, addPost } = usePost();
-	const { user } = useUser();
-	console.log("home: user:: ", user)
+	// const { user } = useUser();
 	useEffect(() => {
 		postService.getPosts().then((posts) => {
 			if (posts) {

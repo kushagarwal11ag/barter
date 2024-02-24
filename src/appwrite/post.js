@@ -28,6 +28,7 @@ export class PostService {
 			);
 		} catch (error) {
 			console.log("Appwrite service :: createPost :: error", error);
+			throw error;
 		}
 	}
 
@@ -53,7 +54,7 @@ export class PostService {
 			);
 		} catch (error) {
 			console.log("Appwrite service :: getPosts :: error", error);
-			return false;
+			throw error;
 		}
 	}
 
@@ -62,7 +63,7 @@ export class PostService {
 			return await this.bucket.createFile(conf.productImagesId, id, file);
 		} catch (error) {
 			console.log("Appwrite service :: uploadFile :: error", error);
-			return false;
+			throw error;
 		}
 	}
 

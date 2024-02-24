@@ -4,19 +4,20 @@ import { useRouter } from "next/navigation";
 
 import authService from "@/appwrite/auth";
 import useUser from "@/context/users/useUser";
+import userService from "@/appwrite/user";
 
 import toast, { Toaster } from "react-hot-toast";
 
 const EditProfile = () => {
 	const router = useRouter();
 	const { user, setUser } = useUser();
-	const oldCredentials = {
-		userName: user.userName || "",
-	};
 	const [credentials, setCredentials] = useState({
+		profileImageId: user.profileImageId || null,
+		profileUrl: user.profileUrl || "/defaultProfile.svg",
 		userName: user.userName || "",
 		userEmail: user.userEmail || "",
 	});
+	const [userFile, setUserFile] = useState(null);
 	const [formStatus, setFormStatus] = useState("");
 
 	const onChange = (event) => {
@@ -26,31 +27,53 @@ const EditProfile = () => {
 		});
 	};
 
+	const handleFileChange = (event) => {
+		const file = event.target.files[0];
+		setUserFile(file);
+		setCredentials((prev) => ({
+			...prev,
+			profileUrl: URL.createObjectURL(file),
+		}));
+	};
+
+	const resetForm = () => {
+		setCredentials({
+			profileImageId: user.profileImageId || null,
+			profileUrl: user.profileUrl || "/defaultProfile.svg",
+			userName: user.userName || "",
+			userEmail: user.userEmail || "",
+		});
+	};
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+		const loadingToast = toast.loading("Updating Profile...");
 		try {
-			console.log("inside EditProfile: user:: ", user);
-			if (oldCredentials.userName !== credentials.userName) {
-				await toast.promise(
-					authService.updateName(credentials.userName),
-					{
-						loading: "Updating name...",
-						success: "Name updated successfully! Rerouting...",
-						error: "Failed to update name.",
-					}
-				);
-				setUser((prev) => ({
-					...prev,
-					userName: credentials.userName,
-				}));
-				setTimeout(() => router.push("/home"), 2000);
-			} else {
-				setFormStatus("Name not updated! Make some changes first");
-				return;
+			const userImageId = Date.now().toString();
+			await userService.uploadFile(userImageId, userFile);
+			const userImageUrl = userService.getFile(userImageId).href;
+			await userService.updateUser(user.$id, userImageId);
+			await userService.deleteFile(user.profileImageId);
+
+			if (user.userName !== credentials.userName) {
+				await authService.updateName(credentials.userName);
 			}
+
+			setUser((prev) => ({
+				...prev,
+				profileImageId: userImageId,
+				profileUrl: userImageUrl,
+				userName: credentials.userName,
+			}));
+
+			toast.success("Profile updated successfully! Rerouting...", {id: loadingToast});
+			setTimeout(() => {
+				router.push("/home");
+			}, 2000);
 			setFormStatus("");
 		} catch (error) {
 			setFormStatus(error.message);
+			toast.error("Error uploading profile", {id: loadingToast});
 		}
 	};
 
@@ -69,18 +92,17 @@ const EditProfile = () => {
 										</p>
 										<p>Please fill out all the fields.</p>
 										<img
-											src="/defaultProfile.svg"
-											alt=""
+											src={credentials.profileUrl}
+											alt="User Profile Image"
 											className="w-52 h-52 mt-10 mb-7 rounded-full object-cover"
 										/>
-										<label className="">
-											Upload new photo
-										</label>
+										<label>Upload new photo (&lt;1MB)</label>
 										<input
 											type="file"
-											name="profile_pic"
+											name="profileImage"
+											accept="image/png, image/jpg, image/jpeg, image/webp, image/svg"
 											className="mt-3 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-											// value=""
+											onChange={handleFileChange}
 										/>
 									</div>
 
@@ -129,6 +151,13 @@ const EditProfile = () => {
 														type="submit"
 													>
 														Update profile
+													</button>
+													<button
+														type="button"
+														onClick={resetForm}
+														className="ml-2 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+													>
+														Reset
 													</button>
 												</div>
 											</div>

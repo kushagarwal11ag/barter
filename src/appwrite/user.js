@@ -12,33 +12,35 @@ export class UserService {
 		this.bucket = new Storage(this.client);
 	}
 
-	async createUser({ $id, profileImageId }) {
+	async createUser(id, profileImageId) {
 		try {
 			return await this.databases.createDocument(
 				conf.databaseId,
 				conf.userCollectionId,
-				$id,
+				id,
 				{
 					profileImageId,
 				}
 			);
 		} catch (error) {
 			console.log("Appwrite service :: createUser :: error", error);
+			throw error;
 		}
 	}
 
-	async updateUser({ $id, profileImageId }) {
+	async updateUser(id, profileImageId) {
 		try {
 			return await this.databases.updateDocument(
 				conf.databaseId,
 				conf.userCollectionId,
-				$id,
+				id,
 				{
 					profileImageId,
 				}
 			);
 		} catch (error) {
 			console.log("Appwrite service :: updateUser :: error", error);
+			throw error;
 		}
 	}
 
@@ -51,24 +53,35 @@ export class UserService {
 			);
 		} catch (error) {
 			console.log("Appwrite service :: getUser :: error", error);
-			return false;
+			throw error;
 		}
 	}
 
-	async uploadProfileImage(id, file) {
+	async uploadFile(id, file) {
 		try {
 			return await this.bucket.createFile(conf.userImagesId, id, file);
 		} catch (error) {
-			console.log(
-				"Appwrite service :: uploadProfileImage :: error",
-				error
-			);
-			return false;
+			console.log("Appwrite service :: uploadFile :: error", error);
+			throw error;
 		}
 	}
 
-	getProfileImage(id) {
-		return this.bucket.getFilePreview(conf.userImagesId, id);
+	async deleteFile(id) {
+		try {
+			return await this.bucket.deleteFile(conf.userImagesId, id);
+		} catch (error) {
+			console.log("Appwrite service :: deleteFile :: error", error);
+			throw error;
+		}
+	}
+
+	getFile(id) {
+		try {
+			return this.bucket.getFilePreview(conf.userImagesId, id);
+		} catch (error) {
+			console.log("Appwrite service :: getFile :: error", error);
+			throw error;
+		}
 	}
 }
 

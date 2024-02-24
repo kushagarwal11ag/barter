@@ -17,7 +17,6 @@ const Home = () => {
 
 	useEffect(() => {
 		setLoader(true);
-		console.log("starting web app: user:: ", user)
 		if (authStatus && user.$id) router.push("/home");
 		setLoader(false);
 	}, [authStatus, router]);

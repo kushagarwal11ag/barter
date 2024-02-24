@@ -6,6 +6,7 @@ import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 
 import authService from "@/appwrite/auth";
+import userService from "@/appwrite/user";
 import useAuth from "@/context/auth/useAuth";
 import useUser from "@/context/users/useUser";
 
@@ -56,9 +57,17 @@ const Login = () => {
 				success: "Rerouting",
 				error: "Error fetching user data",
 			});
+
+			const profileId = await userService.getUser(userData.$id);
+			let profileUrl = null;
+			if (profileId.profileImageId) {
+				profileUrl = userService.getFile(profileId.profileImageId).href;
+			}
+
 			setUser({
 				$id: userData.$id || "",
-				// profileImageId: null,
+				profileImageId: profileId.profileImageId || null,
+				profileUrl: profileUrl || "/defaultProfile.svg",
 				userName: userData.name || "",
 				userEmail: userData.email || "",
 			});
