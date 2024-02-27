@@ -43,6 +43,7 @@ const EditProfile = () => {
 			userName: user.userName || "",
 			userEmail: user.userEmail || "",
 		});
+		router.push("/home");
 	};
 
 	const handleSubmit = async (event) => {
