@@ -11,8 +11,6 @@ const AddPost = () => {
 	const [credentials, setCredentials] = useState({
 		pName: "",
 		pCategory: "Accessories",
-		tName: "Kushal",
-		tPhone: "+91 1234567890",
 	});
 	const [postFile, setPostFile] = useState(null);
 	const [imageURL, setImageURL] = useState("/images/uploadFile.svg");
@@ -50,9 +48,19 @@ const AddPost = () => {
 		}
 	};
 
+	// const cancelForm = () => {
+	// 	setCredentials({
+	// 		profileImageId: user.profileImageId || null,
+	// 		profileUrl: user.profileUrl || "/defaultProfile.svg",
+	// 		userName: user.userName || "",
+	// 		userEmail: user.userEmail || "",
+	// 	});
+	// 	router.push("/home");
+	// };
+
 	return (
 		<>
-			<div className=" flex items-center justify-center">
+			<div className="flex items-center justify-center">
 				<div className="container max-w-screen-lg mx-auto pb-12 md:pb-0">
 					<div>
 						<form onSubmit={handleSubmit}>
@@ -77,6 +85,7 @@ const AddPost = () => {
 											accept="image/png, image/jpg, image/jpeg, image/webp, image/svg"
 											className="mt-3 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
 											onChange={handleFileChange}
+											required
 										/>
 									</div>
 
@@ -133,19 +142,25 @@ const AddPost = () => {
 													</option>
 												</select>
 											</div>
-
-											<button
-												type="submit"
-												className="w-24 md:w-full text-center bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4  inline-flex items-center rounded-full"
-											>
-												<img
-													src="/images/checked-2.png"
-													alt=""
-													className="fill-current w-4 h-4 mr-2"
-												/>
-												<span>Post</span>
-											</button>
 										</div>
+										<button
+											type="submit"
+											className="mt-2 mr-2 w-fit text-center bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 inline-flex items-center gap-2 rounded-full"
+										>
+											<img
+												src="/images/checked-2.png"
+												alt=""
+												className="fill-current w-4 h-4"
+											/>
+											Post
+										</button>
+										<button
+											type="button"
+											// onClick={cancelForm}
+											className="mt-2 w-fit text-center bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded-full"
+										>
+											Cancel Changes
+										</button>
 									</div>
 								</div>
 							</div>

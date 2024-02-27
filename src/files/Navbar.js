@@ -169,7 +169,7 @@ export default function Example({ page = "home" }) {
 															href="/profile"
 															className={classNames(
 																active
-																	? "bg-gray-100"
+																	? "bg-gray-200"
 																	: "",
 																"block px-4 py-2 text-sm text-gray-700"
 															)}
@@ -184,7 +184,7 @@ export default function Example({ page = "home" }) {
 															href="/contact"
 															className={classNames(
 																active
-																	? "bg-gray-100"
+																	? "bg-gray-200"
 																	: "",
 																"block px-4 py-2 text-sm text-gray-700"
 															)}
@@ -199,7 +199,7 @@ export default function Example({ page = "home" }) {
 															href="#"
 															className={classNames(
 																active
-																	? "bg-gray-100"
+																	? "bg-gray-200"
 																	: "",
 																"block px-4 py-2 text-sm text-gray-700"
 															)}
@@ -210,12 +210,12 @@ export default function Example({ page = "home" }) {
 												</Menu.Item>
 												<Menu.Item>
 													{({ active }) => (
-														<button
+														<div
 															className={classNames(
 																active
-																	? "bg-gray-100"
+																	? "bg-gray-200"
 																	: "",
-																"block px-4 py-2 text-sm text-gray-700"
+																"cursor-pointer block px-4 py-2 text-sm text-gray-700"
 															)}
 															onClick={() => {
 																authService
@@ -225,13 +225,19 @@ export default function Example({ page = "home" }) {
 																			setAuthStatus(
 																				false
 																			);
-																			setUser({
-																				$id: "",
-																				profileImageId: null,
-																				profileUrl: "/defaultProfile.svg",
-																				userName: "",
-																				userEmail: "",
-																			})
+																			setUser(
+																				{
+																					$id: "",
+																					profileImageId:
+																						null,
+																					profileUrl:
+																						"/defaultProfile.svg",
+																					userName:
+																						"",
+																					userEmail:
+																						"",
+																				}
+																			);
 																			router.push(
 																				"/"
 																			);
@@ -240,7 +246,7 @@ export default function Example({ page = "home" }) {
 															}}
 														>
 															Sign out
-														</button>
+														</div>
 													)}
 												</Menu.Item>
 											</Menu.Items>

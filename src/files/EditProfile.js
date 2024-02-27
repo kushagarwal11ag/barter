@@ -36,7 +36,7 @@ const EditProfile = () => {
 		}));
 	};
 
-	const resetForm = () => {
+	const cancelForm = () => {
 		setCredentials({
 			profileImageId: user.profileImageId || null,
 			profileUrl: user.profileUrl || "/defaultProfile.svg",
@@ -155,10 +155,10 @@ const EditProfile = () => {
 													</button>
 													<button
 														type="button"
-														onClick={resetForm}
+														onClick={cancelForm}
 														className="ml-2 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
 													>
-														Reset
+														Cancel Changes
 													</button>
 												</div>
 											</div>

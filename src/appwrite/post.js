@@ -12,7 +12,7 @@ export class PostService {
 		this.bucket = new Storage(this.client);
 	}
 
-	async createPost({ $id, imageId, pName, pCategory, tName, tPhone }) {
+	async createPost({ $id, imageId, pName, pCategory, tName }) {
 		try {
 			return await this.databases.createDocument(
 				conf.databaseId,
@@ -23,7 +23,6 @@ export class PostService {
 					pName,
 					pCategory,
 					tName,
-					tPhone,
 				}
 			);
 		} catch (error) {
