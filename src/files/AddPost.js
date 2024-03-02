@@ -52,15 +52,15 @@ const AddPost = () => {
 		}
 	};
 
-	// const cancelForm = () => {
-	// 	setCredentials({
-	// 		profileImageId: user.profileImageId || null,
-	// 		profileUrl: user.profileUrl || "/defaultProfile.svg",
-	// 		userName: user.userName || "",
-	// 		userEmail: user.userEmail || "",
-	// 	});
-	// 	router.push("/home");
-	// };
+	const cancelForm = () => {
+		setCredentials({
+			pName: "",
+			pCategory: "Accessories",
+			tName: user.userName || "",
+			tId: user.$id || "",
+		});
+		router.push("/home");
+	};
 
 	return (
 		<>
@@ -160,7 +160,7 @@ const AddPost = () => {
 										</button>
 										<button
 											type="button"
-											// onClick={cancelForm}
+											onClick={cancelForm}
 											className="mt-2 w-fit text-center bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded-full"
 										>
 											Cancel Changes

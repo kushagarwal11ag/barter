@@ -20,6 +20,8 @@
 .DS_Store
 *.pem
 public/screenshot
+public/images/posts
+public/images/profile
 
 # debug
 npm-debug.log*
