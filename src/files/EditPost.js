@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import usePost from "@/context/posts/usePost";
@@ -10,12 +10,18 @@ const EditPost = ({ id }) => {
 	const { posts, editPost } = usePost();
 	const post = posts.find((post) => post.$id === id);
 	const [credentials, setCredentials] = useState({
+		imageId: post ? post.imageId : null,
 		pName: post ? post.pName : "",
 		pCategory: post ? post.pCategory : "",
 	});
 	const [postFile, setPostFile] = useState(null);
-	const [imageURL, setImageURL] = useState("/images/uploadFile.svg");
+	const [imageURL, setImageURL] = useState("");
 	const [formStatus, setFormStatus] = useState("");
+
+	useEffect(() => {
+		if (credentials.imageId)
+			setImageURL(postService.getFile(credentials.imageId).href);
+	}, []);
 
 	const onChange = (event) => {
 		setCredentials({
@@ -32,16 +38,22 @@ const EditPost = ({ id }) => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			const postImageId = Date.now().toString();
-			await postService.uploadFile(postImageId, postFile);
-			const postId = Date.now().toString();
-			const newCredentials = {
-				...credentials,
-				$id: postId,
-				imageId: postImageId,
-			};
-			addPost(newCredentials);
-			postService.createPost(newCredentials);
+			let newCredentials = {};
+			if (postFile) {
+				const postImageId = Date.now().toString();
+				await postService.uploadFile(postImageId, postFile);
+				newCredentials = {
+					imageId: postImageId,
+				};
+				await postService.deleteFile(post.imageId);
+			}
+			newCredentials = {
+				...newCredentials,
+                pName: credentials.pName,
+                pCategory: credentials.pCategory,
+			}
+			editPost(post.$id, newCredentials);
+			await postService.updatePost(id, newCredentials);
 			router.push("/home");
 			setFormStatus("");
 		} catch (error) {
@@ -49,15 +61,14 @@ const EditPost = ({ id }) => {
 		}
 	};
 
-	// const cancelForm = () => {
-	// 	setCredentials({
-	// 		profileImageId: user.profileImageId || null,
-	// 		profileUrl: user.profileUrl || "/defaultProfile.svg",
-	// 		userName: user.userName || "",
-	// 		userEmail: user.userEmail || "",
-	// 	});
-	// 	router.push("/home");
-	// };
+	const cancelForm = () => {
+		setCredentials({
+			imageId: post ? post.imageId : null,
+			pName: post ? post.pName : "",
+			pCategory: post ? post.pCategory : "",
+		});
+		router.push("/home");
+	};
 
 	return (
 		<>
@@ -74,16 +85,16 @@ const EditPost = ({ id }) => {
 										<p>Please fill out all the fields.</p>
 										<img
 											src={imageURL}
-											alt="current uploaded file"
+											alt="Post Image"
 											className="w-52 h-52 mt-10 mb-7 object-cover"
 										/>
-										<label className="">
-											Upload product image
+										<label>
+											Upload product image (&lt;5000 KB)
 										</label>
 										<input
 											type="file"
 											name="postImage"
-											accept="image/png, image/jpg, image/jpeg, image/webp, image/svg"
+											accept="image/png, image/jpg, image/jpeg, image/svg"
 											className="mt-3 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
 											onChange={handleFileChange}
 										/>
@@ -156,7 +167,7 @@ const EditPost = ({ id }) => {
 										</button>
 										<button
 											type="button"
-											// onClick={cancelForm}
+											onClick={cancelForm}
 											className="mt-2 w-fit text-center bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded-full"
 										>
 											Cancel Changes

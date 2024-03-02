@@ -4,15 +4,14 @@ import React from "react";
 import Navbar from "@/files/Navbar";
 import EditPost from "@/files/EditPost";
 
-import usePost from "@/context/posts/usePost";
-
-const AddProductPage = () => {
+const EditProduct = ({ params }) => {
+	const { postId } = params;
 	return (
 		<>
 			<Navbar page="editProduct" />
-			<EditPost />
+			<EditPost id={postId} />
 		</>
 	);
 };
 
-export default AddProductPage;
+export default EditProduct;

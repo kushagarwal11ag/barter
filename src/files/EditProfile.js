@@ -50,31 +50,45 @@ const EditProfile = () => {
 		event.preventDefault();
 		const loadingToast = toast.loading("Updating Profile...");
 		try {
-			const userImageId = Date.now().toString();
-			await userService.uploadFile(userImageId, userFile);
-			const userImageUrl = userService.getFile(userImageId).href;
-			await userService.updateUser(user.$id, userImageId);
-			await userService.deleteFile(user.profileImageId);
+			let userImageId,
+				userImageUrl,
+				newCredentials = {};
+			if (userFile) {
+				userImageId = Date.now().toString();
+				await userService.uploadFile(userImageId, userFile);
+				userImageUrl = userService.getFile(userImageId).href;
+				await userService.updateUser(user.$id, userImageId);
+				await userService.deleteFile(user.profileImageId);
+
+				newCredentials = {
+					profileImageId: userImageId,
+					profileUrl: userImageUrl,
+				};
+			}
 
 			if (user.userName !== credentials.userName) {
 				await authService.updateName(credentials.userName);
+				newCredentials = {
+					...newCredentials,
+					userName: credentials.userName,
+				};
 			}
 
 			setUser((prev) => ({
 				...prev,
-				profileImageId: userImageId,
-				profileUrl: userImageUrl,
-				userName: credentials.userName,
+				newCredentials,
 			}));
 
-			toast.success("Profile updated successfully! Rerouting...", {id: loadingToast});
+			toast.success("Profile updated successfully! Rerouting...", {
+				id: loadingToast,
+			});
 			setTimeout(() => {
 				router.push("/home");
 			}, 2000);
 			setFormStatus("");
 		} catch (error) {
 			setFormStatus(error.message);
-			toast.error("Error uploading profile", {id: loadingToast});
+			toast.error("Error uploading profile", { id: loadingToast });
 		}
 	};
 
@@ -97,11 +111,13 @@ const EditProfile = () => {
 											alt="User Profile Image"
 											className="w-52 h-52 mt-10 mb-7 rounded-full object-cover"
 										/>
-										<label>Upload new photo (&lt;1MB)</label>
+										<label>
+											Upload new photo (&lt;1000 KB)
+										</label>
 										<input
 											type="file"
 											name="profileImage"
-											accept="image/png, image/jpg, image/jpeg, image/webp, image/svg"
+											accept="image/png, image/jpg, image/jpeg, image/svg"
 											className="mt-3 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
 											onChange={handleFileChange}
 										/>

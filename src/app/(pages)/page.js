@@ -16,12 +16,25 @@ const Home = () => {
 	const [loader, setLoader] = useState(false);
 
 	useEffect(() => {
-		setLoader(true);
-		if (authStatus && user.$id) router.push("/home");
-		setLoader(false);
-	}, [authStatus, router]);
+		let isMounted = true;
+		const navigate = async () => {
+			if (authStatus && user.$id) {
+				setLoader(true);
+				router.push("/home");
+				if (isMounted) setLoader(false);
+			}
+		};
 
-	return loader ? <Loader /> : authStatus ? <></> : <Welcome />;
+		navigate();
+
+		return () => {
+			isMounted = false;
+		};
+	}, [authStatus, user.$id, router]);
+
+	if (loader) return <Loader />;
+	if (!authStatus) return <Welcome />;
+	return null;
 };
 
 export default Home;

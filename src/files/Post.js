@@ -5,6 +5,7 @@ import Link from "next/link";
 import postService from "@/appwrite/post";
 
 const Post = ({
+	id,
 	// liked = false,
 	imageId,
 	productCategory = "undefined",
@@ -18,11 +19,11 @@ const Post = ({
 	return (
 		<>
 			<section className="bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl overflow-hidden">
-				<Link href="#">
+				<Link href={`post/${id}/edit`}>
 					<div className="h-40 overflow-hidden">
 						<img
 							src={imageUrl}
-							alt="Watch image"
+							alt={`${productName} of type ${productCategory} by ${traderName}`}
 							className="h-full w-full object-cover"
 							loading="auto"
 						/>
@@ -45,8 +46,8 @@ const Post = ({
 									{traderName}
 								</p>
 								<p className="text-sm font-bold text-gray-700 tracking-wide">
-							Trader
-						</p>
+									Trader
+								</p>
 							</div>
 						</div>
 					</section>

@@ -15,34 +15,38 @@ const ProtectedLayout = ({ children }) => {
 	const { user, setUser } = useUser();
 
 	useEffect(() => {
+		let isMounted = true;
 		const checkAuthAndFetchUser = async () => {
 			if (!authStatus) {
 				router.replace("/login");
-			} else {
-				try {
-					const userData = await authService.getCurrentUser();
-					const profileId = await userService.getUser(userData.$id);
-					let profileUrl = null;
-					if (profileId.profileImageId) {
-						profileUrl = userService.getFile(
-							profileId.profileImageId
-						).href;
-					}
-					setUser({
-						$id: userData.$id || "",
-						profileImageId: profileId.profileImageId || null,
-						profileUrl: profileUrl || "/defaultProfile.svg",
-						userName: userData.name || "",
-						userEmail: userData.email || "",
-					});
-				} catch (error) {
-					console.error("Failed to fetch user data:", error);
+				return;
+			}
+			try {
+				if (!isMounted) return;
+				const userData = await authService.getCurrentUser();
+				const profileId = await userService.getUser(userData.$id);
+				let profileUrl = null;
+				if (profileId.profileImageId) {
+					profileUrl = userService.getFile(
+						profileId.profileImageId
+					).href;
 				}
+				setUser({
+					$id: userData.$id || "",
+					profileImageId: profileId.profileImageId || null,
+					profileUrl: profileUrl || "/defaultProfile.svg",
+					userName: userData.name || "",
+					userEmail: userData.email || "",
+				});
+			} catch (error) {
+				throw new Error("Failed to fetch user data");
 			}
 		};
-
-		checkAuthAndFetchUser();
-	}, [authStatus, router]);
+		if (!user.$id) checkAuthAndFetchUser();
+		return () => {
+			isMounted = false;
+		};
+	}, [authStatus, router, user.$id]);
 	return authStatus ? <PostProvider>{children}</PostProvider> : null;
 };
 

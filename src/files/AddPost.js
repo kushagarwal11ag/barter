@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import useUser from "@/context/users/useUser";
 import usePost from "@/context/posts/usePost";
 
 import postService from "@/appwrite/post";
 
 const AddPost = () => {
 	const router = useRouter();
-	const { posts, addPost } = usePost();
+	const { user } = useUser();
+	const { addPost } = usePost();
 	const [credentials, setCredentials] = useState({
 		pName: "",
 		pCategory: "Accessories",
+		tName: user.userName || "",
+		tId: user.$id || "",
 	});
 	const [postFile, setPostFile] = useState(null);
 	const [imageURL, setImageURL] = useState("/images/uploadFile.svg");
@@ -73,16 +77,16 @@ const AddPost = () => {
 										<p>Please fill out all the fields.</p>
 										<img
 											src={imageURL}
-											alt="current uploaded file"
+											alt="Post Image"
 											className="w-52 h-52 mt-10 mb-7 object-cover"
 										/>
-										<label className="">
-											Upload product image
+										<label>
+											Upload product image (&lt;5000 KB)
 										</label>
 										<input
 											type="file"
 											name="postImage"
-											accept="image/png, image/jpg, image/jpeg, image/webp, image/svg"
+											accept="image/png, image/jpg, image/jpeg, image/svg"
 											className="mt-3 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
 											onChange={handleFileChange}
 											required

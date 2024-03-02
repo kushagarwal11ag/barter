@@ -19,8 +19,12 @@ export const PostProvider = ({ children }) => {
 		setPosts([...posts]);
 	};
 
-	const editPost = (postId, post) => {
-		setPosts(posts.map((post) => (post.$id === postId ? post : post)));
+	const editPost = (postId, updatedPost) => {
+		setPosts(
+			posts.map((post) =>
+				post.$id === postId ? { ...post, ...updatedPost } : post
+			)
+		);
 	};
 
 	const deletePost = (postId) => {

@@ -98,7 +98,7 @@ export default function Example({ page = "home" }) {
 							<div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 								{page === "home" ? (
 									<Link
-										href="/add"
+										href="/post/add"
 										className="hidden sm:ml-6 sm:block flex space-x-4 bg-gray-900 text-white text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 mx-1 text-sm font-medium"
 									>
 										Add Post
@@ -279,7 +279,7 @@ export default function Example({ page = "home" }) {
 							))} */}
 							{page === "home" ? (
 								<Link
-									href="/add"
+									href="/post/add"
 									className="flex space-x-4 bg-gray-900 text-white text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 mx-1 text-sm font-medium"
 								>
 									Add Post

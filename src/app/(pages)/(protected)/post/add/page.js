@@ -4,9 +4,7 @@ import React from "react";
 import Navbar from "@/files/Navbar";
 import AddPost from "@/files/AddPost";
 
-import usePost from "@/context/posts/usePost";
-
-const AddProductPage = () => {
+const AddProduct = () => {
 	return (
 		<>
 			<Navbar page="addProduct" />
@@ -15,4 +13,4 @@ const AddProductPage = () => {
 	);
 };
 
-export default AddProductPage;
+export default AddProduct;
