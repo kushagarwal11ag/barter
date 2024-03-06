@@ -67,7 +67,7 @@ const EditPost = ({ id }) => {
 			pName: post ? post.pName : "",
 			pCategory: post ? post.pCategory : "",
 		});
-		router.push("/home");
+		router.push(`/post/${id}`);
 	};
 
 	return (

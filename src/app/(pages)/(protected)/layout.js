@@ -1,9 +1,10 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import authService from "@/appwrite/auth";
 import userService from "@/appwrite/user";
+import postService from "@/appwrite/post";
 import useAuth from "@/context/auth/useAuth";
 import useUser from "@/context/users/useUser";
 
@@ -13,16 +14,44 @@ const ProtectedLayout = ({ children }) => {
 	const router = useRouter();
 	const { authStatus } = useAuth();
 	const { user, setUser } = useUser();
+	const [posts, setPosts] = useState([]);
+	const [currentPost, setCurrentPost] = useState(null);
+
+	const addPost = (post) => {
+		setPosts([post, ...posts]);
+	};
+
+	const getCurrentPost = (postId) => {
+		if (!currentPost || currentPost?.$id !== postId) {
+			const post = posts.find((p) => p.$id === postId);
+			if (post) {
+				setCurrentPost(post);
+			}
+		}
+	};
+
+	const editPost = (postId, updatedPost) => {
+		setPosts(
+			posts.map((p) => (p.$id === postId ? { ...p, ...updatedPost } : p))
+		);
+	};
+
+	const deletePost = (postId) => {
+		setPosts(posts.filter((p) => p.$id !== postId));
+	};
 
 	useEffect(() => {
-		let isMounted = true;
+		let isMountedUser = true;
+		let isMountedPost = true;
+
+		if (!authStatus) {
+			router.replace("/login");
+			return;
+		}
+
 		const checkAuthAndFetchUser = async () => {
-			if (!authStatus) {
-				router.replace("/login");
-				return;
-			}
 			try {
-				if (!isMounted) return;
+				if (!isMountedUser) return;
 				const userData = await authService.getCurrentUser();
 				const profileId = await userService.getUser(userData.$id);
 				let profileUrl = null;
@@ -42,12 +71,41 @@ const ProtectedLayout = ({ children }) => {
 				throw new Error("Failed to fetch user data");
 			}
 		};
-		if (!user.$id) checkAuthAndFetchUser();
+
+		const fetchPostsIfUserExists = async () => {
+			if (!user.$id && authStatus) await checkAuthAndFetchUser();
+			if (user.$id && isMountedPost && authStatus && !posts.length) {
+				try {
+					const postList = await postService.getPosts();
+					setPosts(postList.documents);
+				} catch (error) {
+					throw new Error("Failed to fetch posts");
+				}
+			}
+		};
+
+		fetchPostsIfUserExists();
+
 		return () => {
-			isMounted = false;
+			isMountedUser && (isMountedUser = false);
+			isMountedPost && (isMountedPost = false);
 		};
 	}, [authStatus, router, user.$id]);
-	return authStatus ? <PostProvider>{children}</PostProvider> : null;
+
+	return authStatus ? (
+		<PostProvider
+			value={{
+				posts,
+				currentPost,
+				addPost,
+				getCurrentPost,
+				editPost,
+				deletePost,
+			}}
+		>
+			{children}
+		</PostProvider>
+	) : null;
 };
 
 export default ProtectedLayout;

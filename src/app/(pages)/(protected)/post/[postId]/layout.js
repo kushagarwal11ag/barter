@@ -19,24 +19,21 @@ const ProtectedLayout = ({ params, children }) => {
 			router.replace("/login");
 			return;
 		}
-		const checkPostEditPermission = async () => {
+		const viewPost = () => {
 			try {
 				if (!isMounted) return;
 				if (!currentPost || currentPost?.$id !== postId)
 					getCurrentPost(postId);
-				if (currentPost.tId !== user.$id) {
-					router.replace(`/post/${postId}`);
-					return;
-				}
 			} catch (error) {
-				throw new Error("Failed to check post edit permission");
+				router.replace("/home");
+				throw new Error("Failed to display post");
 			}
 		};
-		if (user.$id && posts) checkPostEditPermission();
+		if (user.$id && posts) viewPost();
 		return () => {
 			isMounted = false;
 		};
-	}, [router, user.$id, currentPost, posts, postId]);
+	}, [router, currentPost, user.$id, postId, posts]);
 	return <>{children}</>;
 };
 

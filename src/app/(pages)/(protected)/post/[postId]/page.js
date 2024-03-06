@@ -1,9 +1,17 @@
 "use client";
 import React from "react";
 
-const ViewPost = ({ params }) => {
+import Navbar from "@/files/Navbar";
+import ViewPost from "@/files/ViewPost";
+
+const ViewProduct = ({ params }) => {
 	const { postId } = params;
-	return <div>Viewing post with id: {postId}</div>;
+	return (
+		<>
+			<Navbar page="viewProduct" />
+			<ViewPost id={postId} />
+		</>
+	);
 };
 
-export default ViewPost;
+export default ViewProduct;

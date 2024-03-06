@@ -66,6 +66,19 @@ export class PostService {
 			throw error;
 		}
 	}
+	
+	async deletePost(postId) {
+		try {
+			return await this.databases.deleteDocument(
+				conf.databaseId,
+				conf.postCollectionId,
+				postId
+			);
+		} catch (error) {
+			console.log("Appwrite service :: deletePost :: error");
+			throw error;
+		}
+	}
 
 	getFile(fileId) {
 		return this.bucket.getFilePreview(conf.productImagesId, fileId);

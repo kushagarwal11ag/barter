@@ -19,7 +19,7 @@ const Post = ({
 	return (
 		<>
 			<section className="bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl overflow-hidden">
-				<Link href={`post/${id}/edit`}>
+				<Link href={`post/${id}`}>
 					<div className="h-40 overflow-hidden">
 						<img
 							src={imageUrl}
