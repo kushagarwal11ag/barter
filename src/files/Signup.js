@@ -58,7 +58,7 @@ const Signup = () => {
 			setUser({
 				$id: id || "",
 				profileImageId: null,
-				profileUrl: "/defaultProfile.svg",
+				profileUrl: "/images/defaultProfile.svg",
 				userName: credentials.name || "",
 				userEmail: credentials.email || "",
 			});

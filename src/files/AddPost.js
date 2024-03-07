@@ -15,6 +15,7 @@ const AddPost = () => {
 		pCategory: "Accessories",
 		tName: user.userName || "",
 		tId: user.$id || "",
+		tProfileImageId: user.profileImageId || null,
 	});
 	const [postFile, setPostFile] = useState(null);
 	const [imageURL, setImageURL] = useState("/images/uploadFile.svg");

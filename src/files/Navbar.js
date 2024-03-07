@@ -231,7 +231,7 @@ export default function Example({ page = "home" }) {
 																					profileImageId:
 																						null,
 																					profileUrl:
-																						"/defaultProfile.svg",
+																						"/images/defaultProfile.svg",
 																					userName:
 																						"",
 																					userEmail:

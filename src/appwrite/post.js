@@ -12,7 +12,7 @@ export class PostService {
 		this.bucket = new Storage(this.client);
 	}
 
-	async createPost({ $id, imageId, pName, pCategory, tName, tId }) {
+	async createPost({ $id, imageId, pName, pCategory, tName, tId, tProfileImageId }) {
 		try {
 			return await this.databases.createDocument(
 				conf.databaseId,
@@ -23,7 +23,8 @@ export class PostService {
 					pName,
 					pCategory,
 					tName,
-					tId
+					tId,
+					tProfileImageId,
 				}
 			);
 		} catch (error) {
@@ -66,7 +67,7 @@ export class PostService {
 			throw error;
 		}
 	}
-	
+
 	async deletePost(postId) {
 		try {
 			return await this.databases.deleteDocument(
@@ -78,6 +79,10 @@ export class PostService {
 			console.log("Appwrite service :: deletePost :: error");
 			throw error;
 		}
+	}
+
+	getUserImage(userImageId) {
+		return this.bucket.getFilePreview(conf.userImagesId, userImageId);
 	}
 
 	getFile(fileId) {
@@ -92,7 +97,7 @@ export class PostService {
 			throw error;
 		}
 	}
-	
+
 	async deleteFile(id) {
 		try {
 			return await this.bucket.deleteFile(conf.productImagesId, id);

@@ -12,7 +12,7 @@ const HomePage = () => {
 	return (
 		<>
 			<Navbar />
-			<main className="m-8 grid gap-8 grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]">
+			<main className="m-auto max-w-7xl p-8 grid gap-8 grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]">
 				{posts.map((post) => {
 					return (
 						<Post
@@ -23,6 +23,7 @@ const HomePage = () => {
 							productName={post.pName}
 							productCategory={post.pCategory}
 							traderName={post.tName}
+							traderProfileImageId={post.tProfileImageId}
 						/>
 					);
 				})}

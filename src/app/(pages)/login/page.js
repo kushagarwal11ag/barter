@@ -20,7 +20,7 @@ const LoginPage = () => {
 			setUser({
 				$id: "",
 				profileImageId: null,
-				profileUrl: "/defaultProfile.svg",
+				profileUrl: "/images/defaultProfile.svg",
 				userName: "",
 				userEmail: "",
 			});

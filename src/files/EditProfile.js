@@ -13,7 +13,7 @@ const EditProfile = () => {
 	const { user, setUser } = useUser();
 	const [credentials, setCredentials] = useState({
 		profileImageId: user.profileImageId || null,
-		profileUrl: user.profileUrl || "/defaultProfile.svg",
+		profileUrl: user.profileUrl || "/images/defaultProfile.svg",
 		userName: user.userName || "",
 		userEmail: user.userEmail || "",
 	});
@@ -39,7 +39,7 @@ const EditProfile = () => {
 	const cancelForm = () => {
 		setCredentials({
 			profileImageId: user.profileImageId || null,
-			profileUrl: user.profileUrl || "/defaultProfile.svg",
+			profileUrl: user.profileUrl || "/images/defaultProfile.svg",
 			userName: user.userName || "",
 			userEmail: user.userEmail || "",
 		});

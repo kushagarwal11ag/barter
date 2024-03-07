@@ -63,7 +63,7 @@ const ProtectedLayout = ({ children }) => {
 				setUser({
 					$id: userData.$id || "",
 					profileImageId: profileId.profileImageId || null,
-					profileUrl: profileUrl || "/defaultProfile.svg",
+					profileUrl: profileUrl || "/images/defaultProfile.svg",
 					userName: userData.name || "",
 					userEmail: userData.email || "",
 				});

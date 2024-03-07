@@ -7,15 +7,22 @@ import postService from "@/appwrite/post";
 const Post = ({
 	id,
 	// liked = false,
-	imageId,
-	productCategory = "undefined",
-	productName = "null",
-	traderName = "null",
+	imageId = "",
+	productCategory = "",
+	productName = "",
+	traderName = "",
+	traderProfileImageId = "",
 }) => {
-	useEffect(() => {
-		setImageUrl(postService.getFile(imageId).href);
-	}, []);
 	const [imageUrl, setImageUrl] = useState("");
+	const [profileUrl, setProfileUrl] = useState("");
+	useEffect(() => {
+		if (!imageUrl) setImageUrl(postService.getFile(imageId).href);
+		if (!profileUrl && traderProfileImageId)
+			setProfileUrl(postService.getUserImage(traderProfileImageId).href);
+		else if (!traderProfileImageId)
+			setProfileUrl("/images/defaultProfile.svg");
+	}, []);
+
 	return (
 		<>
 			<section className="bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl overflow-hidden">
@@ -38,8 +45,9 @@ const Post = ({
 					<section className="p-2 border-t border-gray-300 bg-gray-100">
 						<div className="flex items-center pt-2">
 							<img
-								src="/images/defaultProfile.svg"
-								className="bg-cover bg-center w-10 h-10 rounded-full mr-3"
+								src={profileUrl}
+								alt={`Image of trader ${traderName}`}
+								className="object-cover object-center w-10 h-10 rounded-full mr-3"
 							/>
 							<div>
 								<p className="font-bold text-gray-900">
