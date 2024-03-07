@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import authService from "@/appwrite/auth";
 import useUser from "@/context/users/useUser";
+import usePost from "@/context/posts/usePost";
+
+import authService from "@/appwrite/auth";
 import userService from "@/appwrite/user";
+import postService from "@/appwrite/post";
 
 import toast, { Toaster } from "react-hot-toast";
+
+import Delete from "@/components/icons/Delete";
 
 const EditProfile = () => {
 	const router = useRouter();
 	const { user, setUser } = useUser();
+	const { posts, updatePosts } = usePost();
+
 	const [credentials, setCredentials] = useState({
 		profileImageId: user.profileImageId || null,
 		profileUrl: user.profileUrl || "/images/defaultProfile.svg",
@@ -19,6 +26,8 @@ const EditProfile = () => {
 	});
 	const [userFile, setUserFile] = useState(null);
 	const [formStatus, setFormStatus] = useState("");
+	const [deleteFunctionCalled, setDeleteFunctionCalled] = useState(false);
+	let newCredentials = {};
 
 	const onChange = (event) => {
 		setCredentials({
@@ -50,24 +59,27 @@ const EditProfile = () => {
 		event.preventDefault();
 		const loadingToast = toast.loading("Updating Profile...");
 		try {
-			let userImageId,
-				userImageUrl,
-				newCredentials = {};
-			if (userFile) {
-				userImageId = Date.now().toString();
-				await userService.uploadFile(userImageId, userFile);
-				userImageUrl = userService.getFile(userImageId).href;
-				await userService.updateUser(user.$id, userImageId);
-				await userService.deleteFile(user.profileImageId);
-
-				newCredentials = {
-					profileImageId: userImageId,
-					profileUrl: userImageUrl,
-				};
-			}
+			await handleFileUpload();
 
 			if (user.userName !== credentials.userName) {
 				await authService.updateName(credentials.userName);
+				if (posts.length) {
+					posts.forEach(async (post) => {
+						if (post.tId === user.$id) {
+							try {
+								updatePosts({ tName: credentials.userName });
+								await postService.updatePost(post.$id, {
+									tName: credentials.userName,
+								});
+							} catch (error) {
+								console.error(
+									"Failed to update post with ID: " + post.$id
+								);
+								throw error;
+							}
+						}
+					});
+				}
 				newCredentials = {
 					...newCredentials,
 					userName: credentials.userName,
@@ -76,19 +88,99 @@ const EditProfile = () => {
 
 			setUser((prev) => ({
 				...prev,
-				newCredentials,
+				...newCredentials,
 			}));
 
-			toast.success("Profile updated successfully! Rerouting...", {
+			toast.success("Profile updated!", {
 				id: loadingToast,
 			});
 			setTimeout(() => {
 				router.push("/home");
-			}, 2000);
+			}, 1000);
 			setFormStatus("");
 		} catch (error) {
 			setFormStatus(error.message);
 			toast.error("Error uploading profile", { id: loadingToast });
+		}
+	};
+
+	const handleFileUpload = async () => {
+		if (userFile) {
+			const userImageId = Date.now().toString();
+			await userService.uploadFile(userImageId, userFile);
+			const userImageUrl = userService.getFile(userImageId).href;
+			await userService.updateUser(user.$id, userImageId);
+			if (credentials.profileImageId)
+				await userService.deleteFile(user.profileImageId);
+
+			if (posts.length) {
+				updatePosts({ newProfileImageId: userImageId });
+				posts.forEach(async (post) => {
+					if (post.tId === user.$id) {
+						try {
+							await postService.updatePost(post.$id, {
+								tProfileImageId: userImageId,
+								changeProfile: 1,
+							});
+						} catch (error) {
+							console.error(
+								"Failed to update post with ID: " + post.$id
+							);
+							throw error;
+						}
+					}
+				});
+			}
+
+			newCredentials = {
+				...newCredentials,
+				profileImageId: userImageId,
+				profileUrl: userImageUrl,
+			};
+		} else if (user.profileImageId && !userFile && deleteFunctionCalled) {
+			setDeleteFunctionCalled(false);
+			await userService.deleteFile(user.profileImageId);
+			await userService.updateUser(user.$id, null);
+			if (posts.length) {
+				updatePosts({ newProfileImageId: null });
+				posts.forEach(async (post) => {
+					if (post.tId === user.$id) {
+						try {
+							await postService.updatePost(post.$id, {
+								tProfileImageId: null,
+								changeProfile: 1,
+							});
+						} catch (error) {
+							console.error(
+								"Failed to update post with ID: " + post.$id
+							);
+							throw error;
+						}
+					}
+				});
+			}
+			setUser((prev) => ({
+				...prev,
+				profileImageId: null,
+				profileUrl: "/images/defaultProfile.svg",
+			}));
+		}
+	};
+
+	const handleDelete = async () => {
+		setDeleteFunctionCalled(true);
+		try {
+			if (userFile) {
+				setUserFile(null);
+				document.getElementById("profileImageInput").value = "";
+			}
+			setCredentials({
+				...credentials,
+				profileImageId: null,
+				profileUrl: "/images/defaultProfile.svg",
+			});
+		} catch (error) {
+			setFormStatus(error.message);
 		}
 	};
 
@@ -111,11 +203,18 @@ const EditProfile = () => {
 											alt="User Profile Image"
 											className="w-52 h-52 mt-10 mb-7 rounded-full object-cover"
 										/>
-										<label>
-											Upload new photo (&lt;1000 KB)
+										<label className="flex gap-2 items-center justify-start">
+											<p>
+												Upload new photo (&lt;1000 KB)
+											</p>
+											<Delete
+												className="w-4 h-4 cursor-pointer"
+												onClick={handleDelete}
+											/>
 										</label>
 										<input
 											type="file"
+											id="profileImageInput"
 											name="profileImage"
 											accept="image/png, image/jpg, image/jpeg, image/svg"
 											className="mt-3 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"

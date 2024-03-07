@@ -12,7 +12,15 @@ export class PostService {
 		this.bucket = new Storage(this.client);
 	}
 
-	async createPost({ $id, imageId, pName, pCategory, tName, tId, tProfileImageId }) {
+	async createPost({
+		$id,
+		imageId,
+		pName,
+		pCategory,
+		tName,
+		tId,
+		tProfileImageId,
+	}) {
 		try {
 			return await this.databases.createDocument(
 				conf.databaseId,
@@ -33,17 +41,37 @@ export class PostService {
 		}
 	}
 
-	async updatePost(id, { imageId = null, pName, pCategory }) {
+	async updatePost(
+		id,
+		{
+			imageId = null,
+			pName = null,
+			pCategory = null,
+			tName = null,
+			tProfileImageId = null,
+			changeProfile = null,
+		}
+	) {
 		try {
-			let updateObject = {
-				pName,
-				pCategory,
-			};
+			let updateObject = {};
+			if (pName && pCategory) {
+				updateObject = {
+					pName,
+					pCategory,
+				};
+			}
 
-			if (imageId !== null) {
+			if (imageId) {
 				updateObject.imageId = imageId;
 			}
 
+			if (changeProfile === 1) {
+				updateObject.tProfileImageId = tProfileImageId;
+			}
+
+			if (tName) {
+				updateObject.tName = tName;
+			}
 			return await this.databases.updateDocument(
 				conf.databaseId,
 				conf.postCollectionId,
@@ -79,10 +107,6 @@ export class PostService {
 			console.log("Appwrite service :: deletePost :: error");
 			throw error;
 		}
-	}
-
-	getUserImage(userImageId) {
-		return this.bucket.getFilePreview(conf.userImagesId, userImageId);
 	}
 
 	getFile(fileId) {

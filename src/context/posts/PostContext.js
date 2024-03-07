@@ -3,11 +3,12 @@ import { createContext } from "react";
 export const PostContext = createContext({
 	posts: [],
 	setPosts: () => {},
-	addPost: () => {},
+	addPost: (post) => {},
 	currentPost: null,
-	getCurrentPost: () => {},
-	editPost: () => {},
-	deletePost: () => {},
+	getCurrentPost: (postId) => {},
+	editPost: (postId, updatedPost) => {},
+	updatePosts: (newData) => {},
+	deletePost: (postId) => {},
 });
 
 export const PostProvider = PostContext.Provider;

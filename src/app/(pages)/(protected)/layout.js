@@ -36,6 +36,30 @@ const ProtectedLayout = ({ children }) => {
 		);
 	};
 
+	const updatePosts = (newData) => {
+		if (newData.tName) {
+			setPosts((prevPosts) =>
+				prevPosts.map((post) =>
+					post.tId === user.$id
+						? { ...post, tName: newData.tName }
+						: post
+				)
+			);
+		}
+		if (newData.newProfileImageId) {
+			setPosts((prevPosts) =>
+				prevPosts.map((post) =>
+					post.tId === user.$id
+						? {
+								...post,
+								tProfileImageId: newData.newProfileImageId,
+						  }
+						: post
+				)
+			);
+		}
+	};
+
 	const deletePost = (postId) => {
 		setPosts(posts.filter((p) => p.$id !== postId));
 	};
@@ -100,6 +124,7 @@ const ProtectedLayout = ({ children }) => {
 				addPost,
 				getCurrentPost,
 				editPost,
+				updatePosts,
 				deletePost,
 			}}
 		>

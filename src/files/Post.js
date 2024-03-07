@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 import postService from "@/appwrite/post";
+import userService from "@/appwrite/user";
 
 const Post = ({
 	id,
@@ -14,18 +15,18 @@ const Post = ({
 	traderProfileImageId = "",
 }) => {
 	const [imageUrl, setImageUrl] = useState("");
-	const [profileUrl, setProfileUrl] = useState("");
+	const [profileUrl, setProfileUrl] = useState("/images/defaultProfile.svg");
 	useEffect(() => {
 		if (!imageUrl) setImageUrl(postService.getFile(imageId).href);
-		if (!profileUrl && traderProfileImageId)
-			setProfileUrl(postService.getUserImage(traderProfileImageId).href);
+		if ((profileUrl === "/images/defaultProfile.svg") && traderProfileImageId)
+			setProfileUrl(userService.getFile(traderProfileImageId).href);
 		else if (!traderProfileImageId)
 			setProfileUrl("/images/defaultProfile.svg");
 	}, []);
 
 	return (
 		<>
-			<section className="bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl overflow-hidden">
+			<section className="max-w-xs bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl overflow-hidden">
 				<Link href={`post/${id}`}>
 					<div className="h-40 overflow-hidden">
 						<img
