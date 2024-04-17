@@ -61,13 +61,21 @@ const Navbar = () => {
 		{
 			key: "2",
 			label: (
+				<Link href="/transaction" className="p-2">
+					View Transactions
+				</Link>
+			),
+		},
+		{
+			key: "3",
+			label: (
 				<Link className="p-2" href="/profile">
 					Profile
 				</Link>
 			),
 		},
 		{
-			key: "3",
+			key: "4",
 			label: (
 				<Link className="p-2" href="/contact">
 					Contact Us
@@ -75,7 +83,7 @@ const Navbar = () => {
 			),
 		},
 		{
-			key: "4",
+			key: "5",
 			label: (
 				<Link className="p-2" href="/login" onClick={handleLogout}>
 					Logout
@@ -167,18 +175,26 @@ const Navbar = () => {
 									<>
 										<li>
 											<Link
-												href="/"
+												href="/product/add"
 												onClick={toggleMobileNav}
 											>
-												Home
+												Add Product
 											</Link>
 										</li>
 										<li>
 											<Link
-												href="/explore"
+												href="/transaction"
 												onClick={toggleMobileNav}
 											>
-												Explore
+												View Transactions
+											</Link>
+										</li>
+										<li>
+											<Link
+												href="/profile"
+												onClick={toggleMobileNav}
+											>
+												Profile
 											</Link>
 										</li>
 										<li>
