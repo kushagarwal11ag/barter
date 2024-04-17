@@ -13,9 +13,8 @@ export default function RootLayout({ children }) {
 					rel="icon"
 					type="image/png"
 					sizes="32x32"
-					href="/logo.png"
+					href="/logo.svg"
 				/>
-				<title>Swap Ease - Bartering Platform</title>
 			</head>
 			<body>{children}</body>
 		</html>
