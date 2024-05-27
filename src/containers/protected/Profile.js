@@ -15,7 +15,9 @@ const defaultCredentials = {
 	newPassword: "",
 	confirmNewPassword: "",
 	bio: "",
-	location: "",
+	phone: "",
+	displayEmail: true,
+	displayPhone: true,
 };
 
 const Profile = () => {
@@ -28,19 +30,17 @@ const Profile = () => {
 
 	useEffect(() => {
 		const fetchUser = async () => {
-			const fetchedUser = await axios.get("/api/v1/users/user", {
+			const fetchedUser = await axios.get("/api/v1/users/", {
 				withCredentials: true,
 			});
 
 			const userDetails = fetchedUser?.data?.data;
 			setCredentials({
+				...credentials,
 				name: userDetails?.name || "",
 				email: userDetails?.email,
-				oldPassword: "",
-				newPassword: "",
-				confirmNewPassword: "",
 				bio: userDetails?.bio || "",
-				location: userDetails?.location || "",
+				phone: userDetails?.phone || "",
 			});
 
 			setImageUrl(userDetails.avatar?.url || defaultProfile);
@@ -89,11 +89,11 @@ const Profile = () => {
 	};
 
 	const updatePersonalInfo = async () => {
-		const { name, bio, location } = credentials;
+		const { name, bio, phone, displayEmail, displayPhone } = credentials;
 		try {
-			await axios.patch(
-				"/api/v1/users/user/update",
-				{ name, bio, location },
+			await axios.put(
+				"/api/v1/users/user/",
+				{ name, bio, phone, displayEmail, displayPhone },
 				{ withCredentials: true }
 			);
 			return true;
@@ -108,7 +108,7 @@ const Profile = () => {
 			if (userFile) {
 				const formData = new FormData();
 				formData.append("avatar", userFile);
-				await axios.patch("/api/v1/users/user/user-files", formData, {
+				await axios.patch("/api/v1/users/user/", formData, {
 					withCredentials: true,
 					headers: {
 						"Content-Type": "multipart/form-data",
@@ -177,6 +177,7 @@ const Profile = () => {
 										value={credentials.name}
 										onChange={onChange}
 										placeholder="Name"
+										minLength={3}
 										maxLength={20}
 										required
 									/>
@@ -186,13 +187,9 @@ const Profile = () => {
 									<label className="text-sm text-gray-600 font-bold">
 										Email
 									</label>
-									<input
-										type="email"
-										name="email"
-										className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg"
-										value={credentials.email}
-										disabled
-									/>
+									<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
+										{credentials.email || "example@mail.com"}
+									</p>
 								</div>
 
 								<div className="md:col-span-3">
@@ -206,24 +203,110 @@ const Profile = () => {
 										rows={1}
 										value={credentials.bio}
 										onChange={onChange}
+										minLength={10}
+										maxLength={300}
+									/>
+								</div>
+
+								<div className="md:col-span-5">
+									<label className="text-sm text-gray-600 font-bold">
+										Change password
+									</label>
+									<section className="flex gap-2">
+										<input
+											type="password"
+											name="oldPassword"
+											className="mt-2 w-full px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-[#3a8358] shadow-sm rounded-lg"
+											value={credentials.oldPassword}
+											onChange={onChange}
+											placeholder="Enter old password"
+											minLength={8}
+											maxLength={20}
+										/>
+										<input
+											type="password"
+											name="newPassword"
+											className="mt-2 w-full px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-[#3a8358] shadow-sm rounded-lg"
+											value={credentials.newPassword}
+											onChange={onChange}
+											placeholder="Enter new password"
+											minLength={8}
+											maxLength={20}
+										/>
+										<input
+											type="password"
+											name="confirmNewPassword"
+											className="mt-2 w-full px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-[#3a8358] shadow-sm rounded-lg"
+											value={
+												credentials.confirmNewPassword
+											}
+											onChange={onChange}
+											placeholder="Confirm new password"
+											minLength={8}
+											maxLength={20}
+										/>
+									</section>
+								</div>
+
+								<div className="md:col-span-2">
+									<label className="text-sm text-gray-600 font-bold">
+										Phone{" "}
+										<span className="text-red-500">*</span>
+									</label>
+									<input
+										type="text"
+										name="phone"
+										className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+										value={credentials.phone}
+										onChange={onChange}
+										placeholder="Enter phone number"
+										maxLength={10}
 										required
 									/>
 								</div>
 
 								<div className="md:col-span-2">
 									<label className="text-sm text-gray-600 font-bold">
-										Location
+										Display Email
 									</label>
-									<input
-										type="text"
-										name="location"
+									<select
 										className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-										value={credentials.location}
-										onChange={onChange}
-										placeholder="Enter location"
-										maxLength={20}
-										required
-									/>
+										name="displayEmail"
+										defaultValue={credentials.displayEmail}
+										onChange={(e) => {
+											setCredentials({
+												...credentials,
+												displayEmail: JSON.parse(
+													e.target.value
+												),
+											});
+										}}
+									>
+										<option value={true}>True</option>
+										<option value={false}>False</option>
+									</select>
+								</div>
+
+								<div className="md:col-span-2">
+									<label className="text-sm text-gray-600 font-bold">
+										Display Phone
+									</label>
+									<select
+										className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+										name="displayPhone"
+										defaultValue={credentials.displayPhone}
+										onChange={(e) => {
+											setCredentials({
+												...credentials,
+												displayPhone: JSON.parse(
+													e.target.value
+												),
+											});
+										}}
+									>
+										<option value={true}>True</option>
+										<option value={false}>False</option>
+									</select>
 								</div>
 
 								<div className="md:col-span-5 inline-flex items-end">

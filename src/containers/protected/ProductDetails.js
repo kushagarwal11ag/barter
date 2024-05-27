@@ -18,7 +18,7 @@ const ProductDetails = ({ productId }) => {
 					`/api/v1/products/${productId}`,
 					{ withCredentials: true }
 				);
-				const productDetails = fetchedProduct?.data?.data?.[0];
+				const productDetails = fetchedProduct?.data?.data;
 				setProduct(productDetails);
 			} catch (error) {
 				console.log(error);
@@ -27,7 +27,7 @@ const ProductDetails = ({ productId }) => {
 
 		const fetchUser = async () => {
 			try {
-				const fetchedUser = await axios.get("/api/v1/users/user", {
+				const fetchedUser = await axios.get("/api/v1/users/", {
 					withCredentials: true,
 				});
 				if (fetchedUser?.data?.data) {
@@ -125,6 +125,29 @@ const ProductDetails = ({ productId }) => {
 								<span className="capitalize">
 									{product.condition}
 								</span>
+							</p>
+							{product.isBarter && (
+								<div className="text-gray-600 mt-2">
+									{product.price ? <>Hybrid</> : <>Barter</>}
+									{product.barterCategory && (
+										<p className="capitalize">
+											Barter Category:{" "}
+											{product.barterCategory}
+										</p>
+									)}
+									{product.barterDescription && (
+										<p className="capitalize">
+											Barter Description:{" "}
+											{product.barterDescription}
+										</p>
+									)}
+								</div>
+							)}
+							<p className="text-xl sm:text-2xl font-bold text-gray-800 uppercase mt-2">
+								&#x20b9;{product.price}
+							</p>
+							<p className="text-gray-800 mt-2">
+								Views: {product.viewCount}
 							</p>
 							<hr className="opacity-8 mt-8"></hr>
 							<button className="mt-4 flex gap-4 items-center">

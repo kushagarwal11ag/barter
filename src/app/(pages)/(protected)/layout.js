@@ -9,7 +9,7 @@ const ProtectedLayout = ({ children }) => {
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
-				await axios.get("/api/v1/users/user", {
+				await axios.get("/api/v1/users/", {
 					withCredentials: true,
 				});
 			} catch (error) {

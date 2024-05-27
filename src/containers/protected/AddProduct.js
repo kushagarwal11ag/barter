@@ -6,15 +6,23 @@ import Image from "next/image";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
+const defaultCredentials = {
+	title: "",
+	description: "",
+	condition: "fair",
+	category: "",
+	isBarter: false,
+	barterCategory: "",
+	barterDescription: "",
+	price: 0,
+	meetingSpot: "",
+	isAvailable: true,
+};
+
 const AddProduct = () => {
 	const router = useRouter();
 
-	const [credentials, setCredentials] = useState({
-		title: "",
-		description: "",
-		condition: "fair",
-		category: "Fashion and Accessories",
-	});
+	const [credentials, setCredentials] = useState(defaultCredentials);
 	const [postFile, setPostFile] = useState(null);
 	const [imageURL, setImageURL] = useState("/uploadFile.svg");
 	const [formStatus, setFormStatus] = useState("");
@@ -40,31 +48,28 @@ const AddProduct = () => {
 			formData.append("description", credentials.description);
 			formData.append("condition", credentials.condition);
 			formData.append("category", credentials.category);
+			formData.append("isBarter", credentials.isBarter);
+			formData.append("barterCategory", credentials.barterCategory);
+			formData.append("barterDescription", credentials.barterDescription);
+			formData.append("price", credentials.price);
+			formData.append("meetingSpot", credentials.meetingSpot);
+			formData.append("isAvailable", credentials.isAvailable);
 			if (postFile) {
 				formData.append("image", postFile);
 			}
 
-			const response = await axios.post(
-				"/api/v1/products/product",
-				formData,
-				{
-					withCredentials: true,
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				}
-			);
+			const response = await axios.post("/api/v1/products/", formData, {
+				withCredentials: true,
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
 
 			toast.success(response?.data?.message, {
 				id: toastId,
 			});
 
-			setCredentials({
-				title: "",
-				description: "",
-				condition: "fair",
-				category: "Fashion and Accessories",
-			});
+			setCredentials(defaultCredentials);
 			setFormStatus("");
 			router.push("/explore");
 		} catch (error) {
@@ -79,12 +84,7 @@ const AddProduct = () => {
 	};
 
 	const cancelForm = () => {
-		setCredentials({
-			title: "",
-			description: "",
-			condition: "fair",
-			category: "Fashion and Accessories",
-		});
+		setCredentials(defaultCredentials);
 		router.push("/explore");
 	};
 
@@ -138,7 +138,9 @@ const AddProduct = () => {
 													value={credentials.title}
 													placeholder="Enter product title"
 													onChange={onChange}
+													minLength={3}
 													maxLength={20}
+													required
 												/>
 											</div>
 											<div className="md:col-span-5">
@@ -154,7 +156,7 @@ const AddProduct = () => {
 													}
 													placeholder="Enter product description"
 													onChange={onChange}
-													minLength={3}
+													minLength={10}
 													maxLength={150}
 													required
 												/>
@@ -167,7 +169,7 @@ const AddProduct = () => {
 													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
 													name="condition"
 													onChange={onChange}
-													value={
+													defaultValue={
 														credentials.condition
 													}
 												>
@@ -180,50 +182,151 @@ const AddProduct = () => {
 													<option value="good">
 														Good
 													</option>
+													<option value="poor">
+														Poor
+													</option>
 												</select>
 											</div>
 											<div className="md:col-span-3">
 												<label className="text-sm text-gray-600 font-bold">
 													Category
 												</label>
+												<input
+													type="text"
+													name="category"
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													value={credentials.category}
+													placeholder="Enter product category"
+													onChange={onChange}
+													minLength={3}
+													maxLength={30}
+													required
+												/>
+											</div>
+											<div className="md:col-span-2">
+												<label className="text-sm text-gray-600 font-bold">
+													To Barter
+												</label>
 												<select
 													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													name="category"
-													onChange={onChange}
-													value={credentials.category}
+													name="isBarter"
+													onChange={(e) => {
+														setCredentials({
+															...credentials,
+															isBarter:
+																JSON.parse(
+																	e.target
+																		.value
+																),
+														});
+													}}
+													defaultValue={
+														credentials.isBarter
+													}
 												>
-													<option value="Fashion and Accessories">
-														Fashion and Accessories
+													<option value={true}>
+														True
 													</option>
-													<option value="Electronics">
-														Electronics
+													<option value={false}>
+														False
 													</option>
-													<option value="Appliances">
-														Appliances
+												</select>
+											</div>
+											{credentials.isBarter && (
+												<>
+													<div className="md:col-span-3">
+														<label className="text-sm text-gray-600 font-bold">
+															Barter Category
+														</label>
+														<input
+															type="text"
+															name="barterCategory"
+															className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+															value={
+																credentials.barterCategory
+															}
+															placeholder="Enter barter category"
+															onChange={onChange}
+															minLength={3}
+															maxLength={30}
+														/>
+													</div>
+													<div className="md:col-span-5">
+														<label className="text-sm text-gray-600 font-bold">
+															Barter Description
+														</label>
+														<textarea
+															rows={1}
+															name="barterDescription"
+															className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+															value={
+																credentials.barterDescription
+															}
+															placeholder="Enter barter description"
+															onChange={onChange}
+															minLength={10}
+															maxLength={150}
+														/>
+													</div>
+												</>
+											)}
+											<div className={`${credentials.isBarter ? "md:col-span-1" : "md:col-span-3"}`}>
+												<label className="text-sm text-gray-600 font-bold">
+													Price
+												</label>
+												<input
+													type="number"
+													name="price"
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													value={credentials.price}
+													placeholder="Enter product price"
+													onChange={onChange}
+												/>
+											</div>
+											<div className={`${credentials.isBarter ? "md:col-span-4" : "md:col-span-5"}`}>
+												<label className="text-sm text-gray-600 font-bold">
+													Meeting Spot
+												</label>
+												<textarea
+													rows={1}
+													name="meetingSpot"
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													value={
+														credentials.meetingSpot
+													}
+													placeholder="Enter meeting spot"
+													onChange={onChange}
+													minLength={10}
+													maxLength={150}
+													required
+												/>
+											</div>
+											<div className="md:col-span-2">
+												<label className="text-sm text-gray-600 font-bold">
+													Available
+												</label>
+												<select
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													name="isAvailable"
+													onChange={(e) => {
+														setCredentials({
+															...credentials,
+															isAvailable:
+																JSON.parse(
+																	e.target
+																		.value
+																),
+														});
+													}}
+													defaultValue={
+														credentials.isAvailable
+													}
+												>
+													<option value={true}>
+														True
 													</option>
-													<option value="Furniture">
-														Furniture
-													</option>
-													<option value="Home Decor">
-														Home Decor
-													</option>
-													<option value="Sports and Fitness">
-														Sports and Fitness
-													</option>
-													<option value="Books and media">
-														Books and media
-													</option>
-													<option value="Toys and Games">
-														Toys and Games
-													</option>
-													<option value="Kitchenware">
-														Kitchenware
-													</option>
-													<option value="Health and Beauty">
-														Health and Beauty
-													</option>
-													<option value="Other">
-														Other
+													<option value={false}>
+														False
 													</option>
 												</select>
 											</div>

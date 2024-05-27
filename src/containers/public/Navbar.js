@@ -23,7 +23,7 @@ const Navbar = () => {
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
-				const user = await axios.get("/api/v1/users/user", {
+				const user = await axios.get("/api/v1/users/", {
 					withCredentials: true,
 				});
 				if (user?.data?.data) {

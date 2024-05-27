@@ -9,10 +9,12 @@ import toast, { Toaster } from "react-hot-toast";
 import uploadFile from "../../../public/uploadFile.svg";
 
 const defaultCredentials = {
-	title: "",
 	description: "",
-	condition: "fair",
-	category: "Fashion and Accessories",
+	barterCategory: "",
+	barterDescription: "",
+	price: 0,
+	meetingSpot: "",
+	isAvailable: true,
 };
 
 const EditProduct = ({ productId }) => {
@@ -32,13 +34,19 @@ const EditProduct = ({ productId }) => {
 				}
 			);
 
-			const productDetails = fetchedProduct?.data?.data?.[0];
+			const productDetails = fetchedProduct?.data?.data;
 
 			setCredentials({
-				title: productDetails.title || "",
+				title: productDetails.title,
+				category: productDetails.category,
+				condition: productDetails.condition,
+				isBarter: productDetails.isBarter,
 				description: productDetails.description || "",
-				category: productDetails.category || "",
-				condition: productDetails.condition || "",
+				barterCategory: productDetails.barterCategory || "",
+				barterDescription: productDetails.barterDescription || "",
+				price: productDetails.price || 0,
+				meetingSpot: productDetails.meetingSpot || "",
+				isAvailable: productDetails.isAvailable || true,
 			});
 
 			setImageURL(productDetails.image);
@@ -63,10 +71,12 @@ const EditProduct = ({ productId }) => {
 		const toastId = toast.loading("Editing");
 		try {
 			const formData = new FormData();
-			formData.append("title", credentials.title);
 			formData.append("description", credentials.description);
-			formData.append("condition", credentials.condition);
-			formData.append("category", credentials.category);
+			credentials.isBarter && formData.append("barterCategory", credentials.barterCategory);
+			credentials.isBarter && formData.append("barterDescription", credentials.barterDescription);
+			formData.append("price", credentials.price);
+			formData.append("meetingSpot", credentials.meetingSpot);
+			formData.append("isAvailable", credentials.isAvailable);
 			if (postFile) {
 				formData.append("image", postFile);
 			}
@@ -147,15 +157,13 @@ const EditProduct = ({ productId }) => {
 												<label className="text-sm text-gray-600 font-bold">
 													Title
 												</label>
-												<input
-													type="text"
-													name="title"
-													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													value={credentials.title}
-													placeholder="Enter product title"
-													onChange={onChange}
-													maxLength={20}
-												/>
+												<p
+													className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg"
+													disabled
+												>
+													{credentials.title ||
+														"Title"}
+												</p>
 											</div>
 											<div className="md:col-span-5">
 												<label className="text-sm text-gray-600 font-bold">
@@ -170,76 +178,124 @@ const EditProduct = ({ productId }) => {
 													}
 													placeholder="Enter product description"
 													onChange={onChange}
-													minLength={3}
+													minLength={10}
+													maxLength={150}
+													required
+												/>
+											</div>
+											<div className="md:col-span-5">
+												<label className="text-sm text-gray-600 font-bold">
+													Category
+												</label>
+												<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
+													{credentials.category ||
+														"Category"}
+												</p>
+											</div>
+											<div className="md:col-span-5">
+												<label className="text-sm text-gray-600 font-bold">
+													Condition
+												</label>
+												<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
+													{credentials.condition ||
+														"Condition"}
+												</p>
+											</div>
+											{credentials.isBarter && (
+												<>
+													<div className="md:col-span-5">
+														<label className="text-sm text-gray-600 font-bold">
+															Barter Category
+														</label>
+														<textarea
+															rows={2}
+															name="barterCategory"
+															className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+															value={
+																credentials.barterCategory
+															}
+															placeholder="Enter barter category"
+															onChange={onChange}
+															minLength={3}
+															maxLength={30}
+														/>
+													</div>
+													<div className="md:col-span-5">
+														<label className="text-sm text-gray-600 font-bold">
+															Barter Description
+														</label>
+														<textarea
+															rows={2}
+															name="barterDescription"
+															className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+															value={
+																credentials.barterDescription
+															}
+															placeholder="Enter barter description"
+															onChange={onChange}
+															minLength={10}
+															maxLength={150}
+														/>
+													</div>
+												</>
+											)}
+											<div className="md:col-span-5">
+												<label className="text-sm text-gray-600 font-bold">
+													Price
+												</label>
+												<input
+													type="number"
+													name="price"
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													value={credentials.price}
+													placeholder="Enter price"
+													onChange={onChange}
+												/>
+											</div>
+											<div className="md:col-span-5">
+												<label className="text-sm text-gray-600 font-bold">
+													Meeting Spot
+												</label>
+												<textarea
+													rows={2}
+													name="meetingSpot"
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													value={
+														credentials.meetingSpot
+													}
+													placeholder="Enter meeting spot"
+													onChange={onChange}
+													minLength={10}
 													maxLength={150}
 													required
 												/>
 											</div>
 											<div className="md:col-span-2">
 												<label className="text-sm text-gray-600 font-bold">
-													Condition
+													Available
 												</label>
 												<select
 													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													name="condition"
-													onChange={onChange}
-													value={
-														credentials.condition
+													name="isAvailable"
+													defaultValue={
+														credentials.isAvailable
 													}
+													onChange={(e) => {
+														setCredentials({
+															...credentials,
+															isAvailable:
+																JSON.parse(
+																	e.target
+																		.value
+																),
+														});
+													}}
 												>
-													<option value="new">
-														New
+													<option value={true}>
+														True
 													</option>
-													<option value="fair">
-														Fair
-													</option>
-													<option value="good">
-														Good
-													</option>
-												</select>
-											</div>
-											<div className="md:col-span-3">
-												<label className="text-sm text-gray-600 font-bold">
-													Category
-												</label>
-												<select
-													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													name="category"
-													onChange={onChange}
-													value={credentials.category}
-												>
-													<option value="Fashion and Accessories">
-														Fashion and Accessories
-													</option>
-													<option value="Electronics">
-														Electronics
-													</option>
-													<option value="Appliances">
-														Appliances
-													</option>
-													<option value="Furniture">
-														Furniture
-													</option>
-													<option value="Home Decor">
-														Home Decor
-													</option>
-													<option value="Sports and Fitness">
-														Sports and Fitness
-													</option>
-													<option value="Books and media">
-														Books and media
-													</option>
-													<option value="Toys and Games">
-														Toys and Games
-													</option>
-													<option value="Kitchenware">
-														Kitchenware
-													</option>
-													<option value="Health and Beauty">
-														Health and Beauty
-													</option>
-													<option value="Other">
-														Other
+													<option value={false}>
+														False
 													</option>
 												</select>
 											</div>
