@@ -1,9 +1,9 @@
-import Profile from "@/containers/protected/Profile";
+import EditProfile from "@/containers/protected/EditProfile";
 
 const ProfilePage = () => {
 	return (
 		<>
-			<Profile />
+			<EditProfile />
 		</>
 	);
 };

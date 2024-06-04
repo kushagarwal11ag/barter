@@ -12,7 +12,7 @@ import closeIcon from "../../../public/icons/closeIcon.svg";
 import defaultProfile from "../../../public/defaultProfile.svg";
 
 const Navbar = () => {
-	const [userAvatar, setUserAvatar] = useState(defaultProfile);
+	const [userDetails, setUserDetails] = useState(defaultProfile);
 	const [showMobileNav, setShowMobileNav] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -29,7 +29,7 @@ const Navbar = () => {
 				if (user?.data?.data) {
 					setIsLoggedIn(true);
 					const userDetails = user.data.data;
-					setUserAvatar(userDetails?.avatar?.url || defaultProfile);
+					setUserDetails(userDetails);
 				}
 			} catch (error) {
 				console.log(error);
@@ -69,7 +69,7 @@ const Navbar = () => {
 		{
 			key: "3",
 			label: (
-				<Link className="p-2" href="/profile">
+				<Link className="p-2" href={`/profile/${userDetails?._id}`}>
 					Profile
 				</Link>
 			),
@@ -138,7 +138,7 @@ const Navbar = () => {
 										}}
 									>
 										<Image
-											src={userAvatar}
+											src={userDetails?.avatar?.url || defaultProfile}
 											alt="user profile image"
 											className="w-10 h-10 rounded-full object-cover"
 											width={44}

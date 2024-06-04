@@ -88,14 +88,9 @@ const ProductDetails = ({ productId }) => {
 						</div>
 						<div className="md:flex-1 px-4">
 							<section className="flex">
-								<div className="flex flex-col">
-									<div className="text-lg text-gray-700 capitalize">
-										{product.category}
-									</div>
-									<h2 className="text-3xl sm:text-5xl font-bold text-gray-800 uppercase mb-2">
-										{product.title}
-									</h2>
-								</div>
+								<h2 className="text-3xl sm:text-5xl font-bold text-gray-800 uppercase mb-2">
+									{product.title}
+								</h2>
 								{user?._id === product.owner?._id && (
 									<Popover
 										content={content}
@@ -150,21 +145,27 @@ const ProductDetails = ({ productId }) => {
 								Views: {product.viewCount}
 							</p>
 							<hr className="opacity-8 mt-8"></hr>
-							<button className="mt-4 flex gap-4 items-center">
-								<Image
-									src={
-										product.owner?.avatar || defaultProfile
-									}
-									width={48}
-									height={48}
-									alt="User avatar"
-									className="w-12 h-12 rounded-full object-cover"
-								/>
-								<span>{product.owner?.name}</span>
-							</button>
+							{user?._id !== product.owner?._id && (
+								<Link
+									className="mt-4 flex gap-4 items-center"
+									href={`/profile/${product.owner?._id}`}
+								>
+									<Image
+										src={
+											product.owner?.avatar ||
+											defaultProfile
+										}
+										width={48}
+										height={48}
+										alt="User avatar"
+										className="w-12 h-12 rounded-full object-cover"
+									/>
+									<span>{product.owner?.name}</span>
+								</Link>
+							)}
 						</div>
 					</div>
-					{user?._id !== product.owner?._id && (
+					{/* {user?._id !== product.owner?._id && (
 						<div className="py-2 px-4 w-max max-w-6xl mx-auto bg-gray-900 hover:bg-gray-700 text-white rounded-2xl cursor-pointer">
 							<Link href={`/transaction/add/${productId}`}>
 								<Image
@@ -177,7 +178,7 @@ const ProductDetails = ({ productId }) => {
 								Swap It
 							</Link>
 						</div>
-					)}
+					)} */}
 				</div>
 			)}
 		</>

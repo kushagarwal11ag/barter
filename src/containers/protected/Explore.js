@@ -51,7 +51,15 @@ const Explore = () => {
 									{product.title}
 								</p>
 								<p className="text-gray-700 capitalize">
-									{product.isBarter ? product.price ? <>Hybrid</> : <>Barter</> : <>Sale</>}
+									{product.isBarter ? (
+										product.price ? (
+											<>Hybrid</>
+										) : (
+											<>Barter</>
+										)
+									) : (
+										<>Sale</>
+									)}
 								</p>
 								<p className="uppercase tracking-wide text-sm font-bold text-gray-700">
 									&#x20b9;{product.price}
