@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
 
@@ -8,6 +9,7 @@ import defaultProfile from "../../../public/defaultProfile.svg";
 import uploadFile from "../../../public/uploadFile.svg";
 
 const Profile = ({ profileId }) => {
+	const router = useRouter();
 	const [credentials, setCredentials] = useState(null);
 	const [currentUser, setCurrentUser] = useState(null);
 
@@ -19,20 +21,51 @@ const Profile = ({ profileId }) => {
 			const user = await axios.get("/api/v1/users/", {
 				withCredentials: true,
 			});
+			const followers = await axios.get(`/api/v1/follow/${profileId}`);
+			const following = await axios.get(
+				`/api/v1/follow/following/${profileId}`
+			);
 
 			const userDetails = fetchedUser?.data?.data;
 			const currentUserDetails = user?.data?.data;
-			setCredentials(userDetails);
+
+			setCredentials({
+				...userDetails,
+				followers: followers?.data?.data,
+				following: following?.data?.data,
+			});
 			setCurrentUser(currentUserDetails);
-			console.log(currentUserDetails);
 		};
 		fetchUser();
 	}, []);
 
+	const timeSpan = (joinDate) => {
+		const date = new Date(joinDate);
+		const monthNames = [
+			"January",
+			"February",
+			"March",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December",
+		];
+
+		const year = date.getFullYear();
+		const month = monthNames[date.getMonth()];
+
+		return `${month} ${year}`;
+	};
+
 	return (
 		<>
 			<section className="flex items-center justify-center container max-w-screen-lg mx-auto pb-12 md:pb-0">
-				<section className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6 grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-3">
+				<section className="bg-white rounded p-4 px-4 md:p-8 mb-6 grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-3">
 					<section className="text-gray-600 flex flex-col items-center">
 						<Image
 							name="avatar"
@@ -54,7 +87,7 @@ const Profile = ({ profileId }) => {
 
 					<section className="md:col-span-2">
 						<section className="flex gap-2">
-							{credentials?._id === currentUser?._id && (
+							{credentials?._id === currentUser?._id ? (
 								<>
 									<Link
 										href="edit"
@@ -68,25 +101,46 @@ const Profile = ({ profileId }) => {
 											await axios.delete(
 												"/api/v1/users/"
 											);
+											router.push("/login");
 										}}
 									>
 										Delete
 									</button>
 								</>
-							)}
-							{credentials?._id !== currentUser?._id && (
-								<button
-									className="p-2 rounded bg-[#101827] text-white w-fit"
-									onClick={async () => {
-										await axios.post(
-											`/api/v1/follow/${credentials?._id}`
-										);
-									}}
-								>
-									Follow
-								</button>
+							) : (
+								<>
+									<button
+										className="p-2 rounded bg-[#101827] text-white w-fit"
+										onClick={async () => {
+											credentials.isFollow
+												? await axios.delete(
+														`/api/v1/follow/${credentials._id}`
+												  )
+												: await axios.post(
+														`/api/v1/follow/${credentials._id}`
+												  );
+										}}
+									>
+										{credentials.isFollow
+											? "Unfollow"
+											: "Follow"}
+									</button>
+									<button
+										className="p-2 rounded bg-[#101827] text-white w-fit"
+										onClick={async () => {
+											await axios.patch(
+												`/api/v1/block/${credentials._id}`
+											);
+										}}
+									>
+										Block
+									</button>
+								</>
 							)}
 						</section>
+						<p>Joined {timeSpan(credentials?.createdAt)}</p>
+						<p>{credentials?.followers.length} followers</p>
+						<p>{credentials?.following.length} following</p>
 						<section className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
 							<div className="md:col-span-3">
 								<label className="text-sm text-gray-600 font-bold">
@@ -137,6 +191,9 @@ const Profile = ({ profileId }) => {
 							</div>
 						</section>
 
+						<p className="mt-2 text-xl">
+							{credentials?.product?.length} products
+						</p>
 						<section className="m-auto max-w-7xl p-8 grid gap-8 grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]">
 							{credentials?.product?.length &&
 								credentials.product.map((product) => (
