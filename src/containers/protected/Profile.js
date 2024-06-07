@@ -18,23 +18,25 @@ const Profile = ({ profileId }) => {
 			const fetchedUser = await axios.get(`/api/v1/users/${profileId}`, {
 				withCredentials: true,
 			});
-			const user = await axios.get("/api/v1/users/", {
+			const currentUser = await axios.get("/api/v1/users/", {
 				withCredentials: true,
 			});
 			const followers = await axios.get(`/api/v1/follow/${profileId}`);
 			const following = await axios.get(
 				`/api/v1/follow/following/${profileId}`
 			);
-
-			const userDetails = fetchedUser?.data?.data;
-			const currentUserDetails = user?.data?.data;
+			const feedback = await axios.get(
+				`/api/v1/feedback/user/${profileId}`
+			);
 
 			setCredentials({
-				...userDetails,
+				...fetchedUser?.data?.data,
 				followers: followers?.data?.data,
 				following: following?.data?.data,
+				feedbacks: feedback?.data?.data,
 			});
-			setCurrentUser(currentUserDetails);
+			setCurrentUser(currentUser?.data?.data);
+			console.log(feedback?.data?.data);
 		};
 		fetchUser();
 	}, []);
@@ -62,9 +64,18 @@ const Profile = ({ profileId }) => {
 		return `${month} ${year}`;
 	};
 
+	const bannerStyle = credentials?.banner
+		? {
+				backgroundImage: `url(${credentials.banner})`,
+				backgroundRepeat: "no-repeat",
+				backgroundSize: "cover",
+				backgroundPosition: "center",
+		  }
+		: { backgroundColor: "#468189" };
+
 	return (
 		<>
-			<section className="flex items-center justify-center container max-w-screen-lg mx-auto pb-12 md:pb-0">
+			{/* <section className="flex items-center justify-center container max-w-screen-lg mx-auto pb-12 md:pb-0">
 				<section className="bg-white rounded p-4 px-4 md:p-8 mb-6 grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-3">
 					<section className="text-gray-600 flex flex-col items-center">
 						<Image
@@ -222,8 +233,48 @@ const Profile = ({ profileId }) => {
 									</Link>
 								))}
 						</section>
+						<section>
+							{credentials?.feedbacks?.length &&
+								credentials.feedbacks.map((feedback) => (
+									<section
+										className="p-2 border-2"
+										key={feedback._id}
+									>
+										<button
+											className="p-1 rounded bg-red-600 text-white"
+											onClick={async () => {
+												await axios.delete(
+													`/api/v1/feedback/${feedback._id}`
+												);
+											}}
+										>
+											Delete
+										</button>
+										<div>Rating: {feedback.rating}</div>
+										<div>Content: {feedback.content}</div>
+										<div>
+											Owner Name:{" "}
+											{feedback.feedbackBy.name}
+										</div>
+									</section>
+								))}
+						</section>
 					</section>
 				</section>
+			</section> */}
+			<section>
+				<section className="relative w-full h-32" style={bannerStyle}>
+					<div className="absolute bottom-0 left-1/2 md:left-40 transform -translate-x-1/2 translate-y-1/2 w-40 h-40">
+						<Image
+							src={credentials?.avatar || defaultProfile}
+							alt="User Avatar"
+							className="rounded-full border-4 border-white"
+							layout="fill"
+							objectFit="cover"
+						/>
+					</div>
+				</section>
+				<section>Hello</section>
 			</section>
 		</>
 	);
