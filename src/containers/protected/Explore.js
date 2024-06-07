@@ -12,7 +12,7 @@ const Explore = () => {
 	useEffect(() => {
 		const fetchProducts = async () => {
 			try {
-				const res = await axios.get("/api/v1/products/all", {
+				const res = await axios.get("/api/v1/products/", {
 					withCredentials: true,
 				});
 				const productData = res?.data?.data;
