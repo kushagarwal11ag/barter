@@ -4,9 +4,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
+import { Popover, Rate, Dropdown, Empty, Button } from "antd";
 
 import defaultProfile from "../../../public/defaultProfile.svg";
 import calendar from "../../../public/icons/calendar.svg";
+import menu from "../../../public/icons/menu.svg";
+import phone from "../../../public/icons/phone.svg";
+import mail from "../../../public/icons/mail.svg";
+import Delete from "@/components/icons/Delete.js";
 
 const Profile = ({ profileId }) => {
 	const router = useRouter();
@@ -58,9 +63,6 @@ const Profile = ({ profileId }) => {
 			});
 			setProducts(productDetails);
 			setCurrentUser(currentUserDetails);
-			console.log(feedbackDetails);
-			console.log("followers", followerDetails);
-			console.log("following", followingDetails);
 			console.log("products", productDetails);
 		};
 		fetchUser();
@@ -98,89 +100,109 @@ const Profile = ({ profileId }) => {
 		  }
 		: { backgroundColor: "#468189" };
 
+	const contactContent = (
+		<div>
+			{credentials?.phone && (
+				<div className="flex gap-2">
+					<Image
+						src={phone}
+						alt="Phone icon"
+						width={15}
+						height={15}
+					/>
+					<p>{credentials.phone}</p>
+				</div>
+			)}
+			{credentials?.email && (
+				<div className="flex gap-2">
+					<Image
+						src={mail}
+						alt="E-mail icon"
+						width={15}
+						height={15}
+					/>
+					<p>{credentials.email}</p>
+				</div>
+			)}
+		</div>
+	);
+
+	const followersContent = (
+		<div className="overflow-auto max-h-20 w-48">
+			{credentials?.followers?.map((follower) => (
+				<Link
+					href={`/profile/${follower.follower._id}`}
+					key={follower.follower._id}
+					className="p-2 flex gap-2 hover:text-[#101827]"
+				>
+					<Image
+						src={follower.follower?.avatar || defaultProfile}
+						alt="User Avatar"
+						className="w-10 h-10 rounded-full border-2 border-black"
+						objectFit="cover"
+					/>
+					<div className="capitalize self-center">
+						{follower.follower.name}
+					</div>
+				</Link>
+			))}
+		</div>
+	);
+
+	const followingContent = (
+		<div className="overflow-auto max-h-20 w-48">
+			{credentials?.following?.map((following) => (
+				<Link
+					href={`/profile/${following.following._id}`}
+					key={following.following._id}
+					className="p-2 flex gap-2 hover:text-[#101827]"
+				>
+					<Image
+						src={following.following?.avatar || defaultProfile}
+						alt="User Avatar"
+						className="w-10 h-10 rounded-full border-2 border-black"
+						objectFit="cover"
+					/>
+					<div className="capitalize self-center">
+						{following.following.name}
+					</div>
+				</Link>
+			))}
+		</div>
+	);
+
+	const items =
+		credentials?._id === currentUser?._id
+			? [
+					{
+						key: "1",
+						label: <Link href="edit">Edit</Link>,
+					},
+					{
+						key: "2",
+						label: (
+							<div
+								onClick={async () => {
+									await axios.delete("/api/v1/users/");
+									router.push("/login");
+								}}
+							>
+								Delete
+							</div>
+						),
+						danger: true,
+					},
+			  ]
+			: [
+					{
+						key: "1",
+						label: <Link href="/">Block</Link>,
+						danger: true,
+					},
+			  ];
+
 	return (
 		<>
-			{/* <section className="bg-white rounded p-4 px-4 md:p-8 mb-6 grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-3">
-					<section className="md:col-span-2">
-						<section className="flex gap-2">
-							{credentials?._id === currentUser?._id ? (
-								<>
-									<Link
-										href="edit"
-										className="p-2 rounded bg-green-700 text-white w-fit"
-									>
-										Edit
-									</Link>
-									<button
-										className="p-2 rounded bg-red-700 text-white w-fit"
-										onClick={async () => {
-											await axios.delete(
-												"/api/v1/users/"
-											);
-											router.push("/login");
-										}}
-									>
-										Delete
-									</button>
-								</>
-							) : (
-								<>
-									<button
-										className="p-2 rounded bg-[#101827] text-white w-fit"
-										onClick={async () => {
-											credentials.isFollow
-												? await axios.delete(
-														`/api/v1/follow/${credentials._id}`
-												  )
-												: await axios.post(
-														`/api/v1/follow/${credentials._id}`
-												  );
-										}}
-									>
-										{credentials.isFollow
-											? "Unfollow"
-											: "Follow"}
-									</button>
-									<button
-										className="p-2 rounded bg-[#101827] text-white w-fit"
-										onClick={async () => {
-											await axios.patch(
-												`/api/v1/block/${credentials._id}`
-											);
-										}}
-									>
-										Block
-									</button>
-								</>
-							)}
-						</section>
-							{credentials?.feedbacks?.length &&
-								credentials.feedbacks.map((feedback) => (
-									<section
-										className="p-2 border-2"
-										key={feedback._id}
-									>
-										<button
-											className="p-1 rounded bg-red-600 text-white"
-											onClick={async () => {
-												await axios.delete(
-													`/api/v1/feedback/${feedback._id}`
-												);
-											}}
-										>
-											Delete
-										</button>
-										<div>Rating: {feedback.rating}</div>
-										<div>Content: {feedback.content}</div>
-										<div>
-											Owner Name:{" "}
-											{feedback.feedbackBy.name}
-										</div>
-									</section>
-								))}
-						</section>
-				</section>
-			</section> */}
 			<section className="container max-w-screen-lg mx-auto pb-12 md:pb-0">
 				<section className="relative w-full h-32" style={bannerStyle}>
 					<div className="absolute bottom-0 left-1/2 md:left-40 transform -translate-x-1/2 translate-y-1/2 w-40 h-40">
@@ -193,122 +215,121 @@ const Profile = ({ profileId }) => {
 						/>
 					</div>
 				</section>
-				<section className="mt-20 md:ml-72 md:mt-0 p-2">
-					{credentials?.name && (
-						<div className="capitalize text-2xl font-semibold">
-							{credentials.name}
-						</div>
-					)}
-
-					{credentials?.rating && (
-						<div className="mt-1 flex items-center">
-							<svg
-								className={`w-4 h-4 ${
-									credentials.rating >= 1
-										? "text-yellow-600"
-										: "text-gray-400"
-								}`}
-								aria-hidden="true"
-								xmlns="http://www.w3.org/2000/svg"
-								fill="currentColor"
-								viewBox="0 0 22 20"
-							>
-								<path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-							</svg>
-							<svg
-								className={`w-4 h-4 ${
-									credentials.rating >= 2
-										? "text-yellow-600"
-										: "text-gray-400"
-								} ms-1`}
-								aria-hidden="true"
-								xmlns="http://www.w3.org/2000/svg"
-								fill="currentColor"
-								viewBox="0 0 22 20"
-							>
-								<path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-							</svg>
-							<svg
-								className={`w-4 h-4 ${
-									credentials.rating >= 3
-										? "text-yellow-600"
-										: "text-gray-400"
-								} ms-1`}
-								aria-hidden="true"
-								xmlns="http://www.w3.org/2000/svg"
-								fill="currentColor"
-								viewBox="0 0 22 20"
-							>
-								<path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-							</svg>
-							<svg
-								className={`w-4 h-4 ${
-									credentials.rating >= 4
-										? "text-yellow-600"
-										: "text-gray-400"
-								} ms-1`}
-								aria-hidden="true"
-								xmlns="http://www.w3.org/2000/svg"
-								fill="currentColor"
-								viewBox="0 0 22 20"
-							>
-								<path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-							</svg>
-							<svg
-								className={`w-4 h-4 ${
-									credentials.rating >= 5
-										? "text-yellow-600"
-										: "text-gray-400"
-								} ms-1`}
-								aria-hidden="true"
-								xmlns="http://www.w3.org/2000/svg"
-								fill="currentColor"
-								viewBox="0 0 22 20"
-							>
-								<path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-							</svg>
-						</div>
-					)}
-
-					{credentials?.createdAt && (
-						<div className="mt-1 text-sm flex gap-2">
-							<Image
-								src={calendar}
-								alt="Calendar icon"
-								width={15}
-								height={15}
+				<section className="mt-20 md:ml-72 md:mt-0 p-2 flex">
+					<div>
+						{credentials?.name && (
+							<div className="capitalize text-2xl font-semibold">
+								{credentials.name}
+							</div>
+						)}
+						{credentials?.rating > 0 && (
+							<Rate
+								disabled
+								defaultValue={credentials.rating}
+								className="custom-rating"
 							/>
-							Joined {timeSpan(credentials.createdAt)}
-						</div>
-					)}
+						)}
+						{credentials?.bio && (
+							<div className="text-sm">{credentials.bio}</div>
+						)}
+						{credentials?.createdAt && (
+							<div className="mt-1 text-sm flex gap-2">
+								<Image
+									src={calendar}
+									alt="Calendar icon"
+									width={15}
+									height={15}
+								/>
+								Joined {timeSpan(credentials.createdAt)}
+							</div>
+						)}
+					</div>
+					<Dropdown
+						menu={{
+							items,
+						}}
+						placement="bottomRight"
+						className="ml-auto h-fit"
+					>
+						<Image
+							src={menu}
+							alt="Menu icon"
+							width={24}
+							height={24}
+							className="cursor-pointer"
+						/>
+					</Dropdown>
 				</section>
-				<section className="p-4">
-					<section className="flex gap-4">
-						{credentials?.email && <div>{credentials.email}</div>}
-						{credentials?.phone && (
-							<div>+1 {credentials.phone}</div>
+				<section className="mt-4 p-4">
+					<div className="flex gap-2">
+						{(credentials?.email || credentials?.phone) && (
+							<Popover
+								content={contactContent}
+								title="Contact Details"
+								trigger="hover"
+								arrow={false}
+								placement="bottomLeft"
+								overlayClassName="custom-popover popover2"
+								className="py-1 px-2 bg-[#D3D9E9] rounded cursor-pointer"
+							>
+								Contact
+							</Popover>
 						)}
-					</section>
-					<section className="flex gap-4">
-						{credentials?.followers && (
-							<div>
-								<span className="font-semibold">
-									{credentials.followers.length}
-								</span>{" "}
-								followers
-							</div>
+						{credentials?._id !== currentUser?._id && (
+							<button
+								className="py-1 px-2 bg-[#101827] text-white w-fit rounded"
+								onClick={async () => {
+									credentials.isFollow
+										? await axios.delete(
+												`/api/v1/follow/${credentials._id}`
+										  )
+										: await axios.post(
+												`/api/v1/follow/${credentials._id}`
+										  );
+								}}
+							>
+								{credentials.isFollow ? "Unfollow" : "Follow"}
+							</button>
 						)}
-						{credentials?.following && (
-							<div>
-								<span className="font-semibold">
-									{credentials.following.length}
-								</span>{" "}
-								following
-							</div>
+					</div>
+					<section className="flex gap-4">
+						{credentials?.followers?.length > 0 && (
+							<Popover
+								content={followersContent}
+								title="People who are following you"
+								trigger="hover"
+								arrow={false}
+								placement="bottomLeft"
+								overlayClassName="custom-popover"
+							>
+								<div className="mt-2 cursor-pointer">
+									<span className="font-semibold">
+										{credentials.followers.length}
+									</span>{" "}
+									followers
+								</div>
+							</Popover>
+						)}
+						{credentials?.following?.length > 0 && (
+							<Popover
+								content={followingContent}
+								title="People you are following"
+								trigger="hover"
+								arrow={false}
+								placement="bottomRight"
+								overlayClassName="custom-popover"
+							>
+								<div className="mt-2 cursor-pointer">
+									<span className="font-semibold">
+										{credentials.following.length}
+									</span>{" "}
+									following
+								</div>
+							</Popover>
 						)}
 					</section>
 					<hr className="my-2 h-px border-0 bg-black" />
-					{products?.productCount &&
+					{products?.productCount > 0 ? (
 						products.products.map((product) => (
 							<div key={product._id}>
 								<div>{products.productCount} products</div>
@@ -335,7 +356,64 @@ const Profile = ({ profileId }) => {
 									</div>
 								</Link>
 							</div>
-						))}
+						))
+					) : (
+						<Empty description={<p>No products to display</p>}>
+							{/* <Button>Create Now</Button> */}
+						</Empty>
+					)}
+					<hr className="my-2 h-px border-0 bg-black" />
+					{credentials?.feedbacks?.length > 0 ? (
+						<>
+							{credentials.feedbacks.length} feedbacks
+							{credentials.feedbacks.map((feedback) => (
+								<section
+									key={feedback._id}
+									className="relative"
+								>
+									<section className="p-2 mt-6 flex gap-2 overflow-x-auto border border-black rounded cursor-default">
+										<Delete
+											className="absolute right-2 -top-4 z-50 p-1 bg-white w-7 h-7 cursor-pointer"
+											onClick={async () => {
+												await axios.delete(
+													`/api/v1/feedback/${feedback._id}`
+												);
+											}}
+										/>
+										<div className="flex flex-col min-w-32">
+											<Image
+												src={
+													feedback.feedbackBy
+														.avatar ||
+													defaultProfile
+												}
+												alt="User Avatar"
+												className="w-20 h-20 self-center rounded-full border-2 border-black"
+												objectFit="cover"
+											/>
+											<p className="font-semibold text-center capitalize">
+												{feedback.feedbackBy.name}
+											</p>
+										</div>
+										<div className="max-h-20 overflow-y-auto self-center">
+											<Rate
+												disabled
+												defaultValue={
+													feedback.rating || 1
+												}
+												className="custom-rating"
+											/>
+											<p className="text-sm">
+												{feedback.content}
+											</p>
+										</div>
+									</section>
+								</section>
+							))}
+						</>
+					) : (
+						<Empty description={<p>No feedbacks to display</p>} />
+					)}
 				</section>
 			</section>
 		</>

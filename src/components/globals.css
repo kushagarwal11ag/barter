@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-popover {
+	@apply rounded-lg shadow-lg;
+}
+.custom-popover .ant-popover-inner {
+	@apply bg-[#D3D9E9];
+}
+.popover2 .ant-popover-inner {
+	@apply bg-[#101827];
+}
+.popover2 .ant-popover-title {
+	@apply text-white;
+}
+.popover2 .ant-popover-inner-content {
+	@apply text-white;
+}
+
+.custom-rating .ant-rate-star {
+	@apply text-yellow-600 text-base;
+}
