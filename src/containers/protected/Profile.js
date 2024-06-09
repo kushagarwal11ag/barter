@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
-import { Popover, Rate, Dropdown, Empty, Button } from "antd";
+import { Popover, Modal, Rate, Dropdown, Empty } from "antd";
 
 import defaultProfile from "../../../public/defaultProfile.svg";
 import calendar from "../../../public/icons/calendar.svg";
@@ -12,6 +12,29 @@ import menu from "../../../public/icons/menu.svg";
 import phone from "../../../public/icons/phone.svg";
 import mail from "../../../public/icons/mail.svg";
 import Delete from "@/components/icons/Delete.js";
+
+const timeSpan = (joinDate) => {
+	const date = new Date(joinDate);
+	const monthNames = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	];
+
+	const year = date.getFullYear();
+	const month = monthNames[date.getMonth()];
+
+	return `${month} ${year}`;
+};
 
 const Profile = ({ profileId }) => {
 	const router = useRouter();
@@ -63,33 +86,9 @@ const Profile = ({ profileId }) => {
 			});
 			setProducts(productDetails);
 			setCurrentUser(currentUserDetails);
-			console.log("products", productDetails);
 		};
 		fetchUser();
 	}, []);
-
-	const timeSpan = (joinDate) => {
-		const date = new Date(joinDate);
-		const monthNames = [
-			"January",
-			"February",
-			"March",
-			"April",
-			"May",
-			"June",
-			"July",
-			"August",
-			"September",
-			"October",
-			"November",
-			"December",
-		];
-
-		const year = date.getFullYear();
-		const month = monthNames[date.getMonth()];
-
-		return `${month} ${year}`;
-	};
 
 	const bannerStyle = credentials?.banner
 		? {
@@ -171,6 +170,15 @@ const Profile = ({ profileId }) => {
 		</div>
 	);
 
+	const handleDelete = async () => {
+		await axios.delete("/api/v1/users/", { withCredentials: true });
+		router.push("/login");
+	};
+	const handleBlock = async () => {
+		await axios.patch(`/api/v1/block/${profileId}`);
+		router.push("/explore");
+	};
+
 	const items =
 		credentials?._id === currentUser?._id
 			? [
@@ -181,14 +189,22 @@ const Profile = ({ profileId }) => {
 					{
 						key: "2",
 						label: (
-							<div
-								onClick={async () => {
-									await axios.delete("/api/v1/users/");
-									router.push("/login");
+							<button
+								type="button"
+								onClick={() => {
+									Modal.confirm({
+										title: "Delete account",
+										content:
+											"Once you delete your account, there is no going back. Please be certain.",
+										okButtonProps: {
+											className: "text-black",
+										},
+										onOk: handleDelete,
+									});
 								}}
 							>
 								Delete
-							</div>
+							</button>
 						),
 						danger: true,
 					},
@@ -196,7 +212,22 @@ const Profile = ({ profileId }) => {
 			: [
 					{
 						key: "1",
-						label: <Link href="/">Block</Link>,
+						label: (
+							<button
+								type="button"
+								onClick={() => {
+									Modal.confirm({
+										title: "Block account",
+										okButtonProps: {
+											className: "text-black",
+										},
+										onOk: handleBlock,
+									});
+								}}
+							>
+								Block
+							</button>
+						),
 						danger: true,
 					},
 			  ];
@@ -260,7 +291,7 @@ const Profile = ({ profileId }) => {
 						/>
 					</Dropdown>
 				</section>
-				<section className="mt-4 p-4">
+				<section className="p-2">
 					<div className="flex gap-2">
 						{(credentials?.email || credentials?.phone) && (
 							<Popover
@@ -329,43 +360,50 @@ const Profile = ({ profileId }) => {
 						)}
 					</section>
 					<hr className="my-2 h-px border-0 bg-black" />
-					{products?.productCount > 0 ? (
-						products.products.map((product) => (
-							<div key={product._id}>
-								<div>{products.productCount} products</div>
+					{products?.productCount > 0 && (
+						<div>{products.productCount} products</div>
+					)}
+					<section className="max-w-7xl py-4 grid gap-8 grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]">
+						{products?.productCount > 0 ? (
+							products.products?.map((product) => (
 								<Link
+									key={product._id}
 									href={`/product/${product._id}`}
-									className="max-w-xs bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl overflow-hidden"
+									className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-xl overflow-hidden h-80"
 								>
-									<div className="h-40 overflow-hidden">
-										<Image
-											src={product.image}
-											width={100}
-											height={100}
-											alt={`${product.title} of type ${product.category} by ${credentials.name}`}
-											className="h-full w-full object-contain"
-										/>
-									</div>
-									<div className="p-4">
-										<p className="text-gray-700 capitalize">
-											{product.category}
-										</p>
-										<p className="uppercase tracking-wide text-sm font-bold text-gray-700">
+									<div
+										className="absolute inset-0 bg-cover bg-center z-0 rounded-xl border-black border-4"
+										style={{
+											backgroundImage: `url(${product.image})`,
+										}}
+									></div>
+									<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end rounded-xl">
+										<p className="uppercase tracking-wide text-lg font-bold">
 											{product.title}
 										</p>
-									</div>
+										<p className="capitalize text-sm">
+											{product.category}
+										</p>
+									</section>
 								</Link>
-							</div>
-						))
-					) : (
-						<Empty description={<p>No products to display</p>}>
-							{/* <Button>Create Now</Button> */}
-						</Empty>
-					)}
+							))
+						) : (
+							<Empty description={<p>No products to display</p>}>
+								{/* <Button>Create Now</Button> */}
+							</Empty>
+						)}
+					</section>
 					<hr className="my-2 h-px border-0 bg-black" />
+					<div className="flex">
+						{credentials?._id !== currentUser?._id && (
+							<button type="button" className="ml-auto px-2 border-black border rounded">
+								Leave a review
+							</button>
+						)}
+					</div>
 					{credentials?.feedbacks?.length > 0 ? (
 						<>
-							{credentials.feedbacks.length} feedbacks
+							Reviews
 							{credentials.feedbacks.map((feedback) => (
 								<section
 									key={feedback._id}
@@ -412,7 +450,7 @@ const Profile = ({ profileId }) => {
 							))}
 						</>
 					) : (
-						<Empty description={<p>No feedbacks to display</p>} />
+						<Empty description={<p>No reviews to display</p>} />
 					)}
 				</section>
 			</section>

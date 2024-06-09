@@ -32,42 +32,29 @@ const Explore = () => {
 						<Link
 							key={product._id}
 							href={`/product/${product._id}`}
-							className="max-w-xs bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl overflow-hidden"
+							className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-xl overflow-hidden h-80"
 						>
-							<div className="h-40 overflow-hidden">
-								<Image
-									src={product.image}
-									width={100}
-									height={100}
-									alt={`${product.title} of type ${product.category} by ${product.owner.name}`}
-									className="h-full w-full object-contain"
-								/>
-							</div>
-							<div className="p-4">
-								<p className="text-gray-700 capitalize">
-									{product.category}
+							<div
+								className="absolute inset-0 bg-cover bg-center z-0 rounded-xl border-black border-4"
+								style={{
+									backgroundImage: `url(${product.image})`,
+								}}
+							></div>
+							<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end rounded-xl">
+								<p className="text-sm">
+									{product.isBarter
+										? product.price
+											? "Hybrid"
+											: "Barter"
+										: "Sale"}
 								</p>
-								<p className="uppercase tracking-wide text-sm font-bold text-gray-700">
+								<p className="uppercase tracking-wide text-lg font-bold">
 									{product.title}
 								</p>
-								<p className="text-gray-700 capitalize">
-									{product.isBarter ? (
-										product.price ? (
-											<>Hybrid</>
-										) : (
-											<>Barter</>
-										)
-									) : (
-										<>Sale</>
-									)}
+								<p className="capitalize text-sm">
+									{product.category}
 								</p>
-								<p className="uppercase tracking-wide text-sm font-bold text-gray-700">
-									&#x20b9;{product.price}
-								</p>
-							</div>
-
-							<section className="p-2 border-t border-gray-300 bg-gray-100">
-								<div className="flex items-center pt-2">
+								<div className="mt-2 flex items-center gap-2">
 									<Image
 										src={
 											product.owner.avatar ||
@@ -76,15 +63,10 @@ const Explore = () => {
 										width={100}
 										height={100}
 										alt={`Image of trader ${product.owner.name}`}
-										className="object-cover object-center w-10 h-10 rounded-full mr-3"
+										className="object-cover object-center w-10 h-10 rounded-full"
 									/>
-									<div>
-										<p className="font-bold text-gray-900 capitalize">
-											{product.owner.name}
-										</p>
-										<p className="text-sm font-bold text-gray-700 tracking-wide">
-											Trader
-										</p>
+									<div className="font-bold capitalize">
+										{product.owner.name}
 									</div>
 								</div>
 							</section>
