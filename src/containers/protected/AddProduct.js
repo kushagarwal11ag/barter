@@ -106,7 +106,7 @@ const AddProduct = () => {
 											src={imageURL}
 											width={100}
 											height={100}
-											alt="Post Image"
+											alt="Product Image"
 											className="w-52 h-52 mt-10 mb-7 object-cover"
 										/>
 										<label>Upload product image</label>

@@ -27,7 +27,7 @@ export default function Home() {
 						src="/barter-illustration.png"
 						width={500}
 						height={500}
-						alt="Barter illustration"
+						alt="Image illustrating bartering process"
 					/>
 				</div>
 			</section>
@@ -44,7 +44,7 @@ export default function Home() {
 							src="/icons/electronics.png"
 							width={100}
 							height={100}
-							alt="Electronics icon"
+							alt="Electronics image"
 						/>
 					</div>
 
@@ -59,7 +59,7 @@ export default function Home() {
 							src="/icons/books.png"
 							width={100}
 							height={100}
-							alt="Books icon"
+							alt="Books image"
 						/>
 					</div>
 
@@ -74,7 +74,7 @@ export default function Home() {
 							src="/icons/jacket.png"
 							width={100}
 							height={100}
-							alt="Jacket icon"
+							alt="Jacket image"
 						/>
 					</div>
 
@@ -89,7 +89,7 @@ export default function Home() {
 							src="/icons/furniture.png"
 							width={100}
 							height={100}
-							alt="Furniture icon"
+							alt="Furniture image"
 						/>
 					</div>
 
@@ -104,7 +104,7 @@ export default function Home() {
 							src="/icons/sports.png"
 							width={100}
 							height={100}
-							alt="Sports icon"
+							alt="Sports image"
 						/>
 					</div>
 
@@ -119,7 +119,7 @@ export default function Home() {
 							src="/icons/car.png"
 							width={100}
 							height={100}
-							alt="Vehicle icon"
+							alt="Vehicle image"
 						/>
 					</div>
 

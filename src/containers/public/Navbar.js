@@ -4,11 +4,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
-import { Dropdown } from "antd";
+import { Dropdown, Badge, Popover } from "antd";
 
-import logoImg from "../../../public/logo.svg";
-import menuImg from "../../../public/icons/mobileMenu.svg";
-import closeIcon from "../../../public/icons/closeIcon.svg";
 import defaultProfile from "../../../public/defaultProfile.svg";
 
 const Navbar = () => {
@@ -53,21 +50,13 @@ const Navbar = () => {
 		{
 			key: "1",
 			label: (
-				<Link href="/product/add" className="p-2">
-					Add Product
-				</Link>
-			),
-		},
-		{
-			key: "2",
-			label: (
 				<Link href="/transaction" className="p-2">
 					View Transactions
 				</Link>
 			),
 		},
 		{
-			key: "3",
+			key: "2",
 			label: (
 				<Link className="p-2" href={`/profile/${userDetails?._id}`}>
 					Profile
@@ -75,7 +64,7 @@ const Navbar = () => {
 			),
 		},
 		{
-			key: "4",
+			key: "3",
 			label: (
 				<Link className="p-2" href="/contact">
 					Contact Us
@@ -83,7 +72,7 @@ const Navbar = () => {
 			),
 		},
 		{
-			key: "5",
+			key: "4",
 			label: (
 				<Link className="p-2" href="/login" onClick={handleLogout}>
 					Logout
@@ -98,7 +87,7 @@ const Navbar = () => {
 				<div className="navbar_div max-w-7xl mx-auto flex justify-between px-5 md:px-12 py-2 items-center">
 					<Link className="navbar_left" href="/">
 						<Image
-							src={logoImg}
+							src="/logo.svg"
 							alt="logo"
 							width={48}
 							height={48}
@@ -106,13 +95,30 @@ const Navbar = () => {
 						/>
 					</Link>
 					<div className="navbar_right">
-						<ul className="gap-4 items-center hidden md:flex">
+						<ul className="gap-6 items-center hidden sm:flex">
 							{isLoggedIn ? (
-								<>
-									<li className="hover:text-indigo-400">
+								<div className="flex gap-3 items-center">
+									<li className="mt-2 border-b-2 border-gray-800 hover:border-indigo-500 cursor-pointer">
+										<Badge dot={true} size="small">
+											<Popover
+												content="Hello"
+												title="Notification Box"
+												trigger="click"
+												arrow={false}
+											>
+												<Image
+													src="/icons/notification.svg"
+													alt="notification icon"
+													width={25}
+													height={25}
+												/>
+											</Popover>
+										</Badge>
+									</li>
+									<li className="py-2 border-b-2 border-gray-800 hover:border-indigo-500">
 										<Link href="/explore">Explore</Link>
 									</li>
-								</>
+								</div>
 							) : (
 								<>
 									<Link
@@ -138,8 +144,11 @@ const Navbar = () => {
 										}}
 									>
 										<Image
-											src={userDetails?.avatar?.url || defaultProfile}
-											alt="user profile image"
+											src={
+												userDetails?.avatar?.url ||
+												defaultProfile
+											}
+											alt="User Avatar"
 											className="w-10 h-10 rounded-full object-cover"
 											width={44}
 											height={44}
@@ -149,8 +158,8 @@ const Navbar = () => {
 							)}
 						</ul>
 						<Image
-							src={menuImg}
-							alt="mobile navigation"
+							src="/icons/mobileMenu.svg"
+							alt="Mobile Navigation icon"
 							className="w-7 h-7 flex md:hidden cursor-pointer"
 							width={28}
 							height={28}
@@ -163,9 +172,11 @@ const Navbar = () => {
 						<div className="mobile_nav_header flex justify-between items-center px-5 py-3 border-b border-gray-200">
 							<h3 className="text-lg font-semibold">Menu</h3>
 							<Image
-								src={closeIcon}
-								alt="close icon"
+								src="/icons/closeIcon.svg"
+								alt="Navigation close icon"
 								className="w-6 h-6 cursor-pointer"
+								width={10}
+								height={10}
 								onClick={toggleMobileNav}
 							/>
 						</div>
@@ -175,10 +186,10 @@ const Navbar = () => {
 									<>
 										<li>
 											<Link
-												href="/product/add"
+												href="/explore"
 												onClick={toggleMobileNav}
 											>
-												Add Product
+												Explore
 											</Link>
 										</li>
 										<li>
@@ -191,7 +202,7 @@ const Navbar = () => {
 										</li>
 										<li>
 											<Link
-												href="/profile"
+												href={`/profile/${userDetails?._id}`}
 												onClick={toggleMobileNav}
 											>
 												Profile

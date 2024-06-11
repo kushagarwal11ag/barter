@@ -73,6 +73,15 @@ const Explore = () => {
 						</Link>
 					))}
 			</section>
+			<Link href="/product/add">
+				<Image
+					src="/icons/plus.svg"
+					alt="Add product icon"
+					width={60}
+					height={60}
+					className="fixed bottom-5 right-5 cursor-pointer hover:scale-110 duration-300"
+				/>
+			</Link>
 		</>
 	);
 };

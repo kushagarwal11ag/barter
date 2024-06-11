@@ -80,7 +80,7 @@ const Login = () => {
 							width={400}
 							height={400}
 							className="h-96 absolute right-5 mr-5"
-							alt="Main image"
+							alt="Image showcasing barter"
 						/>
 
 						<ul className="circles">

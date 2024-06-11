@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
+import Navbar from "@/containers/public/Navbar";
+
 const ProtectedLayout = ({ children }) => {
 	const router = useRouter();
 
@@ -21,7 +23,12 @@ const ProtectedLayout = ({ children }) => {
 		fetchUser();
 	}, []);
 
-	return <>{children}</>;
+	return (
+		<>
+			<Navbar />
+			{children}
+		</>
+	);
 };
 
 export default ProtectedLayout;

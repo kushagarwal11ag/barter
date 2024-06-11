@@ -1,7 +1,13 @@
 import Home from "@/containers/public/Home";
+import Navbar from "@/containers/public/Navbar";
 
 const HomePage = () => {
-	return <Home />;
+	return (
+		<>
+			<Navbar />
+			<Home />
+		</>
+	);
 };
 
 export default HomePage;

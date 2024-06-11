@@ -207,10 +207,10 @@ const EditProfile = () => {
 							<Image
 								name="avatar"
 								src={imageUrl.avatar}
-								alt="User Profile Image"
+								alt="User Avatar"
 								width={200}
 								height={200}
-								className="w-52 h-52 m-7 rounded-full object-cover object-contain"
+								className="w-52 h-52 m-7 rounded-full object-cover"
 							/>
 							<label className="flex gap-2 items-center justify-start">
 								<p>Upload Avatar</p>
@@ -225,10 +225,10 @@ const EditProfile = () => {
 							<Image
 								name="banner"
 								src={imageUrl.banner}
-								alt="User Banner - Background Image"
+								alt="Banner of user to be displayed"
 								width={200}
 								height={200}
-								className="w-52 h-52 m-7 rounded-full object-cover object-contain"
+								className="w-52 h-52 m-7 rounded-full object-cover"
 							/>
 							<label className="flex gap-2 items-center justify-start">
 								<p>Upload Background Image</p>
@@ -284,7 +284,7 @@ const EditProfile = () => {
 										name="bio"
 										className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
 										placeholder="Enter bio"
-										rows={1}
+										rows={2}
 										value={credentials.bio}
 										onChange={onChange}
 										minLength={10}

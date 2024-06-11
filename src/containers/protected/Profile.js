@@ -16,10 +16,6 @@ import {
 } from "antd";
 
 import defaultProfile from "../../../public/defaultProfile.svg";
-import calendar from "../../../public/icons/calendar.svg";
-import menu from "../../../public/icons/menu.svg";
-import phone from "../../../public/icons/phone.svg";
-import mail from "../../../public/icons/mail.svg";
 import Edit from "@/components/icons/Edit.js";
 import Delete from "@/components/icons/Delete.js";
 
@@ -303,7 +299,10 @@ const Feedbacks = ({ credentials, currentUser, profileId }) => {
 										/>
 									)}
 								</div>
-								<div className="flex flex-col min-w-32 my-auto">
+								<Link
+									href={`/profile/${feedback.feedbackBy._id}`}
+									className="flex flex-col min-w-32 my-auto"
+								>
 									<Image
 										src={
 											feedback.feedbackBy.avatar ||
@@ -317,7 +316,7 @@ const Feedbacks = ({ credentials, currentUser, profileId }) => {
 									<p className="font-semibold text-center capitalize">
 										{feedback.feedbackBy.name}
 									</p>
-								</div>
+								</Link>
 								<div className="overflow-y-auto flex flex-col self-center">
 									<Rate
 										disabled
@@ -414,7 +413,7 @@ const Profile = ({ profileId }) => {
 			{credentials?.phone && (
 				<div className="flex gap-2">
 					<Image
-						src={phone}
+						src="/icons/phone.svg"
 						alt="Phone icon"
 						width={15}
 						height={15}
@@ -425,7 +424,7 @@ const Profile = ({ profileId }) => {
 			{credentials?.email && (
 				<div className="flex gap-2">
 					<Image
-						src={mail}
+						src="/icons/mail.svg"
 						alt="E-mail icon"
 						width={15}
 						height={15}
@@ -607,7 +606,7 @@ const Profile = ({ profileId }) => {
 						{credentials?.createdAt && (
 							<div className="mt-1 text-sm flex gap-2">
 								<Image
-									src={calendar}
+									src="/icons/calendar.svg"
 									alt="Calendar icon"
 									width={15}
 									height={15}
@@ -624,7 +623,7 @@ const Profile = ({ profileId }) => {
 						className="ml-auto h-fit"
 					>
 						<Image
-							src={menu}
+							src="/icons/menu.svg"
 							alt="Menu icon"
 							width={24}
 							height={24}
