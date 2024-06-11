@@ -32,10 +32,10 @@ const Explore = () => {
 						<Link
 							key={product._id}
 							href={`/product/${product._id}`}
-							className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-xl overflow-hidden h-80"
+							className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-2xl overflow-hidden h-80"
 						>
 							<div
-								className="absolute inset-0 bg-cover bg-center z-0 rounded-xl border-black border-4"
+								className="absolute inset-0 bg-cover bg-center z-0 rounded-xl border-black border"
 								style={{
 									backgroundImage: `url(${product.image})`,
 								}}
