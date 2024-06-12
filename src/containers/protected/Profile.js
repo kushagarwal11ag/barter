@@ -42,6 +42,12 @@ const timeSpan = (joinDate) => {
 	return `${month} ${year}`;
 };
 
+const handleAxiosError = (error) => {
+	const errorMessage =
+		error.response?.data?.message || "Something went wrong. Try again";
+	console.log(errorMessage);
+};
+
 const FeedbackModal = ({
 	type = "add",
 	isModalOpen,
@@ -89,12 +95,6 @@ const FeedbackModal = ({
 	const handleFeedbackModalCancel = () => {
 		form.resetFields();
 		setIsModalOpen(false);
-	};
-
-	const handleAxiosError = (error) => {
-		const errorMessage =
-			error.response?.data?.message || "Something went wrong. Try again";
-		console.log(errorMessage);
 	};
 
 	const formInitialValues =
@@ -231,11 +231,6 @@ const Feedbacks = ({ credentials, currentUser, profileId }) => {
 		} catch (error) {
 			handleAxiosError(error);
 		}
-	};
-	const handleAxiosError = (error) => {
-		const errorMessage =
-			error.response?.data?.message || "Something went wrong. Try again";
-		console.log(errorMessage);
 	};
 
 	return (
@@ -555,21 +550,15 @@ const Profile = ({ profileId }) => {
 	const handleAccountFollow = async () => {
 		try {
 			credentials?.isFollow
-				? await axios.post(`/api/v1/follow/${credentials._id}`, {
+				? await axios.delete(`/api/v1/follow/${credentials._id}`, {
 						withCredentials: true,
 				  })
-				: await axios.delete(`/api/v1/follow/${credentials._id}`, {
+				: await axios.post(`/api/v1/follow/${credentials._id}`, {
 						withCredentials: true,
 				  });
 		} catch (error) {
 			handleAxiosError(error);
 		}
-	};
-
-	const handleAxiosError = (error) => {
-		const errorMessage =
-			error.response?.data?.message || "Something went wrong. Try again";
-		console.log(errorMessage);
 	};
 
 	return (
@@ -604,12 +593,12 @@ const Profile = ({ profileId }) => {
 							<div className="text-sm">{credentials.bio}</div>
 						)}
 						{credentials?.createdAt && (
-							<div className="mt-1 text-sm flex gap-2">
+							<div className="mt-1 text-xs flex gap-2">
 								<Image
 									src="/icons/calendar.svg"
 									alt="Calendar icon"
-									width={15}
-									height={15}
+									width={12}
+									height={12}
 								/>
 								Joined {timeSpan(credentials.createdAt)}
 							</div>

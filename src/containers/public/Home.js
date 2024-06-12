@@ -11,9 +11,8 @@ export default function Home() {
 							Shop without spending money
 						</h1>
 						<p className="max-w-2xl mb-6 font-light  lg:mb-8 md:text-lg lg:text-xl text-gray-400">
-							Everyday,thousands of people meet on SwapEase to
-							trade for everything from clothing and furniture to
-							houseplants and art
+							Meet people on SwapEase to trade for everything from
+							clothing and furniture to houseplants and art
 						</p>
 						<Link
 							href="/login"
@@ -146,7 +145,7 @@ export default function Home() {
 							</div>
 							<p className="text-2xl">
 								<b>SignUp.</b> Create your free account and
-								start exploring items!
+								start exploring items.
 							</p>
 						</div>
 						<div className="flex flex-col p-8 space-y-4 rounded-md bg-gray-900">
@@ -242,20 +241,14 @@ export default function Home() {
 					<div className="grid justify-center pt-6 lg:justify-between">
 						<div className="flex flex-col self-center text-sm text-center md:block lg:col-start-1 md:space-x-6">
 							<span>©2023 All rights reserved</span>
-							<Link href="#">
-								Privacy policy
-							</Link>
-							<Link href="#">
-								Terms of service
-							</Link>
-							<Link href="/contact">
-								Contact Us
-							</Link>
+							<Link href="#">Privacy policy</Link>
+							<Link href="#">Terms of service</Link>
+							<Link href="/contact">Contact Us</Link>
 						</div>
 						<div className="flex justify-center pt-4 space-x-4 lg:pt-0 lg:col-end-13">
 							<Link
 								rel="noopener noreferrer"
-								href="mailto:contact.swapease@gmail.com"
+								href="mailto:kushagarwal11ag@gmail.com"
 								title="Email"
 								className="flex items-center justify-center w-10 h-10 rounded-full bg-violet-400 text-gray-900"
 							>
@@ -286,7 +279,7 @@ export default function Home() {
 							</Link>
 							<Link
 								rel="noopener noreferrer"
-								href="https://github.com/"
+								href="https://github.com/kushagarwal11ag/barter"
 								title="GitHub"
 								className="flex items-center justify-center w-10 h-10 rounded-full bg-violet-400 text-gray-900"
 							>

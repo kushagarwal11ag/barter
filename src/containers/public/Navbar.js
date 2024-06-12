@@ -1,12 +1,176 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
 import { Dropdown, Badge, Popover } from "antd";
+import TimeAgoWrapper from "../fractions/TimeAgoWrapper";
 
 import defaultProfile from "../../../public/defaultProfile.svg";
+import Delete from "@/components/icons/Delete.js";
+
+const handleAxiosError = (error) => {
+	const errorMessage =
+		error.response?.data?.message || "Something went wrong. Try again";
+	console.log(errorMessage);
+};
+
+const NotificationItem = ({ notification }) => {
+	const handleReadToggle = useCallback(async () => {
+		try {
+			await axios.patch(`/api/v1/notification/${notification._id}`, {
+				withCredentials: true,
+			});
+		} catch (error) {
+			handleAxiosError(error);
+		}
+	}, []);
+
+	const handleDelete = useCallback(async () => {
+		try {
+			await axios.delete(`/api/v1/notification/${notification._id}`, {
+				withCredentials: true,
+			});
+		} catch (error) {
+			handleAxiosError(error);
+		}
+	}, []);
+
+	const getLinkHref = () => {
+		switch (notification.notificationType) {
+			case "follow":
+				return `/profile/${notification.followedByUser?._id}`;
+			case "feedback":
+				return `/profile/${notification.user}`;
+			default:
+				return "#";
+		}
+	};
+
+	const getAvatarSrc = () => {
+		switch (notification.notificationType) {
+			case "follow":
+				return notification.followedByUser?.avatar || defaultProfile;
+			case "feedback":
+				return notification.feedbackByUser?.avatar || defaultProfile;
+			default:
+				return defaultProfile;
+		}
+	};
+
+	return (
+		<section className="flex gap-2 border-b">
+			<Link href={getLinkHref()} className="self-center">
+				<div className="relative w-12 h-12">
+					<Image
+						src={getAvatarSrc()}
+						alt="User Avatar"
+						className="rounded-full border-2 border-black object-cover"
+						layout="fill"
+						objectFit="cover"
+					/>
+				</div>
+			</Link>
+			<section className="p-2 flex flex-col w-full">
+				<div className="flex gap-2">
+					<div className="flex flex-col gap-2">
+						<div
+							className={`${
+								notification.isRead
+									? "font-normal"
+									: "font-bold"
+							}`}
+						>
+							{notification.content}
+						</div>
+						<button
+							className="text-xs w-fit"
+							onClick={handleReadToggle}
+						>
+							{notification.isRead ? (
+								<div className="flex items-center">
+									<Image
+										src="/icons/check.svg"
+										alt="Icon to mark notification as unread"
+										width={20}
+										height={20}
+									/>
+									Mark as unread
+								</div>
+							) : (
+								<div className="flex gap-1">
+									<Image
+										src="/icons/doubleCheck.svg"
+										alt="Icon to mark notification as read"
+										width={15}
+										height={15}
+									/>
+									Mark as read
+								</div>
+							)}
+						</button>
+					</div>
+					<Delete
+						className="cursor-pointer w-5 h-5 ml-auto"
+						onClick={handleDelete}
+					/>
+				</div>
+				<TimeAgoWrapper
+					date={new Date(notification.createdAt)}
+					className="mt-1 self-end text-xs"
+				/>
+			</section>
+		</section>
+	);
+};
+
+const Notifications = () => {
+	const [notifications, setNotifications] = useState(null);
+
+	useEffect(() => {
+		const fetchNotifications = async () => {
+			const getNotification = await axios.get("/api/v1/notification/", {
+				withCredentials: true,
+			});
+			setNotifications(getNotification?.data?.data);
+		};
+		fetchNotifications();
+	}, []);
+
+	const hasUnreadNotifications = notifications?.some(
+		(notification) => !notification.isRead
+	);
+
+	const content = (
+		<div className="h-fit max-h-60 overflow-y-auto">
+			{notifications?.map((notification) => (
+				<NotificationItem
+					notification={notification}
+					key={notification._id}
+				/>
+			))}
+		</div>
+	);
+
+	return (
+		<Badge dot={hasUnreadNotifications} size="small">
+			<Popover
+				content={content}
+				title="Notifications"
+				trigger="click"
+				arrow={false}
+			>
+				<Image
+					src="/icons/notification.svg"
+					alt="notification icon"
+					width={25}
+					height={25}
+				/>
+			</Popover>
+		</Badge>
+	);
+};
 
 const Navbar = () => {
 	const [userDetails, setUserDetails] = useState(defaultProfile);
@@ -91,7 +255,6 @@ const Navbar = () => {
 							alt="logo"
 							width={48}
 							height={48}
-							className="w-10 md:w-12"
 						/>
 					</Link>
 					<div className="navbar_right">
@@ -99,21 +262,7 @@ const Navbar = () => {
 							{isLoggedIn ? (
 								<div className="flex gap-3 items-center">
 									<li className="mt-2 border-b-2 border-gray-800 hover:border-indigo-500 cursor-pointer">
-										<Badge dot={true} size="small">
-											<Popover
-												content="Hello"
-												title="Notification Box"
-												trigger="click"
-												arrow={false}
-											>
-												<Image
-													src="/icons/notification.svg"
-													alt="notification icon"
-													width={25}
-													height={25}
-												/>
-											</Popover>
-										</Badge>
+										<Notifications />
 									</li>
 									<li className="py-2 border-b-2 border-gray-800 hover:border-indigo-500">
 										<Link href="/explore">Explore</Link>
@@ -160,7 +309,7 @@ const Navbar = () => {
 						<Image
 							src="/icons/mobileMenu.svg"
 							alt="Mobile Navigation icon"
-							className="w-7 h-7 flex md:hidden cursor-pointer"
+							className="w-7 h-7 flex sm:hidden cursor-pointer"
 							width={28}
 							height={28}
 							onClick={toggleMobileNav}
@@ -168,8 +317,8 @@ const Navbar = () => {
 					</div>
 				</div>
 				{showMobileNav && (
-					<div className="mobile_nav bg-white text-black fixed top-0 bottom-0 left-0 z-[101] w-full md:w-72 transition-transform duration-300 ease-in-out transform translate-x-0">
-						<div className="mobile_nav_header flex justify-between items-center px-5 py-3 border-b border-gray-200">
+					<div className="bg-white text-black fixed top-0 bottom-0 left-0 z-[101] w-full sm:w-72 transition-transform duration-300 ease-in-out transform translate-x-0">
+						<div className="flex justify-between items-center px-5 py-3 border-b border-gray-200">
 							<h3 className="text-lg font-semibold">Menu</h3>
 							<Image
 								src="/icons/closeIcon.svg"
@@ -181,7 +330,7 @@ const Navbar = () => {
 							/>
 						</div>
 						<div className="mobile_nav_links px-5 py-3 ">
-							<ul className="flex flex-col gap-8 items-center ">
+							<ul className="flex flex-col gap-8 items-center">
 								{isLoggedIn ? (
 									<>
 										<li>

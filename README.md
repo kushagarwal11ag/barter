@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SwapEase - A barter platform
+
+Welcome to the SwapEase, a dynamic barter platform where users can exchange goods using a modern web application interface. This project aims to streamline the process of bartering items by providing a robust platform.
+
+## Features
+
+1. **User Management**: Register, login, update profiles, and manage authentication.
+2. **Product Listings**: Users can create, update, delete, and browse products.
+3. **Product Transactions**: Users can initiate transactions with the capability to barter/sell products or both.
+4. **Wishlist System**: Users can add products to a personal wishlist for future reference.
+5. **Search and Filter**: Advanced search and filtering capabilities based on product categories, condition, and more.
+6. **Real-Time Notifications**: Notify users about changes to products they are interested in or own.
+7. **Real-Time Chats**: Users can communicate with each other
+
+## Technology Stack
+
+- **Backend**: Node.js, Express
+- **Database**: MongoDB with Mongoose ODM
+- **Frontend**: Next.js, Redux for state management
+- **Authentication**: JWT for secure authentication
+- **File Storage**: Cloudinary
+- **Validation**: JOI
+- **File Handling**: Multer
+- **API Testing**: Postman for API route testing
+- **Deployment**: Vercel
 
 ## Getting Started
 
-First, run the development server:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Prerequisites
+
+Things you need to install run the software:
+
+- Node.js
+- Git
+
+### Installing
+A step-by-step guide that tell you how to get a development environment running:
+
+- Clone the repository
+```
+git clone https://github.com/kushagarwal11ag/barter.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Install dependencies
+```
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Set up environment variables: *Rename* .sample.env file to .env in the root directory
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Run the application
+```
+npm run dev
+```
 
-## Learn More
+- Open your browser and visit `http://localhost:3000` to view the live website.
 
-To learn more about Next.js, take a look at the following resources:
+## Authors
+- Kushal Agarwal - [Github](https://github.com/kushagarwal11ag)
+- Drashti Tailor - [Github](https://github.com/drashtitailor)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## License
+This project is licensed under the MIT License - see the LICENSE.md file for details
