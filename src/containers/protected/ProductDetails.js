@@ -75,7 +75,7 @@ const ProductDetails = ({ productId }) => {
 				<div className="mt-4 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex flex-col md:flex-row -mx-4">
 						<div className="md:flex-1 px-4">
-							<div className="h-fit flex justify-center rounded-lg mb-4">
+							{ <div className="h-fit flex justify-center rounded-lg mb-4">
 								<Image
 									src={product.image}
 									width={500}
@@ -84,10 +84,10 @@ const ProductDetails = ({ productId }) => {
 									alt="Product image"
 									className="rounded-lg"
 								/>
-							</div>
+							</div> }
 						</div>
 						<div className="md:flex-1 px-4">
-							<section className="flex">
+							<section className="flex items-center justify-between">
 								<h2 className="text-3xl sm:text-5xl font-bold text-gray-800 uppercase mb-2">
 									{product.title}
 								</h2>
@@ -95,11 +95,11 @@ const ProductDetails = ({ productId }) => {
 									<Popover
 										content={content}
 										placement="bottomRight"
-									>
+									> 
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
-											width="1em"
-											height="1em"
+											width="1.5em"
+											height="1.5em"
 											viewBox="0 0 16 16"
 											className="bi bi-three-dots-vertical"
 											fill="currentColor"
