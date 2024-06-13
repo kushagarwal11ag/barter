@@ -1,10 +1,9 @@
 "use client";
-
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
-import { Dropdown, Badge, Popover } from "antd";
+import { Dropdown, Badge, Popover, Empty } from "antd";
 import TimeAgoWrapper from "../fractions/TimeAgoWrapper";
 
 import defaultProfile from "../../../public/defaultProfile.svg";
@@ -144,12 +143,12 @@ const Notifications = () => {
 
 	const content = (
 		<div className="h-fit max-h-60 overflow-y-auto">
-			{notifications?.map((notification) => (
+			{notifications?.length > 0 ? notifications.map((notification) => (
 				<NotificationItem
 					notification={notification}
 					key={notification._id}
 				/>
-			))}
+			)) : <Empty description={<p>Nothing to display</p>} />}
 		</div>
 	);
 

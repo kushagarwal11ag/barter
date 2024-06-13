@@ -72,8 +72,13 @@ const EditProduct = ({ productId }) => {
 		try {
 			const formData = new FormData();
 			formData.append("description", credentials.description);
-			credentials.isBarter && formData.append("barterCategory", credentials.barterCategory);
-			credentials.isBarter && formData.append("barterDescription", credentials.barterDescription);
+			credentials.isBarter &&
+				formData.append("barterCategory", credentials.barterCategory);
+			credentials.isBarter &&
+				formData.append(
+					"barterDescription",
+					credentials.barterDescription
+				);
 			formData.append("price", credentials.price);
 			formData.append("meetingSpot", credentials.meetingSpot);
 			formData.append("isAvailable", credentials.isAvailable);
@@ -152,8 +157,18 @@ const EditProduct = ({ productId }) => {
 												{formStatus}
 											</p>
 										)}
-										<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-											<div className="md:col-span-5">
+										<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 sm:grid-cols-5">
+											<div className="sm:col-span-2">
+												<label className="text-sm text-gray-600 font-bold">
+													Category
+												</label>
+												<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
+													{credentials.category ||
+														"Category"}
+												</p>
+											</div>
+
+											<div className="sm:col-span-3">
 												<label className="text-sm text-gray-600 font-bold">
 													Title
 												</label>
@@ -165,7 +180,8 @@ const EditProduct = ({ productId }) => {
 														"Title"}
 												</p>
 											</div>
-											<div className="md:col-span-5">
+
+											<div className="sm:col-span-5">
 												<label className="text-sm text-gray-600 font-bold">
 													Description
 												</label>
@@ -183,32 +199,14 @@ const EditProduct = ({ productId }) => {
 													required
 												/>
 											</div>
-											<div className="md:col-span-5">
-												<label className="text-sm text-gray-600 font-bold">
-													Category
-												</label>
-												<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
-													{credentials.category ||
-														"Category"}
-												</p>
-											</div>
-											<div className="md:col-span-5">
-												<label className="text-sm text-gray-600 font-bold">
-													Condition
-												</label>
-												<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
-													{credentials.condition ||
-														"Condition"}
-												</p>
-											</div>
+
 											{credentials.isBarter && (
 												<>
-													<div className="md:col-span-5">
+													<div className="sm:col-span-2">
 														<label className="text-sm text-gray-600 font-bold">
 															Barter Category
 														</label>
-														<textarea
-															rows={2}
+														<input
 															name="barterCategory"
 															className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
 															value={
@@ -220,12 +218,13 @@ const EditProduct = ({ productId }) => {
 															maxLength={30}
 														/>
 													</div>
-													<div className="md:col-span-5">
+
+													<div className="sm:col-span-3">
 														<label className="text-sm text-gray-600 font-bold">
 															Barter Description
 														</label>
 														<textarea
-															rows={2}
+															rows={1}
 															name="barterDescription"
 															className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
 															value={
@@ -239,7 +238,18 @@ const EditProduct = ({ productId }) => {
 													</div>
 												</>
 											)}
-											<div className="md:col-span-5">
+
+											<div className="sm:col-span-1">
+												<label className="text-sm text-gray-600 font-bold">
+													Condition
+												</label>
+												<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
+													{credentials.condition ||
+														"Condition"}
+												</p>
+											</div>
+
+											<div className="sm:col-span-1">
 												<label className="text-sm text-gray-600 font-bold">
 													Price
 												</label>
@@ -252,12 +262,13 @@ const EditProduct = ({ productId }) => {
 													onChange={onChange}
 												/>
 											</div>
-											<div className="md:col-span-5">
+
+											<div className="sm:col-span-3">
 												<label className="text-sm text-gray-600 font-bold">
 													Meeting Spot
 												</label>
 												<textarea
-													rows={2}
+													rows={1}
 													name="meetingSpot"
 													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
 													value={
@@ -270,34 +281,46 @@ const EditProduct = ({ productId }) => {
 													required
 												/>
 											</div>
-											<div className="md:col-span-2">
-												<label className="text-sm text-gray-600 font-bold">
-													Available
+
+											<div className="sm:col-span-5 flex gap-2 w-fit h-fit">
+												<label className="relative flex cursor-pointer p-1 rounded-md">
+													<input
+														type="checkbox"
+														name="isAvailable"
+														checked={
+															credentials?.isAvailable
+														}
+														onChange={() => {
+															setCredentials(
+																(prev) => ({
+																	...prev,
+																	isAvailable:
+																		!credentials.isAvailable,
+																})
+															);
+														}}
+														className="peer cursor-pointer appearance-none relative h-5 w-5 bg-white border border-gray-600 transition-all checked:border-indigo-600 checked:bg-white rounded-md"
+													/>
+													<div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 translate-y-1/2 text-indigo-600 opacity-0 transition-opacity peer-checked:opacity-100">
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															className="h-3.5 w-3.5"
+															viewBox="0 0 20 20"
+															fill="currentColor"
+															stroke="currentColor"
+															strokeWidth="1"
+														>
+															<path
+																fillRule="evenodd"
+																d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+																clipRule="evenodd"
+															></path>
+														</svg>
+													</div>
 												</label>
-												<select
-													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													name="isAvailable"
-													value={
-														credentials.isAvailable
-													}
-													onChange={(e) => {
-														setCredentials({
-															...credentials,
-															isAvailable:
-																JSON.parse(
-																	e.target
-																		.value
-																),
-														});
-													}}
-												>
-													<option value={true}>
-														True
-													</option>
-													<option value={false}>
-														False
-													</option>
-												</select>
+												<label className="my-auto text-sm text-gray-600">
+													Change product availability
+												</label>
 											</div>
 										</div>
 										<button

@@ -12,6 +12,7 @@ let toastId;
 const defaultCredentials = {
 	name: "",
 	email: "",
+	toChangePassword: false,
 	oldPassword: "",
 	newPassword: "",
 	confirmNewPassword: "",
@@ -19,6 +20,60 @@ const defaultCredentials = {
 	phone: "",
 	displayEmail: true,
 	displayPhone: true,
+};
+
+const UserProfile = ({ imageUrl, handleFileChange }) => {
+	const bannerStyle = imageUrl?.banner
+		? `bg-cover bg-center`
+		: "bg-[#468189]";
+	const bannerImage = imageUrl?.banner ? `url(${imageUrl.banner})` : "";
+	const avatarImage = imageUrl?.avatar || defaultProfile;
+
+	return (
+		<section className="relative w-full h-32">
+			<div
+				className={`absolute inset-0 ${bannerStyle}`}
+				style={{ backgroundImage: bannerImage }}
+			>
+				<div className="absolute inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+					<label className="text-white cursor-pointer">
+						Upload Background
+						<input
+							type="file"
+							name="banner"
+							accept="image/png, image/jpg, image/jpeg, image/svg"
+							className="hidden"
+							onChange={handleFileChange}
+						/>
+					</label>
+				</div>
+			</div>
+
+			<div className="absolute bottom-0 left-1/2 md:left-40 transform -translate-x-1/2 translate-y-1/2 w-40 h-40 z-20">
+				<div className="relative w-full h-full">
+					<Image
+						src={avatarImage}
+						alt="User Avatar"
+						className="rounded-full border-4 border-black"
+						layout="fill"
+						objectFit="cover"
+					/>
+					<div className="absolute inset-0 z-30 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-full">
+						<label className="text-white cursor-pointer">
+							Upload Avatar
+							<input
+								type="file"
+								name="avatar"
+								accept="image/png, image/jpg, image/jpeg, image/svg"
+								className="hidden"
+								onChange={handleFileChange}
+							/>
+						</label>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
 };
 
 const EditProfile = () => {
@@ -44,10 +99,10 @@ const EditProfile = () => {
 			const userDetails = fetchedUser?.data?.data;
 			setCredentials({
 				...credentials,
-				name: userDetails?.name || "",
+				name: userDetails?.name,
 				email: userDetails?.email,
-				bio: userDetails?.bio || "",
-				phone: userDetails?.phone || "",
+				bio: userDetails?.bio,
+				phone: userDetails?.phone,
 				displayEmail: userDetails?.displayEmail,
 				displayPhone: userDetails?.displayPhone,
 			});
@@ -96,10 +151,6 @@ const EditProfile = () => {
 			});
 
 			setCredentials(defaultCredentials);
-			setUserFile({
-				avatar: null,
-				banner: null,
-			});
 			setFormStatus("");
 			router.push("/explore");
 		} catch (error) {
@@ -124,7 +175,7 @@ const EditProfile = () => {
 
 	const changePassword = async () => {
 		const { oldPassword, newPassword, confirmNewPassword } = credentials;
-		if (oldPassword && newPassword) {
+		if (credentials.toChangePassword && oldPassword && newPassword) {
 			if (!confirmNewPassword || newPassword !== confirmNewPassword) {
 				setFormStatus("New password mismatch");
 				toast.error("Error", {
@@ -143,7 +194,10 @@ const EditProfile = () => {
 				handleAxiosError(error);
 				return false;
 			}
-		} else if (oldPassword || newPassword || confirmNewPassword) {
+		} else if (
+			credentials.toChangePassword &&
+			(oldPassword || newPassword || confirmNewPassword)
+		) {
 			setFormStatus("Must fill all password details to update");
 			toast.error("Error", {
 				id: toastId,
@@ -198,102 +252,117 @@ const EditProfile = () => {
 	return (
 		<>
 			<Toaster />
-			<section className="flex items-center justify-center container max-w-screen-lg mx-auto pb-12 md:pb-0">
+			<section className="container max-w-screen-lg mx-auto pb-12 md:pb-0">
 				<form onSubmit={handleSubmit}>
-					<section className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6 grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-3">
-						<section className="text-gray-600 flex flex-col items-center">
-							<p className="font-medium text-lg">Edit Profile</p>
-							<p>Please fill out all the fields.</p>
-							<Image
-								name="avatar"
-								src={imageUrl.avatar}
-								alt="User Avatar"
-								width={200}
-								height={200}
-								className="w-52 h-52 m-7 rounded-full object-cover"
-							/>
-							<label className="flex gap-2 items-center justify-start">
-								<p>Upload Avatar</p>
-							</label>
-							<input
-								type="file"
-								name="avatar"
-								accept="image/png, image/jpg, image/jpeg, image/svg"
-								className="mt-3 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-								onChange={handleFileChange}
-							/>
-							<Image
-								name="banner"
-								src={imageUrl.banner}
-								alt="Banner of user to be displayed"
-								width={200}
-								height={200}
-								className="w-52 h-52 m-7 rounded-full object-cover"
-							/>
-							<label className="flex gap-2 items-center justify-start">
-								<p>Upload Background Image</p>
-							</label>
-							<input
-								type="file"
-								name="banner"
-								accept="image/png, image/jpg, image/jpeg, image/svg"
-								className="mt-3 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-								onChange={handleFileChange}
-							/>
-						</section>
+					<UserProfile
+						imageUrl={imageUrl}
+						handleFileChange={handleFileChange}
+					/>
 
-						<section className="md:col-span-2">
-							{formStatus && (
-								<p className="text-red-500">{formStatus}</p>
-							)}
-							<section className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-								<div className="md:col-span-3">
-									<label className="text-sm text-gray-600 font-bold">
-										Name{" "}
-										<span className="text-red-500">*</span>
-									</label>
+					<section className="mt-20 p-2">
+						{formStatus && (
+							<p className="text-red-500">{formStatus}</p>
+						)}
+						<section className="grid gap-4 gap-y-2 text-sm grid-cols-1 sm:grid-cols-5">
+							<div className="sm:col-span-2">
+								<label className="text-sm text-gray-600 font-bold">
+									Name <span className="text-red-500">*</span>
+								</label>
+								<input
+									type="text"
+									name="name"
+									className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+									value={credentials.name}
+									onChange={onChange}
+									placeholder="Name"
+									minLength={3}
+									maxLength={20}
+									required
+								/>
+							</div>
+
+							<div className="sm:col-span-2">
+								<label className="text-sm text-gray-600 font-bold">
+									Email
+								</label>
+								<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
+									{credentials.email || "example@mail.com"}
+								</p>
+							</div>
+
+							<div className="sm:col-span-1">
+								<label className="text-sm text-gray-600 font-bold">
+									Phone{" "}
+									<span className="text-red-500">*</span>
+								</label>
+								<input
+									type="text"
+									name="phone"
+									className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+									value={credentials.phone}
+									onChange={onChange}
+									placeholder="Enter phone number"
+									maxLength={10}
+									required
+								/>
+							</div>
+
+							<div className="sm:col-span-5">
+								<label className="text-sm text-gray-600 font-bold">
+									Bio <span className="text-red-500">*</span>
+								</label>
+								<textarea
+									name="bio"
+									className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+									placeholder="Enter bio"
+									rows={2}
+									value={credentials.bio}
+									onChange={onChange}
+									minLength={10}
+									maxLength={300}
+									required
+								/>
+							</div>
+
+							<div className="sm:col-span-5 flex gap-2 w-fit h-fit">
+								<label className="relative flex cursor-pointer p-1 rounded-md">
 									<input
-										type="text"
-										name="name"
-										className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-										value={credentials.name}
-										onChange={onChange}
-										placeholder="Name"
-										minLength={3}
-										maxLength={20}
-										required
+										type="checkbox"
+										name="toChangePassword"
+										checked={credentials.toChangePassword}
+										onChange={() => {
+											setCredentials((prev) => ({
+												...prev,
+												toChangePassword:
+													!credentials.toChangePassword,
+											}));
+										}}
+										className="peer cursor-pointer appearance-none relative h-5 w-5 bg-white border border-gray-600 transition-all checked:border-indigo-600 checked:bg-white rounded-md"
 									/>
-								</div>
+									<div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 translate-y-1/2 text-indigo-600 opacity-0 transition-opacity peer-checked:opacity-100">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="h-3.5 w-3.5"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											stroke="currentColor"
+											strokeWidth="1"
+										>
+											<path
+												fillRule="evenodd"
+												d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+												clipRule="evenodd"
+											></path>
+										</svg>
+									</div>
+								</label>
+								<label className="my-auto text-sm text-gray-600">
+									Change password
+								</label>
+							</div>
 
-								<div className="md:col-span-2">
-									<label className="text-sm text-gray-600 font-bold">
-										Email
-									</label>
-									<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
-										{credentials.email ||
-											"example@mail.com"}
-									</p>
-								</div>
-
-								<div className="md:col-span-5">
-									<label className="text-sm text-gray-600 font-bold">
-										Bio{" "}
-										<span className="text-red-500">*</span>
-									</label>
-									<textarea
-										name="bio"
-										className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-										placeholder="Enter bio"
-										rows={2}
-										value={credentials.bio}
-										onChange={onChange}
-										minLength={10}
-										maxLength={300}
-										required
-									/>
-								</div>
-
-								<div className="md:col-span-5">
+							{credentials?.toChangePassword && (
+								<div className="sm:col-span-5">
 									<label className="text-sm text-gray-600 font-bold">
 										Change password
 									</label>
@@ -332,102 +401,97 @@ const EditProfile = () => {
 										/>
 									</section>
 								</div>
+							)}
 
-								<div className="md:col-span-2">
-									<label className="text-sm text-gray-600 font-bold">
-										Phone{" "}
-										<span className="text-red-500">*</span>
-									</label>
+							<div className="sm:col-span-5 flex gap-2 w-fit h-fit">
+								<label className="relative flex cursor-pointer p-1 rounded-md">
 									<input
-										type="text"
-										name="phone"
-										className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-										value={credentials.phone}
-										onChange={onChange}
-										placeholder="Enter phone number"
-										maxLength={10}
-										required
-									/>
-								</div>
-
-								<div className="md:col-span-3">
-									<label className="text-sm text-gray-600 font-bold">
-										Address{" "}
-										<span className="text-red-500">*</span>
-									</label>
-									<textarea
-										name="address"
-										className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg"
-										placeholder="Enter address"
-										rows={1}
-										// value={credentials.address}
-										// onChange={onChange}
-										minLength={10}
-										maxLength={300}
-										disabled
-									/>
-								</div>
-
-								<div className="md:col-span-2">
-									<label className="text-sm text-gray-600 font-bold">
-										Display Email
-									</label>
-									<select
-										className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+										type="checkbox"
 										name="displayEmail"
-										value={credentials.displayEmail}
-										onChange={(e) => {
-											setCredentials({
-												...credentials,
-												displayEmail: JSON.parse(
-													e.target.value
-												),
-											});
+										checked={credentials?.displayEmail}
+										onChange={() => {
+											setCredentials((prev) => ({
+												...prev,
+												displayEmail:
+													!credentials.displayEmail,
+											}));
 										}}
-									>
-										<option value={true}>True</option>
-										<option value={false}>False</option>
-									</select>
-								</div>
+										className="peer cursor-pointer appearance-none relative h-5 w-5 bg-white border border-gray-600 transition-all checked:border-indigo-600 checked:bg-white rounded-md"
+									/>
+									<div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 translate-y-1/2 text-indigo-600 opacity-0 transition-opacity peer-checked:opacity-100">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="h-3.5 w-3.5"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											stroke="currentColor"
+											strokeWidth="1"
+										>
+											<path
+												fillRule="evenodd"
+												d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+												clipRule="evenodd"
+											></path>
+										</svg>
+									</div>
+								</label>
+								<label className="my-auto text-sm text-gray-600">
+									Display Email
+								</label>
+							</div>
 
-								<div className="md:col-span-2">
-									<label className="text-sm text-gray-600 font-bold">
-										Display Phone
-									</label>
-									<select
-										className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+							<div className="sm:col-span-5 flex gap-2 w-fit h-fit">
+								<label className="relative flex cursor-pointer p-1 rounded-md">
+									<input
+										type="checkbox"
 										name="displayPhone"
-										value={credentials.displayPhone}
-										onChange={(e) => {
-											setCredentials({
-												...credentials,
-												displayPhone: JSON.parse(
-													e.target.value
-												),
-											});
+										checked={credentials?.displayPhone}
+										onChange={() => {
+											setCredentials((prev) => ({
+												...prev,
+												displayPhone:
+													!credentials.displayPhone,
+											}));
 										}}
-									>
-										<option value={true}>True</option>
-										<option value={false}>False</option>
-									</select>
-								</div>
+										className="peer cursor-pointer appearance-none relative h-5 w-5 bg-white border border-gray-600 transition-all checked:border-indigo-600 checked:bg-white rounded-md"
+									/>
+									<div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 translate-y-1/2 text-indigo-600 opacity-0 transition-opacity peer-checked:opacity-100">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="h-3.5 w-3.5"
+											viewBox="0 0 20 20"
+											fill="currentColor"
+											stroke="currentColor"
+											strokeWidth="1"
+										>
+											<path
+												fillRule="evenodd"
+												d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+												clipRule="evenodd"
+											></path>
+										</svg>
+									</div>
+								</label>
+								<label className="my-auto text-sm text-gray-600">
+									Display Phone
+								</label>
+							</div>
 
-								<div className="md:col-span-5 inline-flex items-end">
-									<button
-										className="bg-[#002D74] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-										type="submit"
-									>
-										Update profile
-									</button>
-									<button
-										type="button"
-										onClick={cancelForm}
-										className="ml-2 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-									>
-										Cancel Changes
-									</button>
-								</div>
-							</section>
+							<div className="sm:col-span-5 inline-flex items-end">
+								<button
+									className="bg-[#002D74] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+									type="submit"
+								>
+									Update profile
+								</button>
+								<button
+									type="button"
+									onClick={cancelForm}
+									className="ml-2 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+								>
+									Cancel Changes
+								</button>
+							</div>
 						</section>
 					</section>
 				</form>
