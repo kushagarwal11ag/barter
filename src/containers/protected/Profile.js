@@ -4,16 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
-import {
-	Popover,
-	Modal,
-	Rate,
-	Form,
-	Input,
-	Dropdown,
-	Empty,
-	Button,
-} from "antd";
+import { Popover, Modal, Rate, Form, Input, Dropdown, Tabs, Empty } from "antd";
 
 import defaultProfile from "../../../public/defaultProfile.svg";
 import Edit from "@/components/icons/Edit.js";
@@ -48,6 +39,146 @@ const handleAxiosError = (error) => {
 	console.log(errorMessage);
 };
 
+const ProductTabs = ({ credentials, currentUser, products }) => {
+	const [wishlist, setWishlist] = useState(null);
+
+	useEffect(() => {
+		const fetchWishlist = async () => {
+			const wishlistProducts = await axios.get("/api/v1/wishlist/", {
+				withCredentials: true,
+			});
+			setWishlist(wishlistProducts?.data?.data);
+		};
+		fetchWishlist();
+	}, []);
+
+	const myProducts = (
+		<>
+			{products?.length > 0 ? (
+				<section className="max-w-7xl py-4 px-2 grid gap-8 grid-flow-col auto-cols-[70%] min-[450px]:auto-cols-[50%] sm:auto-cols-[30%] overflow-x-auto snap-proximity snap-x">
+					{products.map((product) => (
+						<Link
+							key={product._id}
+							href={`/product/${product._id}`}
+							className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-xl overflow-hidden h-80 snap-center"
+						>
+							<div
+								className="absolute inset-0 bg-cover bg-center z-0 rounded-xl border-black border"
+								style={{
+									backgroundImage: `url(${product.image})`,
+								}}
+							></div>
+							<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end rounded-xl">
+								<p className="uppercase tracking-wide text-lg font-bold">
+									{product.title}
+								</p>
+								<p className="capitalize text-sm">
+									{product.category}
+								</p>
+							</section>
+						</Link>
+					))}
+				</section>
+			) : (
+				<Empty
+					description={<p>No products added yet</p>}
+					className="my-5"
+				>
+					<Link
+						href="/product/add"
+						className="p-2 bg-[#101827] text-white rounded"
+					>
+						Create now
+					</Link>
+				</Empty>
+			)}
+		</>
+	);
+
+	const wishlistProducts = (
+		<>
+			{wishlist?.length ? (
+				<section className="max-w-7xl py-4 px-2 grid gap-8 grid-flow-col auto-cols-[70%] min-[450px]:auto-cols-[50%] sm:auto-cols-[30%] overflow-x-auto snap-proximity snap-x">
+					{wishlist.map((product) => (
+						<Link
+							key={product._id}
+							href={`/product/${product._id}`}
+							className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-xl overflow-hidden h-80 snap-center"
+						>
+							<div
+								className="absolute inset-0 bg-cover bg-center z-0 rounded-xl border-black border"
+								style={{
+									backgroundImage: `url(${product.image})`,
+								}}
+							></div>
+							<div
+								className="absolute top-0 right-2 z-20 w-10 h-10 bg-cover bg-no-repeat"
+								style={{
+									backgroundImage: "url(/icons/heart.svg)",
+								}}
+							></div>
+							<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end rounded-xl">
+								<p className="uppercase tracking-wide text-lg font-bold">
+									{product.title}
+								</p>
+								<p className="capitalize text-sm">
+									{product.category}
+								</p>
+								<div className="mt-2 flex items-center gap-2">
+									<Image
+										src={
+											product.owner.avatar ||
+											defaultProfile
+										}
+										width={100}
+										height={100}
+										alt={`Image of trader ${product.owner.name}`}
+										className="object-cover object-center w-10 h-10 rounded-full"
+									/>
+									<div className="font-bold capitalize">
+										{product.owner.name}
+									</div>
+								</div>
+							</section>
+						</Link>
+					))}
+				</section>
+			) : (
+				<Empty
+					description={<p>No products added to wishlist</p>}
+					className="my-5"
+				>
+					<Link
+						href="/explore"
+						className="p-2 bg-[#101827] text-white rounded"
+					>
+						Explore Products
+					</Link>
+				</Empty>
+			)}
+		</>
+	);
+
+	const items = [
+		{
+			key: "1",
+			label: "My Products",
+			children: myProducts,
+		},
+		{
+			key: "2",
+			label: "Wishlist",
+			children: wishlistProducts,
+		},
+	];
+
+	return credentials === currentUser ? (
+		<Tabs defaultActiveKey="1" items={items} />
+	) : (
+		myProducts
+	);
+};
+
 const FeedbackModal = ({
 	type = "add",
 	isModalOpen,
@@ -56,10 +187,8 @@ const FeedbackModal = ({
 	profileId,
 }) => {
 	const [form] = Form.useForm();
-	const [confirmLoading, setConfirmLoading] = useState(false);
 
 	const handleFeedbackAdd = async (values) => {
-		setConfirmLoading(true);
 		try {
 			await axios.post(
 				`/api/v1/feedback/user/${profileId}`,
@@ -68,7 +197,6 @@ const FeedbackModal = ({
 					withCredentials: true,
 				}
 			);
-			setConfirmLoading(false);
 			setIsModalOpen(false);
 		} catch (error) {
 			setIsModalOpen(false);
@@ -76,7 +204,6 @@ const FeedbackModal = ({
 		}
 	};
 	const handleEditFeedback = async (values) => {
-		setConfirmLoading(true);
 		try {
 			await axios.patch(
 				`/api/v1/feedback/${initialFeedback._id}`,
@@ -85,7 +212,6 @@ const FeedbackModal = ({
 					withCredentials: true,
 				}
 			);
-			setConfirmLoading(false);
 			setIsModalOpen(false);
 		} catch (error) {
 			setIsModalOpen(false);
@@ -159,57 +285,42 @@ const FeedbackModal = ({
 					/>
 				</Form.Item>
 				<div className="flex justify-end space-x-4">
-					<Button
+					<button
 						onClick={handleFeedbackModalCancel}
-						style={{
-							backgroundColor: "#ef4444",
-							color: "#fff",
-							borderColor: "#fff",
-						}}
-						onMouseEnter={(e) =>
-							(e.target.style.backgroundColor = "#b91c1c")
-						}
-						onMouseLeave={(e) =>
-							(e.target.style.backgroundColor = "#ef4444")
-						}
+						className="px-4 text-red-600 border-2 border-red-600 hover:bg-red-600 hover:text-white rounded"
 					>
 						Cancel
-					</Button>
-					<Button
-						htmlType="submit"
-						style={{
-							backgroundColor: "#3b82f6",
-							color: "#fff",
-							borderColor: "#fff",
-						}}
-						onMouseEnter={(e) =>
-							(e.target.style.backgroundColor = "#1e40af")
-						}
-						onMouseLeave={(e) =>
-							(e.target.style.backgroundColor = "#3b82f6")
-						}
-						loading={confirmLoading}
+					</button>
+					<button
+						type="submit"
+						className="px-4 text-[#101827] border-2 border-[#101827] hover:bg-[#101827] hover:text-white rounded"
 					>
 						Submit
-					</Button>
+					</button>
 				</div>
 			</Form>
 		</Modal>
 	);
 };
 
-const Feedbacks = ({ credentials, currentUser, profileId }) => {
+const FeedbackTabs = ({ credentials, currentUser, profileId }) => {
 	const [feedbacks, setFeedbacks] = useState(null);
+	const [myFeedbacks, setMyFeedbacks] = useState(null);
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
 	useEffect(() => {
 		const fetchFeedbacks = async () => {
 			try {
-				const feedback = await axios.get(
-					`/api/v1/feedback/user/${profileId}`
+				const feedbackList = await axios.get(
+					`/api/v1/feedback/user/${profileId}`,
+					{ withCredentials: true }
 				);
-				setFeedbacks(feedback?.data?.data);
+				const myFeedbackList = await axios.get("/api/v1/feedback/my", {
+					withCredentials: true,
+				});
+				setFeedbacks(feedbackList?.data?.data);
+				setMyFeedbacks(myFeedbackList?.data?.data);
 			} catch (error) {
 				handleAxiosError(error);
 			}
@@ -233,13 +344,13 @@ const Feedbacks = ({ credentials, currentUser, profileId }) => {
 		}
 	};
 
-	return (
+	const userFeedbackList = (
 		<>
 			{credentials !== currentUser && (
 				<div className="flex">
 					<button
 						type="button"
-						className="ml-auto px-2 border-black border rounded"
+						className="ml-auto mb-6 px-2 border-black border rounded"
 						onClick={showAddModal}
 					>
 						Leave a review
@@ -253,11 +364,10 @@ const Feedbacks = ({ credentials, currentUser, profileId }) => {
 				</div>
 			)}
 			{feedbacks?.length > 0 ? (
-				<>
-					<span className="font-semibold text-lg">Reviews</span>
+				<div className="flex flex-col gap-6">
 					{feedbacks.map((feedback) => (
 						<section key={feedback._id} className="relative">
-							<section className="p-2 mt-6 flex flex-col sm:flex-row gap-2 overflow-x-auto border border-black rounded cursor-default">
+							<section className="p-2 flex flex-col sm:flex-row gap-2 overflow-x-auto border border-black rounded cursor-default">
 								<div className="absolute right-2 -top-4 z-50 p-1 bg-white w-fit h-fit flex gap-2">
 									{feedback.feedbackBy._id ===
 										currentUser && (
@@ -325,11 +435,98 @@ const Feedbacks = ({ credentials, currentUser, profileId }) => {
 							</section>
 						</section>
 					))}
-				</>
+				</div>
 			) : (
 				<Empty description={<p>No reviews to display</p>} />
 			)}
 		</>
+	);
+
+	const myFeedbackList = (
+		<>
+			{myFeedbacks?.length > 0 ? (
+				<div className="flex flex-col gap-6">
+					{myFeedbacks.map((feedback) => (
+						<section key={feedback._id} className="relative">
+							<section className="p-2 flex flex-col sm:flex-row gap-2 overflow-x-auto border border-black rounded cursor-default">
+								<div className="absolute right-2 -top-4 z-50 p-1 bg-white w-fit h-fit flex gap-2">
+									<Edit
+										className="h-5 w-5 cursor-pointer"
+										onClick={showEditModal}
+									/>
+									<FeedbackModal
+										type="edit"
+										isModalOpen={isEditModalOpen}
+										setIsModalOpen={setIsEditModalOpen}
+										profileId={profileId}
+										initialFeedback={{
+											_id: feedback._id,
+											rating: feedback.rating,
+											content: feedback.content,
+										}}
+									/>
+									<Delete
+										className="h-5 w-5 cursor-pointer"
+										onClick={() => {
+											handleFeedbackDelete(feedback._id);
+										}}
+									/>
+								</div>
+								<Link
+									href={`/profile/${feedback.feedbackFor._id}`}
+									className="flex flex-col min-w-32 my-auto"
+								>
+									<Image
+										src={
+											feedback.feedbackFor.avatar ||
+											defaultProfile
+										}
+										alt="User Avatar"
+										className="w-14 h-14 sm:w-20 sm:h-20 self-center rounded-full border-2 border-black object-cover"
+										width={100}
+										height={100}
+									/>
+									<p className="font-semibold text-center capitalize">
+										{feedback.feedbackFor.name}
+									</p>
+								</Link>
+								<div className="overflow-y-auto flex flex-col self-center">
+									<Rate
+										disabled
+										defaultValue={feedback.rating || 1}
+										className="custom-rating self-center sm:self-start"
+									/>
+									<p className="text-sm">
+										{feedback.content}
+									</p>
+								</div>
+							</section>
+						</section>
+					))}
+				</div>
+			) : (
+				<Empty description={<p>No reviews to display</p>} />
+			)}
+		</>
+	);
+
+	const items = [
+		{
+			key: "1",
+			label: "Received Reviews",
+			children: userFeedbackList,
+		},
+		{
+			key: "2",
+			label: "My Reviews",
+			children: myFeedbackList,
+		},
+	];
+
+	return credentials === currentUser ? (
+		<Tabs defaultActiveKey="1" items={items} />
+	) : (
+		userFeedbackList
 	);
 };
 
@@ -360,11 +557,15 @@ const Profile = ({ profileId }) => {
 				const feedback = await axios.get(
 					`/api/v1/feedback/user/${profileId}`
 				);
+				const blockedUsers = await axios.get("/api/v1/block/", {
+					withCredentials: true,
+				});
 
 				const fetchedUserDetails = fetchedUser?.data?.data;
 				const productDetails = products?.data?.data;
 				const currentUserDetails = currentUser?.data?.data;
 				const feedbackDetails = feedback?.data?.data;
+				const blockedUserDetails = blockedUsers?.data?.data;
 				let followerDetails;
 				let followingDetails;
 
@@ -384,6 +585,7 @@ const Profile = ({ profileId }) => {
 					followers: followerDetails,
 					following: followingDetails,
 					feedbacks: feedbackDetails,
+					blockedUsers: blockedUserDetails,
 				});
 				setProducts(productDetails);
 				setCurrentUser(currentUserDetails);
@@ -436,13 +638,14 @@ const Profile = ({ profileId }) => {
 				<Link
 					href={`/profile/${follower.follower._id}`}
 					key={follower.follower._id}
-					className="p-2 flex gap-2 hover:text-[#101827]"
+					className="p-2 flex gap-2 hover:text-[#101827] border-b border-[#101827]"
 				>
 					<Image
 						src={follower.follower?.avatar || defaultProfile}
 						alt="User Avatar"
-						className="w-10 h-10 rounded-full border-2 border-black"
-						objectFit="cover"
+						className="w-10 h-10 rounded-full border-2 border-black object-cover"
+						width={100}
+						height={100}
 					/>
 					<div className="capitalize self-center">
 						{follower.follower.name}
@@ -458,19 +661,60 @@ const Profile = ({ profileId }) => {
 				<Link
 					href={`/profile/${following.following._id}`}
 					key={following.following._id}
-					className="p-2 flex gap-2 hover:text-[#101827]"
+					className="p-2 flex gap-2 hover:text-[#101827] border-b border-[#101827]"
 				>
 					<Image
 						src={following.following?.avatar || defaultProfile}
 						alt="User Avatar"
-						className="w-10 h-10 rounded-full border-2 border-black"
-						objectFit="cover"
+						className="w-10 h-10 rounded-full border-2 border-black object-cover"
+						width={100}
+						height={100}
 					/>
 					<div className="capitalize self-center">
 						{following.following.name}
 					</div>
 				</Link>
 			))}
+		</div>
+	);
+
+	const blockedUsersContent = (
+		<div className="overflow-auto max-h-20 w-48">
+			{credentials?.blockedUsers?.length > 0 ? (
+				credentials.blockedUsers.map((block) => (
+					<div
+						key={block._id}
+						className="p-2 flex gap-2 hover:text-[#101827] border-b border-[#101827]"
+					>
+						<Image
+							src={block.avatar || defaultProfile}
+							alt="User Avatar"
+							className="w-10 h-10 rounded-full border-2 border-black object-cover"
+							width={100}
+							height={100}
+						/>
+						<div className="flex flex-col">
+							<div className="capitalize self-center">
+								{block.name}
+							</div>
+							<button
+								className="px-1 w-fit text-xs bg-[#101827] text-white hover:bg-[#101827d9] rounded"
+								onClick={() => {
+									handleUserUnblock(block._id);
+								}}
+							>
+								Unblock
+							</button>
+						</div>
+					</div>
+				))
+			) : (
+				<Empty
+					description={false}
+					className="flex justify-center items-center"
+					imageStyle={{ height: 60, width: 60 }}
+				/>
+			)}
 		</div>
 	);
 
@@ -543,6 +787,15 @@ const Profile = ({ profileId }) => {
 				withCredentials: true,
 			});
 			router.push("/explore");
+		} catch (error) {
+			handleAxiosError(error);
+		}
+	};
+	const handleUserUnblock = async (userId) => {
+		try {
+			await axios.delete(`/api/v1/block/${userId}`, {
+				withCredentials: true,
+			});
 		} catch (error) {
 			handleAxiosError(error);
 		}
@@ -621,40 +874,42 @@ const Profile = ({ profileId }) => {
 					</Dropdown>
 				</section>
 				<section className="py-2 px-4">
-					<div className="flex gap-2">
-						{(credentials?.email || credentials?.phone) && (
-							<Popover
-								content={contactContent}
-								title="Contact Details"
-								trigger="hover"
-								arrow={false}
-								placement="bottomLeft"
-								overlayClassName="custom-popover popover2"
-								className="py-1 px-2 bg-[#D3D9E9] rounded cursor-pointer"
-							>
-								Contact
-							</Popover>
+					{credentials?._id !== currentUser?._id &&
+						(credentials?.email || credentials?.phone) && (
+							<div className="flex gap-2">
+								<Popover
+									content={contactContent}
+									title="Contact Details"
+									trigger="hover"
+									arrow={false}
+									placement="bottomLeft"
+									overlayClassName="custom-popover popover2"
+									className="py-1 px-2 bg-[#D3D9E9] rounded cursor-pointer"
+								>
+									Contact
+								</Popover>
+
+								<button
+									className="py-1 px-2 bg-[#101827] text-white w-fit rounded"
+									onClick={handleAccountFollow}
+								>
+									{credentials.isFollow
+										? "Unfollow"
+										: "Follow"}
+								</button>
+							</div>
 						)}
-						{credentials?._id !== currentUser?._id && (
-							<button
-								className="py-1 px-2 bg-[#101827] text-white w-fit rounded"
-								onClick={handleAccountFollow}
-							>
-								{credentials.isFollow ? "Unfollow" : "Follow"}
-							</button>
-						)}
-					</div>
-					<section className="flex gap-4">
+					<section className="mt-2 flex gap-4">
 						{credentials?.followers?.length > 0 && (
 							<Popover
 								content={followersContent}
-								title="People who are following you"
+								title="People who follow you"
 								trigger="hover"
 								arrow={false}
 								placement="bottomLeft"
 								overlayClassName="custom-popover"
 							>
-								<div className="mt-2 cursor-pointer">
+								<div className="cursor-pointer">
 									<span className="font-semibold">
 										{credentials.followers.length}
 									</span>{" "}
@@ -665,13 +920,13 @@ const Profile = ({ profileId }) => {
 						{credentials?.following?.length > 0 && (
 							<Popover
 								content={followingContent}
-								title="People you are following"
+								title="People you follow"
 								trigger="hover"
 								arrow={false}
-								placement="bottomRight"
+								placement="bottomLeft"
 								overlayClassName="custom-popover"
 							>
-								<div className="mt-2 cursor-pointer">
+								<div className="cursor-pointer">
 									<span className="font-semibold">
 										{credentials.following.length}
 									</span>{" "}
@@ -679,61 +934,38 @@ const Profile = ({ profileId }) => {
 								</div>
 							</Popover>
 						)}
+						{credentials?._id === currentUser?._id && (
+							<Popover
+								content={blockedUsersContent}
+								title="People you have blocked"
+								trigger="click"
+								arrow={false}
+								placement="bottomLeft"
+								overlayClassName="custom-popover"
+							>
+								<div className="cursor-pointer text">
+									<span className="font-semibold">
+										{credentials?.blockedUsers?.length}
+									</span>{" "}
+									blocked
+								</div>
+							</Popover>
+						)}
 					</section>
 					<hr className="my-2 h-px border-0 bg-black" />
-					{products?.productCount > 0 ? (
-						<>
-							<span className="font-semibold text-lg">
-								Products
-							</span>
-							<section className="max-w-7xl py-4 grid gap-8 grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]">
-								{products.products?.map((product) => (
-									<Link
-										key={product._id}
-										href={`/product/${product._id}`}
-										className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-xl overflow-hidden h-80"
-									>
-										<div
-											className="absolute inset-0 bg-cover bg-center z-0 rounded-xl border-black border"
-											style={{
-												backgroundImage: `url(${product.image})`,
-											}}
-										></div>
-										<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end rounded-xl">
-											<p className="uppercase tracking-wide text-lg font-bold">
-												{product.title}
-											</p>
-											<p className="capitalize text-sm">
-												{product.category}
-											</p>
-										</section>
-									</Link>
-								))}
-							</section>
-						</>
-					) : (
-						<Empty
-							description={<p>No products to display</p>}
-							className="my-5"
-						>
-							{credentials?._id === currentUser?._id && (
-								<Link
-									href="/product/add"
-									className="p-2 bg-[#101827] text-white rounded"
-								>
-									Create Now
-								</Link>
-							)}
-						</Empty>
-					)}
+					<div className="font-semibold text-lg">Products</div>
+					<ProductTabs
+						credentials={credentials?._id}
+						currentUser={currentUser?._id}
+						products={products}
+					/>
 					<hr className="my-2 h-px border-0 bg-black" />
-					{credentials?._id && currentUser?._id && (
-						<Feedbacks
-							credentials={credentials._id}
-							currentUser={currentUser._id}
-							profileId={profileId}
-						/>
-					)}
+					<div className="font-semibold text-lg">Reviews</div>
+					<FeedbackTabs
+						credentials={credentials?._id}
+						currentUser={currentUser?._id}
+						profileId={profileId}
+					/>
 				</section>
 			</section>
 		</>

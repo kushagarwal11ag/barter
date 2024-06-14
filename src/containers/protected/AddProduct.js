@@ -92,11 +92,11 @@ const AddProduct = () => {
 		<>
 			<Toaster />
 			<div className="flex items-center justify-center">
-				<div className="container max-w-screen-lg mx-auto pb-12 md:pb-0">
+				<div className="container max-w-screen-lg mx-auto pb-12 sm:pb-0">
 					<div>
 						<form onSubmit={handleSubmit}>
-							<div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-								<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-3">
+							<div className="bg-white rounded shadow-lg p-4 px-4 sm:p-8 mb-6">
+								<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 sm:grid-cols-3">
 									<div className="text-gray-600">
 										<p className="font-medium text-lg">
 											Create Post
@@ -120,14 +120,15 @@ const AddProduct = () => {
 										/>
 									</div>
 
-									<div className="md:col-span-2">
+									<div className="sm:col-span-2">
 										{formStatus && (
 											<p className="text-red-500">
 												{formStatus}
 											</p>
 										)}
-										<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
-											<div className="md:col-span-5">
+										
+										<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 sm:grid-cols-5">
+											<div className="sm:col-span-2">
 												<label className="text-sm text-gray-600 font-bold">
 													Title
 												</label>
@@ -143,7 +144,25 @@ const AddProduct = () => {
 													required
 												/>
 											</div>
-											<div className="md:col-span-5">
+
+											<div className="sm:col-span-3">
+												<label className="text-sm text-gray-600 font-bold">
+													Category
+												</label>
+												<input
+													type="text"
+													name="category"
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													value={credentials.category}
+													placeholder="Enter product category"
+													onChange={onChange}
+													minLength={3}
+													maxLength={30}
+													required
+												/>
+											</div>
+
+											<div className="sm:col-span-5">
 												<label className="text-sm text-gray-600 font-bold">
 													Description
 												</label>
@@ -161,7 +180,8 @@ const AddProduct = () => {
 													required
 												/>
 											</div>
-											<div className="md:col-span-2">
+
+											<div className="sm:col-span-1">
 												<label className="text-sm text-gray-600 font-bold">
 													Condition
 												</label>
@@ -187,54 +207,85 @@ const AddProduct = () => {
 													</option>
 												</select>
 											</div>
-											<div className="md:col-span-3">
+
+											<div className="sm:col-span-1">
 												<label className="text-sm text-gray-600 font-bold">
-													Category
+													Price
 												</label>
 												<input
-													type="text"
-													name="category"
+													type="number"
+													name="price"
 													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													value={credentials.category}
-													placeholder="Enter product category"
+													value={credentials.price}
+													placeholder="Enter product price"
 													onChange={onChange}
-													minLength={3}
-													maxLength={30}
+													min={credentials.isBarter ? 0 : 1}
+												/>
+											</div>
+
+											<div className="sm:col-span-3">
+												<label className="text-sm text-gray-600 font-bold">
+													Meeting Spot
+												</label>
+												<textarea
+													rows={1}
+													name="meetingSpot"
+													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
+													value={
+														credentials.meetingSpot
+													}
+													placeholder="Enter meeting spot"
+													onChange={onChange}
+													minLength={10}
+													maxLength={150}
 													required
 												/>
 											</div>
-											<div className="md:col-span-2">
-												<label className="text-sm text-gray-600 font-bold">
-													To Barter
+
+											<div className="sm:col-span-5 flex gap-2 w-fit h-fit">
+												<label className="relative flex cursor-pointer p-1 rounded-md">
+													<input
+														type="checkbox"
+														name="isBarter"
+														checked={
+															credentials?.isBarter
+														}
+														onChange={() => {
+															setCredentials(
+																(prev) => ({
+																	...prev,
+																	isBarter:
+																		!credentials.isBarter,
+																})
+															);
+														}}
+														className="peer cursor-pointer appearance-none relative h-5 w-5 bg-white border border-gray-600 transition-all checked:border-indigo-600 checked:bg-white rounded-md"
+													/>
+													<div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 translate-y-1/2 text-indigo-600 opacity-0 transition-opacity peer-checked:opacity-100">
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															className="h-3.5 w-3.5"
+															viewBox="0 0 20 20"
+															fill="currentColor"
+															stroke="currentColor"
+															strokeWidth="1"
+														>
+															<path
+																fillRule="evenodd"
+																d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+																clipRule="evenodd"
+															></path>
+														</svg>
+													</div>
 												</label>
-												<select
-													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													name="isBarter"
-													onChange={(e) => {
-														setCredentials({
-															...credentials,
-															isBarter:
-																JSON.parse(
-																	e.target
-																		.value
-																),
-														});
-													}}
-													defaultValue={
-														credentials.isBarter
-													}
-												>
-													<option value={true}>
-														True
-													</option>
-													<option value={false}>
-														False
-													</option>
-												</select>
+												<label className="my-auto text-sm text-gray-600">
+													Barter this product
+												</label>
 											</div>
+
 											{credentials.isBarter && (
 												<>
-													<div className="md:col-span-3">
+													<div className="sm:col-span-2">
 														<label className="text-sm text-gray-600 font-bold">
 															Barter Category
 														</label>
@@ -251,7 +302,8 @@ const AddProduct = () => {
 															maxLength={30}
 														/>
 													</div>
-													<div className="md:col-span-5">
+
+													<div className="sm:col-span-3">
 														<label className="text-sm text-gray-600 font-bold">
 															Barter Description
 														</label>
@@ -270,65 +322,46 @@ const AddProduct = () => {
 													</div>
 												</>
 											)}
-											<div className={`${credentials.isBarter ? "md:col-span-1" : "md:col-span-3"}`}>
-												<label className="text-sm text-gray-600 font-bold">
-													Price
+
+											<div className="sm:col-span-5 flex gap-2 w-fit h-fit">
+												<label className="relative flex cursor-pointer p-1 rounded-md">
+													<input
+														type="checkbox"
+														name="isAvailable"
+														checked={
+															credentials?.isAvailable
+														}
+														onChange={() => {
+															setCredentials(
+																(prev) => ({
+																	...prev,
+																	isAvailable:
+																		!credentials.isAvailable,
+																})
+															);
+														}}
+														className="peer cursor-pointer appearance-none relative h-5 w-5 bg-white border border-gray-600 transition-all checked:border-indigo-600 checked:bg-white rounded-md"
+													/>
+													<div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 translate-y-1/2 text-indigo-600 opacity-0 transition-opacity peer-checked:opacity-100">
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															className="h-3.5 w-3.5"
+															viewBox="0 0 20 20"
+															fill="currentColor"
+															stroke="currentColor"
+															strokeWidth="1"
+														>
+															<path
+																fillRule="evenodd"
+																d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+																clipRule="evenodd"
+															></path>
+														</svg>
+													</div>
 												</label>
-												<input
-													type="number"
-													name="price"
-													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													value={credentials.price}
-													placeholder="Enter product price"
-													onChange={onChange}
-												/>
-											</div>
-											<div className={`${credentials.isBarter ? "md:col-span-4" : "md:col-span-5"}`}>
-												<label className="text-sm text-gray-600 font-bold">
-													Meeting Spot
+												<label className="my-auto text-sm text-gray-600">
+													Product visible to users
 												</label>
-												<textarea
-													rows={1}
-													name="meetingSpot"
-													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													value={
-														credentials.meetingSpot
-													}
-													placeholder="Enter meeting spot"
-													onChange={onChange}
-													minLength={10}
-													maxLength={150}
-													required
-												/>
-											</div>
-											<div className="md:col-span-2">
-												<label className="text-sm text-gray-600 font-bold">
-													Available
-												</label>
-												<select
-													className="w-full mt-2 px-3 py-2 text-black bg-transparent outline-none border-2 border-[darkgrey] focus:border-indigo-600 shadow-sm rounded-lg"
-													name="isAvailable"
-													onChange={(e) => {
-														setCredentials({
-															...credentials,
-															isAvailable:
-																JSON.parse(
-																	e.target
-																		.value
-																),
-														});
-													}}
-													defaultValue={
-														credentials.isAvailable
-													}
-												>
-													<option value={true}>
-														True
-													</option>
-													<option value={false}>
-														False
-													</option>
-												</select>
 											</div>
 										</div>
 										<button

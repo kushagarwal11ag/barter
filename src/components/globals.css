@@ -6,7 +6,7 @@
 	@apply rounded-lg shadow-lg;
 }
 .custom-popover .ant-popover-inner {
-	@apply bg-[#D3D9E9];
+	@apply border-2 border-[#101827];
 }
 .popover2 .ant-popover-inner {
 	@apply bg-[#101827];

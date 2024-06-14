@@ -148,7 +148,7 @@ const Notifications = () => {
 					notification={notification}
 					key={notification._id}
 				/>
-			)) : <Empty description={<p>Nothing to display</p>} />}
+			)) : <Empty description={<p>You&apos;re all caught up.</p>} />}
 		</div>
 	);
 
