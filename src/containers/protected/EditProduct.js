@@ -131,7 +131,7 @@ const EditProduct = ({ productId }) => {
 								<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-3">
 									<div className="text-gray-600">
 										<p className="font-medium text-lg">
-											Create Post
+											Edit Post
 										</p>
 										<p>Please fill out all the fields.</p>
 										<Image
@@ -158,16 +158,6 @@ const EditProduct = ({ productId }) => {
 											</p>
 										)}
 										<div className="grid gap-4 gap-y-2 text-sm grid-cols-1 sm:grid-cols-5">
-											<div className="sm:col-span-2">
-												<label className="text-sm text-gray-600 font-bold">
-													Category
-												</label>
-												<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
-													{credentials.category ||
-														"Category"}
-												</p>
-											</div>
-
 											<div className="sm:col-span-3">
 												<label className="text-sm text-gray-600 font-bold">
 													Title
@@ -178,6 +168,16 @@ const EditProduct = ({ productId }) => {
 												>
 													{credentials.title ||
 														"Title"}
+												</p>
+											</div>
+
+											<div className="sm:col-span-2">
+												<label className="text-sm text-gray-600 font-bold">
+													Category
+												</label>
+												<p className="w-full mt-2 px-3 py-2 text-black bg-[darkgrey] outline-none border-2 border-[darkgrey] shadow-sm rounded-lg">
+													{credentials.category ||
+														"Category"}
 												</p>
 											</div>
 
@@ -260,6 +260,11 @@ const EditProduct = ({ productId }) => {
 													value={credentials.price}
 													placeholder="Enter price"
 													onChange={onChange}
+													min={
+														credentials.isBarter
+															? 0
+															: 1
+													}
 												/>
 											</div>
 

@@ -397,9 +397,19 @@ const FeedbackTabs = ({ credentials, currentUser, profileId }) => {
 										<Delete
 											className="h-5 w-5 cursor-pointer"
 											onClick={() => {
-												handleFeedbackDelete(
-													feedback._id
-												);
+												Modal.confirm({
+													title: "Delete feedback",
+													content:
+														"Are you sure you want to delete this feedback?",
+													okButtonProps: {
+														className:
+															"text-black border-slate-300",
+													},
+													onOk: () =>
+														handleFeedbackDelete(
+															feedback._id
+														),
+												});
 											}}
 										/>
 									)}
@@ -535,6 +545,7 @@ const Profile = ({ profileId }) => {
 	const [credentials, setCredentials] = useState(null);
 	const [products, setProducts] = useState(null);
 	const [currentUser, setCurrentUser] = useState(null);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -591,6 +602,8 @@ const Profile = ({ profileId }) => {
 				setCurrentUser(currentUserDetails);
 			} catch (error) {
 				handleAxiosError(error);
+			} finally {
+				setLoading(false);
 			}
 		};
 		fetchUser();
@@ -814,6 +827,68 @@ const Profile = ({ profileId }) => {
 		}
 	};
 
+	if (loading) {
+		return (
+			<section className="container max-w-screen-lg mx-auto pb-12 md:pb-0">
+				<section className="relative w-full h-32 bg-neutral-300 animate-pulse">
+					<div className="absolute bottom-0 left-1/2 md:left-40 transform -translate-x-1/2 translate-y-1/2 w-40 h-40">
+						<Image
+							src={defaultProfile}
+							alt="User Avatar"
+							className="rounded-full border-4 border-black"
+							layout="fill"
+							objectFit="cover"
+						/>
+					</div>
+				</section>
+				<section className="mt-20 md:ml-72 md:mt-0 p-2 flex flex-col gap-2">
+					<div className="bg-neutral-400/50 w-2/5 h-4 animate-pulse rounded-md"></div>
+					<div className="bg-neutral-400/50 w-1/5 h-4 animate-pulse rounded-md"></div>
+					<div className="bg-neutral-400/50 w-full h-12 animate-pulse rounded-md"></div>
+					<div className="bg-neutral-400/50 w-1/5 h-4 animate-pulse rounded-md"></div>
+				</section>
+				<section className="py-2 px-4">
+					<div className="flex gap-2">
+						<div className="bg-neutral-400/50 w-1/5 h-4 animate-pulse rounded-md"></div>
+						<div className="bg-neutral-400/50 w-1/5 h-4 animate-pulse rounded-md"></div>
+					</div>
+					<hr className="my-4 h-px border-0 bg-black" />
+					<div className="bg-neutral-400/50 w-1/5 h-4 animate-pulse rounded-md"></div>
+					<section className="max-w-7xl py-4 px-2 grid gap-8 grid-flow-col auto-cols-[70%] min-[450px]:auto-cols-[50%] sm:auto-cols-[30%] overflow-x-auto">
+						{Array.from({ length: 3 }).map((_, index) => (
+							<div
+								key={index}
+								className="max-w-xs h-80 bg-neutral-400/50 animate-pulse rounded-xl border-black border"
+							></div>
+						))}
+					</section>
+					<hr className="my-4 h-px border-0 bg-black" />
+					<div className="bg-neutral-400/50 w-1/5 h-4 animate-pulse rounded-md"></div>
+					<section className="mt-6 p-2 flex flex-col sm:flex-row gap-6 relative border border-black rounded">
+						<div className="absolute right-2 -top-4 z-50 p-1 bg-white w-fit h-fit flex gap-2">
+							<div className="bg-neutral-400/50 w-5 h-5 animate-pulse rounded-md"></div>
+							<div className="bg-neutral-400/50 w-5 h-5 animate-pulse rounded-md"></div>
+						</div>
+						<div className="flex flex-col gap-2 min-w-32 my-auto">
+							<Image
+								src={defaultProfile}
+								alt="User Avatar"
+								className="w-14 h-14 sm:w-20 sm:h-20 self-center rounded-full border-2 border-black"
+								width={100}
+								height={100}
+							/>
+							<div className="self-center bg-neutral-400/50 w-2/5 sm:w-full h-4 animate-pulse rounded-md"></div>
+						</div>
+						<div className="flex flex-col gap-2 w-full my-auto">
+							<div className="self-center sm:self-start bg-neutral-400/50 w-1/5 h-4 animate-pulse rounded-md"></div>
+							<div className="bg-neutral-400/50 w-full h-12 animate-pulse rounded-md"></div>
+						</div>
+					</section>
+				</section>
+			</section>
+		);
+	}
+
 	return (
 		<>
 			<section className="container max-w-screen-lg mx-auto pb-12 md:pb-0">
@@ -899,7 +974,7 @@ const Profile = ({ profileId }) => {
 								</button>
 							</div>
 						)}
-					<section className="mt-2 flex gap-4">
+					<section className="flex gap-2">
 						{credentials?.followers?.length > 0 && (
 							<Popover
 								content={followersContent}
@@ -938,7 +1013,7 @@ const Profile = ({ profileId }) => {
 							<Popover
 								content={blockedUsersContent}
 								title="People you have blocked"
-								trigger="click"
+								trigger="hover"
 								arrow={false}
 								placement="bottomLeft"
 								overlayClassName="custom-popover"

@@ -143,12 +143,16 @@ const Notifications = () => {
 
 	const content = (
 		<div className="h-fit max-h-60 overflow-y-auto">
-			{notifications?.length > 0 ? notifications.map((notification) => (
-				<NotificationItem
-					notification={notification}
-					key={notification._id}
-				/>
-			)) : <Empty description={<p>You&apos;re all caught up.</p>} />}
+			{notifications?.length > 0 ? (
+				notifications.map((notification) => (
+					<NotificationItem
+						notification={notification}
+						key={notification._id}
+					/>
+				))
+			) : (
+				<Empty description={<p>You&apos;re all caught up.</p>} />
+			)}
 		</div>
 	);
 
@@ -175,6 +179,7 @@ const Navbar = () => {
 	const [userDetails, setUserDetails] = useState(defaultProfile);
 	const [showMobileNav, setShowMobileNav] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const toggleMobileNav = () => {
 		setShowMobileNav(!showMobileNav);
@@ -194,6 +199,8 @@ const Navbar = () => {
 			} catch (error) {
 				console.log(error);
 				setIsLoggedIn(false);
+			} finally {
+				setLoading(false);
 			}
 		};
 
@@ -244,11 +251,11 @@ const Navbar = () => {
 		},
 	];
 
-	return (
-		<>
-			<div className="navbar_container bg-gray-800 text-white">
-				<div className="navbar_div max-w-7xl mx-auto flex justify-between px-5 md:px-12 py-2 items-center">
-					<Link className="navbar_left" href="/">
+	if (loading) {
+		return (
+			<div className="bg-gray-800 text-white">
+				<div className="mx-auto flex justify-between px-5 py-2 items-center">
+					<Link href="/">
 						<Image
 							src="/logo.svg"
 							alt="logo"
@@ -256,7 +263,29 @@ const Navbar = () => {
 							height={48}
 						/>
 					</Link>
-					<div className="navbar_right">
+					<div className="gap-6 items-center hidden sm:flex">
+						<div className="bg-neutral-400/50 w-20 h-4 animate-pulse rounded-md"></div>
+						<div className="bg-neutral-400/50 w-20 h-4 animate-pulse rounded-md"></div>
+						<div className="bg-neutral-400/50 w-10 h-10 animate-pulse rounded-full"></div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<>
+			<div className="bg-gray-800 text-white">
+				<div className="mx-auto flex justify-between px-5 py-2 items-center">
+					<Link href="/">
+						<Image
+							src="/logo.svg"
+							alt="logo"
+							width={48}
+							height={48}
+						/>
+					</Link>
+					<div>
 						<ul className="gap-6 items-center hidden sm:flex">
 							{isLoggedIn ? (
 								<div className="flex gap-3 items-center">

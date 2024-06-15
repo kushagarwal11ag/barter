@@ -9,6 +9,7 @@ import { Empty } from "antd";
 
 const Explore = () => {
 	const [products, setProducts] = useState([]);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchProducts = async () => {
@@ -20,10 +21,25 @@ const Explore = () => {
 				setProducts(productData);
 			} catch (error) {
 				console.log(error);
+			} finally {
+				setLoading(false);
 			}
 		};
 		fetchProducts();
 	}, []);
+
+	if (loading) {
+		return (
+			<section className="max-w-7xl p-8 grid gap-8 grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]">
+				{Array.from({ length: 10 }).map((_, index) => (
+					<div
+						key={index}
+						className="p-4 bg-neutral-400/50 max-w-xs h-80 animate-pulse rounded-xl border-black border"
+					></div>
+				))}
+			</section>
+		);
+	}
 
 	return (
 		<>
@@ -95,9 +111,7 @@ const Explore = () => {
 					</Link>
 				</>
 			) : (
-				<Empty
-					description={<p>No products to display</p>}
-				>
+				<Empty description={<p>No products to display</p>}>
 					<Link
 						href="/product/add"
 						className="p-2 bg-[#101827] text-white rounded"
