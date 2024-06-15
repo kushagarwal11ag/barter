@@ -8,164 +8,174 @@ import axios from "axios";
 import defaultProfile from "../../../public/defaultProfile.svg";
 
 const ProductDetails = ({ productId }) => {
-	const [product, setProduct] = useState(null);
-	const [user, setUser] = useState(null);
+  const [product, setProduct] = useState(null);
+  const [user, setUser] = useState(null);
 
-	useEffect(() => {
-		const fetchProduct = async () => {
-			try {
-				const fetchedProduct = await axios.get(
-					`/api/v1/products/${productId}`,
-					{ withCredentials: true }
-				);
-				const productDetails = fetchedProduct?.data?.data;
-				setProduct(productDetails);
-			} catch (error) {
-				console.log(error);
-			}
-		};
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const fetchedProduct = await axios.get(
+          `/api/v1/products/${productId}`,
+          { withCredentials: true }
+        );
+        const productDetails = fetchedProduct?.data?.data;
+        setProduct(productDetails);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-		const fetchUser = async () => {
-			try {
-				const fetchedUser = await axios.get("/api/v1/users/", {
-					withCredentials: true,
-				});
-				if (fetchedUser?.data?.data) {
-					const userDetails = fetchedUser.data.data;
-					setUser(userDetails);
-				}
-			} catch (error) {
-				console.log(error);
-				setUser(null);
-			}
-		};
-		fetchProduct();
-		fetchUser();
-	}, [productId]);
+    const fetchUser = async () => {
+      try {
+        const fetchedUser = await axios.get("/api/v1/users/", {
+          withCredentials: true,
+        });
+        if (fetchedUser?.data?.data) {
+          const userDetails = fetchedUser.data.data;
+          setUser(userDetails);
+        }
+      } catch (error) {
+        console.log(error);
+        setUser(null);
+      }
+    };
+    fetchProduct();
+    fetchUser();
+  }, [productId]);
 
-	const handleDelete = async () => {
-		try {
-			await axios.delete(`/api/v1/products/${productId}`);
-		} catch (error) {
-			console.log(error);
-		}
-	};
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/api/v1/products/${productId}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-	const content = (
-		<div className="flex flex-col">
-			<Link
-				href={`/product/${productId}/edit`}
-				className="p-2 hover:text-green-600"
-			>
-				Edit
-			</Link>
-			<Link
-				href="/explore"
-				className="p-2 hover:text-red-500"
-				onClick={handleDelete}
-			>
-				Delete
-			</Link>
-		</div>
-	);
+  const content = (
+    <div className="flex flex-col">
+      <Link
+        href={`/product/${productId}/edit`}
+        className="p-2 hover:text-green-600"
+      >
+        Edit
+      </Link>
+      <Link
+        href="/explore"
+        className="p-2 hover:text-red-500"
+        onClick={handleDelete}
+      >
+        Delete
+      </Link>
+    </div>
+  );
 
-	return (
-		<>
-			{product && (
-				<div className="mt-4 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="flex flex-col md:flex-row -mx-4">
-						<div className="md:flex-1 px-4">
-							{ <div className="h-fit flex justify-center rounded-lg mb-4">
-								<Image
-									src={product.image}
-									width={500}
-									height={700}
-									objectFit="cover"
-									alt="Product image"
-									className="rounded-lg"
-								/>
-							</div> }
-						</div>
-						<div className="md:flex-1 px-4">
-							<section className="flex items-center justify-between">
-								<h2 className="text-3xl sm:text-5xl font-bold text-gray-800 uppercase mb-2">
-									{product.title}
-								</h2>
-								{user?._id === product.owner?._id && (
-									<Popover
-										content={content}
-										placement="bottomRight"
-									> 
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="1.5em"
-											height="1.5em"
-											viewBox="0 0 16 16"
-											className="bi bi-three-dots-vertical"
-											fill="currentColor"
-										>
-											<path
-												fillRule="evenodd"
-												d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
-											/>
-										</svg>
-									</Popover>
-								)}
-							</section>
-							<p className="text-gray-600 mt-2">
-								{product.description}
-							</p>
-							<p className="text-gray-600 mt-2">
-								Condition:{" "}
-								<span className="capitalize">
-									{product.condition}
-								</span>
-							</p>
-							{product.isBarter && (
-								<div className="text-gray-600 mt-2">
-									{product.price ? <>Hybrid</> : <>Barter</>}
-									{product.barterCategory && (
-										<p className="capitalize">
-											Barter Category:{" "}
-											{product.barterCategory}
-										</p>
-									)}
-									{product.barterDescription && (
-										<p className="capitalize">
-											Barter Description:{" "}
-											{product.barterDescription}
-										</p>
-									)}
-								</div>
-							)}
-							<p className="text-xl sm:text-2xl font-bold text-gray-800 uppercase mt-2">
-								&#x20b9;{product.price}
-							</p>
-							<p className="text-gray-800 mt-2">
-								Views: {product.viewCount}
-							</p>
-							<hr className="opacity-8 mt-8"></hr>
-							{user?._id !== product.owner?._id && (
-								<Link
-									className="mt-4 flex gap-4 items-center"
-									href={`/profile/${product.owner?._id}`}
-								>
-									<Image
-										src={
-											product.owner?.avatar ||
-											defaultProfile
-										}
-										width={48}
-										height={48}
-										alt="User avatar"
-										className="w-12 h-12 rounded-full object-cover"
-									/>
-									<span>{product.owner?.name}</span>
-								</Link>
-							)}
-						</div>
-					</div>
-					{/* {user?._id !== product.owner?._id && (
+  return (
+    <>
+      {product && (
+        <div className="mt-4 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row -mx-4">
+            <div className="md:flex-1 px-4">
+              {
+                <div className="h-fit flex justify-center rounded-lg mb-4">
+                  <Image
+                    src={product.image}
+                    width={500}
+                    height={700}
+                    objectFit="cover"
+                    alt="Product image"
+                    className="rounded-lg"
+                  />
+                </div>
+              }
+            </div>
+            <div className="md:flex-1 px-4">
+              <p className="text-xl text-red-600 mt-2 mb-2">
+                <span>
+                  {product.isBarter
+                    ? product.price
+                      ? "Hybrid"
+                      : "Barter"
+                    : "Sale"}
+                </span>
+              </p>
+              <section className="flex items-center justify-between">
+                <h2 className="text-3xl sm:text-5xl font-bold text-gray-800 uppercase mb-2">
+                  {product.title}
+                </h2>
+                {user?._id === product.owner?._id && (
+                  <Popover content={content} placement="bottomRight">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.5em"
+                      height="1.5em"
+                      viewBox="0 0 16 16"
+                      className="bi bi-three-dots-vertical"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
+                      />
+                    </svg>
+                  </Popover>
+                )}
+              </section>
+              <p className="text-gray-600 mt-2">{product.description}</p>
+              {console.log("product", product)}
+              <p className="text-gray-600 mt-2">{product.category}</p>
+              <p className="text-gray-600 mt-2">
+                <strong> Condition: </strong>
+                <span className="capitalize">{product.condition}</span>
+              </p>
+              {product.isBarter && (
+                <div className="text-gray-600 mt-2">
+                  {product.price ? <>Hybrid</> : <>Barter</>}
+                  {product.barterCategory && (
+                    <p className="capitalize">
+                      <strong> Barter Category: </strong>
+                      {product.barterCategory}
+                    </p>
+                  )}
+                  {product.barterDescription && (
+                    <p className="capitalize">
+                      <strong> Barter Description: </strong>
+                      {product.barterDescription}
+                    </p>
+                  )}
+                </div>
+              )}
+              <p className="text-xl sm:text-2xl font-bold text-gray-800 uppercase mt-2">
+                &#x20b9;{product.price}
+              </p>
+              <p className="text-gray-800 mt-2">
+                <strong> views: </strong>
+                {product.viewCount}
+              </p>
+              <hr className="opacity-8 mt-8"></hr>
+              {user?._id !== product.owner?._id && (
+                <Link
+                  className="mt-4 flex gap-4 items-center"
+                  href={`/profile/${product.owner?._id}`}
+                >
+                  <Image
+                    src={product.owner?.avatar || defaultProfile}
+                    width={48}
+                    height={48}
+                    alt="User avatar"
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <span>{product.owner?.name}</span>
+                </Link>
+              )}
+            </div>
+          </div>
+          <div>
+            <button className="w-35 mx-auto flex justify-center bg-gradient-to-r from-indigo-500 to-blue-600  hover:bg-gradient-to-l hover:from-blue-500 hover:to-indigo-600 text-gray-100 p-4  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500 margin-top: 10px">
+              Initiate Transaction
+            </button>
+          </div>
+
+          {/* {user?._id !== product.owner?._id && (
 						<div className="py-2 px-4 w-max max-w-6xl mx-auto bg-gray-900 hover:bg-gray-700 text-white rounded-2xl cursor-pointer">
 							<Link href={`/transaction/add/${productId}`}>
 								<Image
@@ -179,10 +189,10 @@ const ProductDetails = ({ productId }) => {
 							</Link>
 						</div>
 					)} */}
-				</div>
-			)}
-		</>
-	);
+        </div>
+      )}
+    </>
+  );
 };
 
 export default ProductDetails;
