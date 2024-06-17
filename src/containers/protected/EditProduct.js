@@ -139,7 +139,7 @@ const EditProduct = ({ productId }) => {
 											width={100}
 											height={100}
 											alt="Product Image"
-											className="w-52 h-52 mt-10 mb-7 object-cover"
+											className="w-52 h-52 mt-10 mb-7 object-contain"
 										/>
 										<label>Upload product image</label>
 										<input
