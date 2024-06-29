@@ -276,7 +276,7 @@ const Navbar = () => {
 	return (
 		<>
 			<div className="bg-gray-800 text-white">
-				<div className="mx-auto flex justify-between px-5 py-2 items-center">
+				<div className="mx-auto max-w-7xl flex justify-between px-5 py-2 items-center">
 					<Link href="/">
 						<Image
 							src="/logo.svg"

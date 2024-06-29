@@ -30,7 +30,7 @@ const Explore = () => {
 
 	if (loading) {
 		return (
-			<section className="max-w-7xl p-8 grid gap-8 grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]">
+			<section className="max-w-7xl mx-auto p-8 grid gap-8 grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]">
 				{Array.from({ length: 10 }).map((_, index) => (
 					<div
 						key={index}
@@ -45,19 +45,20 @@ const Explore = () => {
 		<>
 			{products?.length > 0 ? (
 				<>
-					<section className="max-w-7xl p-8 grid gap-8 grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]">
+					<section className="mx-auto max-w-7xl p-8 grid gap-8 grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]">
 						{products.map((product) => (
 							<Link
 								key={product._id}
 								href={`/product/${product._id}`}
-								className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-2xl overflow-hidden h-80"
+								className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-2xl overflow-hidden h-80 rounded-xl"
 							>
-								<div
-									className="absolute inset-0 bg-cover bg-center z-0 rounded-xl border-black border"
-									style={{
-										backgroundImage: `url(${product.image})`,
-									}}
-								></div>
+								<Image
+									src={product.image}
+									alt="Product image"
+									layout="fill"
+									objectFit="cover"
+									className="border-black border rounded-xl"
+								/>
 								{product.isWishlist && (
 									<div
 										className="absolute top-0 right-2 z-20 w-10 h-10 bg-cover bg-no-repeat"
@@ -67,7 +68,7 @@ const Explore = () => {
 										}}
 									></div>
 								)}
-								<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end rounded-xl">
+								<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end">
 									<p className="text-sm">
 										{product.isBarter
 											? product.price
@@ -106,7 +107,7 @@ const Explore = () => {
 							alt="Add product icon"
 							width={60}
 							height={60}
-							className="fixed bottom-5 right-5 cursor-pointer hover:scale-110 duration-300"
+							className="fixed bottom-5 right-5 cursor-pointer hover:scale-110 duration-500"
 						/>
 					</Link>
 				</>

@@ -60,15 +60,16 @@ const ProductTabs = ({ credentials, currentUser, products }) => {
 						<Link
 							key={product._id}
 							href={`/product/${product._id}`}
-							className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-xl overflow-hidden h-80 snap-center"
+							className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-xl overflow-hidden h-80 snap-center rounded-xl"
 						>
-							<div
-								className="absolute inset-0 bg-cover bg-center z-0 rounded-xl border-black border"
-								style={{
-									backgroundImage: `url(${product.image})`,
-								}}
-							></div>
-							<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end rounded-xl">
+							<Image
+								src={product.image}
+								alt="Product image"
+								layout="fill"
+								objectFit="cover"
+								className="border-black border rounded-xl"
+							/>
+							<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end">
 								<p className="uppercase tracking-wide text-lg font-bold">
 									{product.title}
 								</p>
@@ -103,21 +104,22 @@ const ProductTabs = ({ credentials, currentUser, products }) => {
 						<Link
 							key={product._id}
 							href={`/product/${product._id}`}
-							className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-xl overflow-hidden h-80 snap-center"
+							className="relative max-w-xs shadow-md duration-500 hover:scale-105 hover:shadow-xl overflow-hidden h-80 snap-center rounded-xl"
 						>
-							<div
-								className="absolute inset-0 bg-cover bg-center z-0 rounded-xl border-black border"
-								style={{
-									backgroundImage: `url(${product.image})`,
-								}}
-							></div>
+							<Image
+								src={product.image}
+								alt="Product image"
+								layout="fill"
+								objectFit="cover"
+								className="border-black border rounded-xl"
+							/>
 							<div
 								className="absolute top-0 right-2 z-20 w-10 h-10 bg-cover bg-no-repeat"
 								style={{
 									backgroundImage: "url(/icons/heart.svg)",
 								}}
 							></div>
-							<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end rounded-xl">
+							<section className="p-4 opacity-0 hover:opacity-100 duration-300 absolute inset-0 z-10 bg-[#000000d9] text-white flex flex-col justify-end">
 								<p className="uppercase tracking-wide text-lg font-bold">
 									{product.title}
 								</p>
@@ -830,7 +832,7 @@ const Profile = ({ profileId }) => {
 	if (loading) {
 		return (
 			<section className="container max-w-screen-lg mx-auto pb-12 md:pb-0">
-				<section className="relative w-full h-32 bg-neutral-300 animate-pulse">
+				<section className="relative w-full h-32 bg-neutral-300 animate-pulse border-x border-b border-black">
 					<div className="absolute bottom-0 left-1/2 md:left-40 transform -translate-x-1/2 translate-y-1/2 w-40 h-40">
 						<Image
 							src={defaultProfile}
@@ -892,7 +894,7 @@ const Profile = ({ profileId }) => {
 	return (
 		<>
 			<section className="container max-w-screen-lg mx-auto pb-12 md:pb-0">
-				<section className="relative w-full h-32" style={bannerStyle}>
+				<section className="relative w-full h-32 border-x border-b border-black" style={bannerStyle}>
 					<div className="absolute bottom-0 left-1/2 md:left-40 transform -translate-x-1/2 translate-y-1/2 w-40 h-40">
 						<Image
 							src={credentials?.avatar || defaultProfile}
@@ -974,7 +976,7 @@ const Profile = ({ profileId }) => {
 								</button>
 							</div>
 						)}
-					<section className="flex gap-2">
+					<section className="flex">
 						{credentials?.followers?.length > 0 && (
 							<Popover
 								content={followersContent}
@@ -984,7 +986,7 @@ const Profile = ({ profileId }) => {
 								placement="bottomLeft"
 								overlayClassName="custom-popover"
 							>
-								<div className="cursor-pointer">
+								<div className="px-2 cursor-pointer border-r border-black">
 									<span className="font-semibold">
 										{credentials.followers.length}
 									</span>{" "}
@@ -1001,7 +1003,7 @@ const Profile = ({ profileId }) => {
 								placement="bottomLeft"
 								overlayClassName="custom-popover"
 							>
-								<div className="cursor-pointer">
+								<div className="px-2 cursor-pointer border-r border-black">
 									<span className="font-semibold">
 										{credentials.following.length}
 									</span>{" "}
@@ -1018,7 +1020,7 @@ const Profile = ({ profileId }) => {
 								placement="bottomLeft"
 								overlayClassName="custom-popover"
 							>
-								<div className="cursor-pointer text">
+								<div className="px-2 cursor-pointer text">
 									<span className="font-semibold">
 										{credentials?.blockedUsers?.length}
 									</span>{" "}
