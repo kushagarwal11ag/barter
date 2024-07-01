@@ -129,10 +129,17 @@ const Notifications = () => {
 
 	useEffect(() => {
 		const fetchNotifications = async () => {
-			const getNotification = await axios.get("/api/v1/notification/", {
-				withCredentials: true,
-			});
-			setNotifications(getNotification?.data?.data);
+			try {
+				const getNotification = await axios.get(
+					"/api/v1/notification/",
+					{
+						withCredentials: true,
+					}
+				);
+				setNotifications(getNotification?.data?.data);
+			} catch (error) {
+				console.log(error);
+			}
 		};
 		fetchNotifications();
 	}, []);

@@ -1,11 +1,11 @@
-import Transactions from "@/containers/protected/Transactions";
+import ViewTransactions from "@/containers/protected/ViewAllTransactions";
 
-const ViewTransactions = () => {
+const ViewTransactionsPage = () => {
 	return (
 		<>
-			<Transactions />
+			<ViewTransactions />
 		</>
 	);
 };
 
-export default ViewTransactions;
+export default ViewTransactionsPage;
