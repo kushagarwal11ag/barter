@@ -7,7 +7,7 @@ import { Rate } from "antd";
 import toast, { Toaster } from "react-hot-toast";
 
 import defaultProfile from "../../../public/defaultProfile.svg";
-import uploadFile from "../../../public/uploadFile.svg";
+import noImage from "../../../public/noImage.svg";
 
 let toastId;
 
@@ -116,7 +116,7 @@ const AddTransaction = ({ productId: productRequestedId }) => {
 				return;
 			}
 			const res = await axios.post(
-				"/api/v1/transactions/add",
+				"/api/v1/transactions/",
 				{
 					transactionType,
 					productRequestedId,
@@ -249,7 +249,7 @@ const AddTransaction = ({ productId: productRequestedId }) => {
 							</p>
 							<div className="relative w-full h-96">
 								<Image
-									src={productRequested.image || uploadFile}
+									src={productRequested.image || noImage}
 									alt="Product requested image"
 									layout="fill"
 									objectFit="contain"
@@ -316,7 +316,7 @@ const AddTransaction = ({ productId: productRequestedId }) => {
 							</p>
 							<div className="relative w-full h-96">
 								<Image
-									src={productOffered.image || uploadFile}
+									src={productOffered.image || noImage}
 									alt="Product offered image"
 									layout="fill"
 									objectFit="contain"
@@ -380,8 +380,15 @@ const AddTransaction = ({ productId: productRequestedId }) => {
 							<p className="text-center text-white bg-blue-600 border-t border-x border-black rounded-t-lg">
 								Product To Offer
 							</p>
-							<div className="h-96 flex justify-center items-center text-lg border-b border-x border-black rounded-b-lg">
-								Choose your product
+							<div className="relative w-full h-96">
+								<Image
+									src={noImage}
+									alt="No image selected"
+									layout="fill"
+									objectFit="contain"
+									objectPosition="center"
+									className="rounded-b-lg border-x border-b border-black"
+								/>
 							</div>
 						</div>
 					)}

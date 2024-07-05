@@ -55,7 +55,7 @@ const ProductDetails = ({ productId }) => {
 		try {
 			if (!product?.isBarter) {
 				const res = await axios.post(
-					"/api/v1/transactions/add",
+					"/api/v1/transactions/",
 					{
 						transactionType: "sale",
 						productRequestedId: productId,

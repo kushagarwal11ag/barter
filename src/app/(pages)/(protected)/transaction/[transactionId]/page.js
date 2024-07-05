@@ -1,6 +1,6 @@
 import TransactionDetails from "@/containers/protected/TransactionDetails";
 
-const ViewTransactionPage = ({ params }) => {
+const TransactionDetailsPage = ({ params }) => {
 	const { transactionId } = params;
 	return (
 		<>
@@ -9,4 +9,4 @@ const ViewTransactionPage = ({ params }) => {
 	);
 };
 
-export default ViewTransactionPage;
+export default TransactionDetailsPage;

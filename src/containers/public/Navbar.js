@@ -42,6 +42,8 @@ const NotificationItem = ({ notification }) => {
 				return `/profile/${notification.followedByUser?._id}`;
 			case "feedback":
 				return `/profile/${notification.user}`;
+			case "transaction":
+				return `/transaction/${notification.transactionId}`;
 			default:
 				return "#";
 		}
@@ -53,6 +55,8 @@ const NotificationItem = ({ notification }) => {
 				return notification.followedByUser?.avatar || defaultProfile;
 			case "feedback":
 				return notification.feedbackByUser?.avatar || defaultProfile;
+			case "transaction":
+				return notification.transactionUser?.avatar || defaultProfile;
 			default:
 				return defaultProfile;
 		}

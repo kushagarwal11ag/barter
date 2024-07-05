@@ -1,6 +1,6 @@
 import EditProfile from "@/containers/protected/EditProfile";
 
-const ProfilePage = () => {
+const EditProfilePage = () => {
 	return (
 		<>
 			<EditProfile />
@@ -8,4 +8,4 @@ const ProfilePage = () => {
 	);
 };
 
-export default ProfilePage;
+export default EditProfilePage;

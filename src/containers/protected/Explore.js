@@ -107,7 +107,7 @@ const Explore = () => {
 							alt="Add product icon"
 							width={60}
 							height={60}
-							className="fixed bottom-5 right-5 cursor-pointer hover:scale-110 duration-500"
+							className="z-50 fixed bottom-5 right-5 cursor-pointer hover:scale-110 duration-500"
 						/>
 					</Link>
 				</>
