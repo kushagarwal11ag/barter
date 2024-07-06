@@ -6,19 +6,6 @@ import axios from "axios";
 import { Empty } from "antd";
 
 const TransactionCard = ({ transaction, productId }) => {
-	const isOfferedProduct = productId === transaction.productOffered?._id;
-	const offeredPrice = isOfferedProduct
-		? transaction.priceRequested
-		: transaction.priceOffered;
-	const requestedPrice = isOfferedProduct
-		? transaction.priceOffered
-		: transaction.priceRequested;
-	const requestedImageUrl = isOfferedProduct
-		? transaction.productRequested.image
-		: transaction.productOffered.image;
-	const offeredImageUrl = isOfferedProduct
-		? transaction.productOffered.image
-		: transaction.productRequested.image;
 	const statusClasses = {
 		pending: "bg-yellow-400 text-black",
 		cancel: "bg-red-600 text-white",
@@ -35,24 +22,51 @@ const TransactionCard = ({ transaction, productId }) => {
 	return (
 		<section key={transaction._id} className="flex flex-col gap-2">
 			<section className="grid grid-cols-3 gap-2">
-				<section className="h-fit border border-black rounded-lg">
+				<section className="flex flex-col h-full border border-black rounded-lg">
 					<div className="text-center bg-red-600 text-white border-b border-black rounded-tl-lg rounded-tr-lg">
 						REQUESTED
 					</div>
-					<div className="flex flex-col justify-between gap-2">
-						<p className="text-center text-lg">
-							&#36;
-							{offeredPrice}
-						</p>
-						<div className="relative h-28 sm:h-60 md:h-80">
-							<Image
-								src={requestedImageUrl}
-								alt="Image of requested product"
-								layout="fill"
-								objectFit="cover"
-								className="border-t border-black rounded-lg"
-							/>
-						</div>
+					<div className="flex flex-col flex-grow justify-between gap-2">
+						{transaction.transactionType !== "sale" ? (
+							<>
+								<p className="text-center text-lg">
+									&#36;
+									{transaction.priceRequested}
+								</p>
+								<div className="relative h-28 sm:h-60 md:h-80">
+									<Image
+										src={
+											transaction.productRequested?.image
+										}
+										alt="Image of requested product"
+										layout="fill"
+										objectFit="cover"
+										className="border-t border-black rounded-lg"
+									/>
+								</div>
+							</>
+						) : (
+							<div className="flex-grow flex flex-col">
+								{transaction.productRequested?._id ? (
+									<div className="relative h-28 sm:h-60 md:h-80 flex-grow">
+										<Image
+											src={
+												transaction.productRequested
+													.image
+											}
+											alt="Image of requested product"
+											layout="fill"
+											objectFit="cover"
+										/>
+									</div>
+								) : (
+									<p className="flex justify-center items-center text-2xl sm:text-7xl flex-grow">
+										&#36;
+										{transaction.priceRequested}
+									</p>
+								)}
+							</div>
+						)}
 					</div>
 				</section>
 				<div className="flex flex-col gap-2 justify-center">
@@ -72,24 +86,48 @@ const TransactionCard = ({ transaction, productId }) => {
 						{statusText[transaction.orderStatus]}
 					</div>
 				</div>
-				<section className="h-fit border border-black rounded-lg">
+				<section className="flex flex-col h-full border border-black rounded-lg">
 					<div className="text-center bg-blue-600 text-white border-b border-black rounded-tl-lg rounded-tr-lg">
 						OFFERED
 					</div>
-					<div className="flex flex-col justify-between gap-2">
-						<p className="text-center text-lg">
-							&#36;
-							{requestedPrice}
-						</p>
-						<div className="relative h-28 sm:h-60 md:h-80">
-							<Image
-								src={offeredImageUrl}
-								alt="Image of offered product"
-								layout="fill"
-								objectFit="cover"
-								className="border-t border-black rounded-lg"
-							/>
-						</div>
+					<div className="flex flex-col flex-grow justify-between gap-2">
+						{transaction.transactionType !== "sale" ? (
+							<>
+								<p className="text-center text-lg">
+									&#36;
+									{transaction.priceOffered}
+								</p>
+								<div className="relative h-28 sm:h-60 md:h-80 flex-grow">
+									<Image
+										src={transaction.productOffered?.image}
+										alt="Image of offered product"
+										layout="fill"
+										objectFit="cover"
+										className="border-t border-black rounded-lg"
+									/>
+								</div>
+							</>
+						) : (
+							<div className="flex-grow flex flex-col">
+								{transaction.productOffered?._id ? (
+									<div className="relative h-28 sm:h-60 md:h-80 flex-grow">
+										<Image
+											src={
+												transaction.productOffered.image
+											}
+											alt="Image of offered product"
+											layout="fill"
+											objectFit="cover"
+										/>
+									</div>
+								) : (
+									<p className="flex justify-center items-center text-2xl sm:text-7xl flex-grow">
+										&#36;
+										{transaction.priceOffered}
+									</p>
+								)}
+							</div>
+						)}
 					</div>
 				</section>
 			</section>
