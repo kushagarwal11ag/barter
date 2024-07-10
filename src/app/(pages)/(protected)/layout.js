@@ -15,7 +15,21 @@ const ProtectedLayout = ({ children }) => {
 					withCredentials: true,
 				});
 			} catch (error) {
-				if (error.response.status === 401) {
+				const errorMessage = error.response?.data?.message;
+				if (
+					errorMessage === "Access token expired. Please refresh." ||
+					errorMessage === "No access token provided. Please log in."
+				) {
+					try {
+						await axios.post("/api/v1/users/refresh", {
+							withCredentials: true,
+						});
+
+						await axios.get("/api/v1/users/");
+					} catch (refreshError) {
+						router.push("/login");
+					}
+				} else {
 					router.push("/login");
 				}
 			}
